@@ -1,0 +1,123 @@
+server-side: django
+client-side: jquery
+
+Models:
+
+#find - find one or more by query
+#get_* - get elements from owner
+
+ user:
+  create
+  find
+  edit
+  delete
+  get_friends
+  get_blogs
+  get_comments
+  get_posts
+
+ user_group:
+  find
+  get_users
+
+ post:
+  create
+  find
+  edit
+  delete
+
+ post_group
+  find
+
+ blog
+  find
+  create
+  edit
+  delete
+  get_posts
+  get_users
+
+ comment
+  find
+  create
+  edit
+  delete
+
+ comment_tree
+  find
+  get_comments
+
+ city
+  find
+  get_users
+
+ tag
+  find
+  create
+  delete
+  edit
+  get_posts
+
+
+Controllers:
+
+ post:
+  show
+  create
+  alert
+  edit
+  delete
+
+ post_comment:
+  add
+  edit
+  delete
+
+ post_list: #support rss output
+  show
+  by_blog
+  by_type
+  by_author
+  by_tag
+  by_query #search
+
+ lenta: #support rss output
+  show
+
+ user:
+  show
+  edit
+  block
+  delete
+  self_delete
+
+ user_comments:
+  show
+
+ list:
+  users
+  citys
+  blogs
+  tags
+
+ blog:
+  create
+  edit
+  delete
+
+ action:
+  register
+  login
+
+ api:
+  last
+  last_posts
+  last_comments
+  last_spy
+  last_draft
+  last_favourit
+  top_users
+  top_blog
+  get_user
+  preview
+  editor #action for text editor
