@@ -1,56 +1,69 @@
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from main.forms import RegisterForm
-from main.forms import LoginForm
 from django.contrib import auth
-from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from main.models.profile import Profile
-
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
+from main.forms import LoginForm
+from main.forms import RegisterForm
+from main.models import *
     
-def register(request):
+def register(request, next = None):
     """Register new user"""
+    if next == None:
+        if request.GET.get('next') == None:
+            next = '/'
+        else:
+            next = request.GET.get('next')
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
             user = User()
-            user.name = data['name']
+            user.username = data['name']
             user.email = data['email']
-            user.password = data['password']
+            user.set_password(data['password'])
+            user.save()
+            profile = Profile()
+            profile.user = user
+            profile.save()
+            return HttpResponseRedirect('/login/' + next)
     else:
         form = RegisterForm()
-    return render_to_response('register.html', {'form': form})
+    return render_to_response('register.html', {'form': form, 'next': next})
     
 def profile(request, name):
     """View user profile"""
-    user = User.objects.filter(username = name)[0]
-    profile = Profile.objects.filter(user = user)
+    user = User.objects.filter(username=name)[0]
+    profile = user.get_profile()
     return render_to_response('user.html', {'profile': profile, 'user': user})
     
 @login_required
 def myprofile(request):
     """View your own profile"""
     user = request.user
-    profile = Profile.objects.filter(user = user)
+    profile = user.get_profile()
     return render_to_response('user.html', {'profile': profile, 'user': user})
     
-def login(request):
+def login(request, next = None):
     """Login user"""
+    if next == None:
+        if request.GET.get('next') == None:
+            next = '/'
+        else:
+            next = request.GET.get('next')
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+            username = data['username']
+            password = data['password']
             user = auth.authenticate(username=username, password=password)
             if user is not None and user.is_active:
                 auth.login(request, user)
-                return HttpResponseRedirect("/user/")
+                return HttpResponseRedirect(next)
     else:
         form = LoginForm()
-        
-    return render_to_response('login.html', {'form' : form})
+    return render_to_response('login.html', {'form': form,
+                              'next': next})
 
 def logout(request):
     """Getting out from here!"""

@@ -9,8 +9,11 @@ from djang0byte.main.views import *
 
 urlpatterns = patterns('',
   ('register/$', register),
+  ('register/(.*)/$', register),
   ('user/(.*)/$', profile),
   ('user/$', myprofile),
   ('login/$', login),
+  ('login/(.*)/$', login),
   ('newblog/$', newblog),
+  ('newpost/$', newpost),
 )
