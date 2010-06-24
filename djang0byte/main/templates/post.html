@@ -1,0 +1,10 @@
+<a href="/blog/{{ post.blog.id }}">{{ post.blog.name }}</a>
+<br /><a href="/user/{{ author }}">{{ author }}</a>
+<br />{{ post.text }}<br />
+{% for tag in tags %}
+<a href="/tag/{{ tag }}/">{{ tag }}</a>
+{% endfor %}
+<br />
+{% for comment in comments %}
+{{ comment.author }} -- {{comment}}
+{% endfor %}

@@ -25,12 +25,29 @@ class Tag(models.Model):
         """Get posts with tag"""
         return PostWithTag.objects.filter(tag=self)
 
+    def __unicode__(self):
+        """Return tag name"""
+        return self.name
+
 class City(models.Model):
     """All of citys"""
     name = models.CharField(max_length=60)
+
+    def __unicode__(self):
+        """Return name"""
+        return self.name
+
     
 class Post(models.Model):
     """Posts table"""
+
+    POST_TYPE=(
+        (0, 'Post'),
+        (1, 'Link'),
+        (2, 'Translate'),
+        (3, 'Answer')
+    )
+
     author = models.ForeignKey(User)
     date = models.DateTimeField(auto_now=True)
     blog = models.ForeignKey(Blog, blank=True, null=True)
@@ -39,8 +56,11 @@ class Post(models.Model):
     text = models.TextField()
     rate = models.IntegerField(null=True)
     rate_count = models.IntegerField(null=True)
-    type = models.IntegerField()
+    type = models.IntegerField(choices=POST_TYPE, default=0)
     adittion = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ('-id',)
 
     def getComment(self):
         """Return first level comments in post"""
@@ -50,15 +70,40 @@ class Post(models.Model):
         """Return tags in post"""
         return PostWithTag.objects.filter(post=self)
 
+    def insertTags(self, tags):
+        """Insert new tags and assign it to post"""
+        tags = tags.split(',')
+        for tag in tags:
+            if tag != '':
+                try:
+                    tag_object = Tag.objects.filter(name=tag)[0]
+                except:
+                    tag_object = Tag()
+                    tag_object.name = tag
+                    tag_object.save()
+                post_in_tag = PostWithTag()
+                post_in_tag.tag = tag_object
+                post_in_tag.post = self
+                post_in_tag.save()
+
+    def removeTags(self):
+        """Remove tags"""
+        PostWithTag.objects.filter(post=self).delete()
+
 class PostWithTag(models.Model):
     """match posts with tags"""
     tag = models.ForeignKey(Tag)
     post = models.ForeignKey(Post)
+
+    def __unicode__(self):
+        """Return tag name"""
+        return self.tag.name
     
 class Comment(models.Model):
     """Comments table"""
     post = models.ForeignKey(Post)
-    root = models.IntegerField()
+    root = models.ForeignKey('self', null=True, blank=True, related_name='child_set')
+    #root = models.IntegerField(null=True)
     author = models.ForeignKey(User)
     text = models.TextField()
     rate = models.IntegerField(null=True)
@@ -68,12 +113,33 @@ class Comment(models.Model):
         """Return second levels comments"""
         return self.objects.filter(id=root)
 
+    def __unicode__(self):
+        """Return comment content"""
+        return self.text
+    
+    class Meta:
+        ordering = ('-id',)
 
 
 class UserInBlog(models.Model):
     """Compared list of users and blogs"""
     user = models.ForeignKey(User)
     blog = models.ForeignKey(Blog)
+
+    def __unicode__(self):
+        return self.blog.name
+
+    def getId(self):
+        return self.blog.id
+
+class BlogWithUser(UserInBlog):
+    """Abstract class"""
+    def __unicode__(self):
+        return self.parent.user.username
+
+    class Meta:
+        abstract = True
+
 
 class Profile(models.Model):
     """User profile"""
@@ -114,7 +180,11 @@ class Profile(models.Model):
 
     def getBlogs(self):
         """Get blogs contain it"""
-        return UserInBlog.objects.filter(user=self).blog
+        return UserInBlog.objects.filter(user=self).only('blog')
+
+    def __unicode__(self):
+        """Return username"""
+        return self.user.username;
 
 class Friends(models.Model):
     """Friends table"""

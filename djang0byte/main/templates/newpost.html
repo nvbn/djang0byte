@@ -1,4 +1,10 @@
 <form action='/newpost/' method='post'>
+    <select name="blog">
+       {% for blog in blogs %}
+        <option value="{{ blog.getId }}">{{ blog }}</option>
+       {% endfor %}
+    </select>
+
 {{ form.as_ul }}
 <input type='submit'>
 </form>

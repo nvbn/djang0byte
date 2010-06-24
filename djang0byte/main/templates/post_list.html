@@ -1,0 +1,5 @@
+{% for post in posts %}
+<h2>{{ post.blog }} - {{ post.author }} - {{ post.title }}</h2>
+{{ post.text }}
+<br /><a href="/post/{{ post.id }}/">Полностью</a>
+{% endfor %}

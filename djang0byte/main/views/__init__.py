@@ -5,3 +5,7 @@ from user import logout
 from user import myprofile
 from blog import newblog
 from post import newpost
+from post import post
+from post import post_list
+from post import post_list_with_param
+from post import new_comment

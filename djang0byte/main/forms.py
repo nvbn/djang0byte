@@ -21,3 +21,9 @@ class CreatePostForm(forms.Form):
     title = forms.CharField()
     text = forms.CharField(widget=forms.Textarea)
     tags = forms.CharField()
+
+class CreateCommentForm(forms.Form):
+    """Create new comment form"""
+    text = forms.CharField(widget=forms.Textarea)
+    post = forms.IntegerField(widget=forms.HiddenInput)
+    comment = forms.IntegerField(widget=forms.HiddenInput, required=False)
