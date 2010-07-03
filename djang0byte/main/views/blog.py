@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from main.forms import CreateBlogForm, CreatePostForm
@@ -24,6 +25,7 @@ def newblog(request):
             owner.blog = blog
             owner.user = request.user
             owner.save()
+            return HttpResponseRedirect('/newpost/')
     else:
         form = CreateBlogForm()
     return render_to_response('newblog.html', {'form': form})

@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+from treebeard.ns_tree import NS_Node
 from django.contrib.auth.models import User
 from django.db import models
+
 
 class Blog(models.Model):
     """Blog entrys"""
@@ -64,7 +67,13 @@ class Post(models.Model):
 
     def getComment(self):
         """Return first level comments in post"""
-        return Comment.objects.filter(post=self, root=0)
+        comments = Comment.objects.filter(post=self)
+        out = []
+        for comment in comments:
+	    out.append(comment.dump_bulk())
+        return out
+        #return 0
+        #return Comment.objects.filter(post=self, root=0)
         
     def getTags(self):
         """Return tags in post"""
@@ -99,26 +108,29 @@ class PostWithTag(models.Model):
         """Return tag name"""
         return self.tag.name
     
-class Comment(models.Model):
+class Comment(NS_Node):
     """Comments table"""
     post = models.ForeignKey(Post)
-    root = models.ForeignKey('self', null=True, blank=True, related_name='child_set')
+    #root = models.ForeignKey('self', null=True, blank=True, related_name='child_set')
     #root = models.IntegerField(null=True)
     author = models.ForeignKey(User)
     text = models.TextField()
     rate = models.IntegerField(null=True)
     rate_count = models.IntegerField(null=True)
     
-    def getComment(self):
-        """Return second levels comments"""
-        return self.objects.filter(id=root)
+    node_order_by = ['id']
+    
+    
+    #def getComment(self):
+    #    """Return second levels comments"""
+    #    return self.objects.filter(id=root)
 
     def __unicode__(self):
         """Return comment content"""
         return self.text
     
     class Meta:
-        ordering = ('-id',)
+        ordering = ['id']
 
 
 class UserInBlog(models.Model):
@@ -180,7 +192,7 @@ class Profile(models.Model):
 
     def getBlogs(self):
         """Get blogs contain it"""
-        return UserInBlog.objects.filter(user=self).only('blog')
+        return UserInBlog.objects.filter(user=self.user)
 
     def __unicode__(self):
         """Return username"""

@@ -6,8 +6,6 @@
             <name>djang0byte</name>
             <sources>
                 <root id="djang0byte.dir"/>
-                <root id="django.dir"/>
-                <root id="django2.dir"/>
             </sources>
             <tests/>
         </data>

@@ -1,4 +1,4 @@
-from xml.dom.minidom import Comment
+# -*- coding: utf-8 -*-
 from djang0byte.main.forms import CreateCommentForm
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -23,6 +23,8 @@ def newpost(request):
             post.owner = request.user
             post.save()
             post.insertTags(data['tags'])
+            comment_root = Comment.add_root(post=post)
+            comment_root.save()
             return HttpResponseRedirect('/post/%d/' % (post.id))
     else:
         form = CreatePostForm()
@@ -66,11 +68,14 @@ def new_comment(request, post = 0, comment = 0):
         form = CreateCommentForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            comment = Comment()
-            comment.post = Post.objects.filter(id=data['post'])[0]
-            comment.root = data['comment']
-            comment.author = request.user
-            comment.text = data['text']
+            if comment == 0:
+                root = Comment.objects.filter(post=Post.objects.filter(id=data['post'])[0])[0]
+            comment = root.add_child(post=Post.objects.filter(id=data['post'])[0],
+            author=request.user, text=data['text'])
+            #comment.post = Post.objects.filter(id=data['post'])[0]
+            
+            #comment.author = request.user
+            #comment.text = data['text']
             comment.save()
             return HttpResponseRedirect('/post/%d/#cmnt%d' %
                             (comment.post.id, comment.id))

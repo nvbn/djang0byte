@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path
 
 # Django settings for djang0byte project.
@@ -77,6 +78,8 @@ INSTALLED_APPS = (
      'django.contrib.contenttypes',
      'django.contrib.sessions',
      'django.contrib.sites',
+     'south',
+     'treebeard',
      'djang0byte.main',
 )
 AUTH_PROFILE_MODULE = "main.profile"

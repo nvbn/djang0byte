@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect

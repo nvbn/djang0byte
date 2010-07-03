@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
 from djang0byte.main.views import *
 #from django.contrib import admin

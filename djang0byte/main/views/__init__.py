@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from user import register
 from user import login
 from user import profile
