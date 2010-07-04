@@ -52,10 +52,8 @@ def post_list(request, frm = 0, type = None, param = None):
         posts = blog.getPosts()[frm:][:10]
     elif type == 'tag':
         tag = Tag.objects.get(name=param)
-        posts_with_tag = tag.getPosts()[frm:][:10]
-        posts = []
-        for post in posts_with_tag:
-	  posts.append(post.post)
+        posts = tag.getPosts()[frm:][:10]
+        print vars(posts[0].post)
     elif type == 'auth':
         user = User.objects.filter(username=param)[0]
         profile = user.get_profile()

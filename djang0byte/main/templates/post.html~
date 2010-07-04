@@ -1,4 +1,4 @@
-<a href="/blog/{{ post.blog.id }}">{{ post.blog }}</a>
+<a href="/blog/{{ post.blog.id }}">{{ post.blog.name }}</a>
 <br /><a href="/user/{{ author }}">{{ author }}</a>
 <br />{{ post.text }}<br />
 {% for tag in tags %}

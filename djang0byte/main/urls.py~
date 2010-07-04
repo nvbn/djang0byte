@@ -23,5 +23,4 @@ urlpatterns = patterns('',
   ('post/(\d*)/$', post),
   ('(\w*)/([^\/]*)/$', post_list_with_param),
   ('$', post_list),
-  ('install/', install)
 )
