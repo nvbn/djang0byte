@@ -81,5 +81,6 @@ INSTALLED_APPS = (
      'south',
      'treebeard',
      'djang0byte.main',
+     'djang0byte._parser',
 )
 AUTH_PROFILE_MODULE = "main.profile"

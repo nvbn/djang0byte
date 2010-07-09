@@ -1,0 +1,16 @@
+<form action='/newpost/answer/' method='post'>
+<select name="blog">
+	<option value="0">Персональный</option>
+       {% for blog in blogs %}
+        <option value="{{ blog.getId }}">{{ blog }}</option>
+       {% endfor %}
+    </select>
+<input type='text' name='title'/>
+<br />
+{% for i in answers_count %}
+<input type='text' name='{{ i }}'/><br />
+{% endfor %}
+<input type='text' name='tags'/><br />
+<input type='hidden' name='count' value='{{ count }}' />
+<input type='submit'>
+</form>

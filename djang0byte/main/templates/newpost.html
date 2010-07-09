@@ -1,5 +1,6 @@
 <form action='/newpost/' method='post'>
     <select name="blog">
+	<option value="0">Персональный</option>
        {% for blog in blogs %}
         <option value="{{ blog.getId }}">{{ blog }}</option>
        {% endfor %}

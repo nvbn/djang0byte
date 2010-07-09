@@ -17,11 +17,13 @@ urlpatterns = patterns('',
   ('login/(.*)/$', login),
   ('newblog/$', newblog),
   ('newpost/$', newpost),
+  ('newpost/(.*)/$', newpost),
   ('newcomment/$', new_comment),
   ('newcomment/(\d*)/$', new_comment),
   ('newcomment/(\d*)/(\d*)/$', new_comment),
   ('post/(\d*)/$', post),
   ('(\w*)/([^\/]*)/$', post_list_with_param),
   ('$', post_list),
-  ('install/', install)
+  ('install/', install),
+  ('vote/$', vote)
 )

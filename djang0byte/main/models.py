@@ -2,6 +2,8 @@
 from treebeard.ns_tree import NS_Node
 from django.contrib.auth.models import User
 from django.db import models
+from _parser.models import _parser
+import datetime
 
 
 class Blog(models.Model):
@@ -75,8 +77,6 @@ class Post(models.Model):
         """Return first level comments in post"""
         comments = Comment.objects.filter(post=self)[0]
         return comments.get_descendants()
-        #return 0
-        #return Comment.objects.filter(post=self, root=0)
         
     def getTags(self):
         """Return tags in post"""
@@ -101,6 +101,51 @@ class Post(models.Model):
     def removeTags(self):
         """Remove tags"""
         PostWithTag.objects.filter(post=self).delete()
+        
+    def setBlog(self, blog):
+        """Set blog to post"""
+        if int(blog) == 0:
+	  self.blog = None
+	else:
+	  self.blog = Blog.objects.get(id=blog)
+	  
+    def createCommentRoot(self):
+        """Create comment root for post"""
+        comment_root = Comment.add_root(post=self, created=datetime.datetime.now())
+        return comment_root
+        
+    def _getContent(self, type = 0):
+        """Return post content, 0 - preview, 1 - post"""
+        if self.type > 2:
+	  return Answer.objects.filter(post=self)
+	elif type == 0:
+	  return self.preview
+	else:
+	  return self.text
+	  
+    def getContent(self, type = 0):
+       """_getContent wrapper"""
+       return self._getContent(type)
+	  
+    def getFullContent(self, type = 1):
+       """Return preview"""
+       return self._getContent(1)
+	  
+    def setText(self, text):
+        """Set text and preview"""
+        text = _parser.parse(text)
+        [self.preview, self.text] = _parser.cut(text)
+        
+    def checkVote(self, user):
+      """Check vote access"""
+        if self.type > 2:     
+	  vote = AnswerVote.objects.filter(answer=self.post, user=user)
+	  if vote[0]:
+	    return 1
+	  else:
+	    return 0
+	else:
+	  return 0
 
 class PostWithTag(models.Model):
     """match posts with tags"""
@@ -229,4 +274,44 @@ class Messages(models.Model):
         self.deleted += 1
         if self.deleted == 2:
             self.delete()
+            
+class Answer(models.Model):
+    """Answers class"""
+    post = models.ForeignKey(Post)
+    vote = models.IntegerField(null=True)
+    value = models.TextField()
+    
+    def fix(self, user):
+        """Fixate votes and block next vote"""
+        reply = AnswerVote()
+        reply.answer = self.answer
+        reply.user = user
+        reply.save()
+    
+    def _vote(self, user, multiple):
+        """Vote to answer"""
+        if multiple == False:
+	  self.fix(user)
+        self.vote += 1
+        self.save()
+        
+    def check(self, user):
+        """Check vote access"""
+        vote = AnswerVote.objects.filter(answer=self.post, user=user)
+        if vote[0]:
+	    return 0
+	else:
+	    return 1
+	    
+    def vote(self, user, multiple = False):
+        """Vote to answer"""
+        if self.check(user):
+	    self._vote(user)
+	    return 1
+	else:
+	    return 0
+	    
+class AnswerVote(models.Model):
+    answer = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
 

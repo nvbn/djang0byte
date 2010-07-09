@@ -7,31 +7,56 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from main.forms import CreatePostForm, CreateCommentForm
 from main.models import *
-import datetime
 
 @transaction.commit_on_success
 @login_required
-def newpost(request):
+def newpost(request, type = 'post'):
     """Create post form and action"""
     profile = request.user.get_profile()
-    if request.method == 'POST':
-        form = CreatePostForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            post = Post()
-            post.author = request.user
-            post.blog = Blog.objects.filter(id=request.POST.get('blog'))[0]
-            post.title = data['title']
-            post.text = data['text']
-            post.owner = request.user
-            post.save()
-            post.insertTags(data['tags'])
-            comment_root = Comment.add_root(post=post, created=datetime.datetime.now())
-            #comment_root.save()
-            return HttpResponseRedirect('/post/%d/' % (post.id))
+    if type == 'post':
+      if request.method == 'POST':
+	  form = CreatePostForm(request.POST)
+	  if form.is_valid():
+	      data = form.cleaned_data
+	      post = Post()
+	      post.author = request.user
+	      post.setBlog(request.POST.get('blog'))
+	      post.title = data['title']
+	      post.setText(data['text'])
+	      post.owner = request.user
+	      post.type = 0#'Post'
+	      post.save()
+	      post.insertTags(data['tags'])
+	      post.createCommentRoot()
+	      #comment_root = Comment.add_root(post=post, created=datetime.datetime.now())
+	      #comment_root.save()
+	      return HttpResponseRedirect('/post/%d/' % (post.id))
+      else:
+	  form = CreatePostForm()
+      return render_to_response('newpost.html', {'form': form, 'blogs': profile.getBlogs()})
     else:
-        form = CreatePostForm()
-    return render_to_response('newpost.html', {'form': form, 'blogs': profile.getBlogs()})
+      if request.method == 'POST':
+	post = Post()
+	post.title = request.POST.get('title')
+	post.author = request.user
+	post.setBlog(request.POST.get('blog'))
+	if request.POST.get('multi', 0):
+	  post.type = 4#'Multiple Answer'
+	else:
+	  post.type = 3#post.type = 'Answer'
+	post.save()
+	post.insertTags(request.POST.get('tags'))
+	post.createCommentRoot()
+	for answer_item in range(int(request.POST.get('count'))):
+	  answer = Answer()
+	  answer.value = request.POST.get(str(answer_item))
+	  answer.post = post
+	  answer.save()
+	return HttpResponseRedirect('/post/%d/' % (post.id))
+      multi = False
+      count = 2
+      return render_to_response('newanswer.html', {'answers_count': range(count),
+	'count': count, 'blogs': profile.getBlogs(), 'multi': multi})
 
 def post(request, id):
     """Print single post"""
@@ -39,7 +64,7 @@ def post(request, id):
     tags = post.getTags()
     author = post.author.get_profile()
     comments = post.getComment()
-    
+    post.getContent = post.getFullContent
     return render_to_response('post.html', {'post': post, 'tags': tags, 
         'author': author, 'comments': comments})
 
@@ -74,9 +99,9 @@ def new_comment(request, post = 0, comment = 0):
         form = CreateCommentForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            post = Post.objects.filter(id=data['post'])[0]
+            post = Post.objects.get(id=data['post'])
             if data['comment'] == 0:
-                root = Comment.objects.filter(post=post)[0]
+                root = Comment.objects.get(post=post)
             else:
 	        root = Comment.objects.get(id=data['comment'])
 
@@ -93,3 +118,20 @@ def new_comment(request, post = 0, comment = 0):
     else:
         form = CreateCommentForm({'post': post, 'comment': comment})
     return render_to_response('new_comment.html', {'form': form})
+    
+@login_required
+def vote(request):
+    """Vote to answer"""
+    if request.method == 'POST':
+        post = Post.object.get(id=request.POST.get('id'))
+        answers = Answer.object.filter(post=post)
+        if post.type == 'Answer':
+	    for answer in answers:
+	      if request.POST.get(str(answer.id), 0):
+		answer.vote(user)
+		break
+	elif post.type == 'Multiple Answer':
+	    for answer in answers:
+	      if request.POST.get(str(answer.id), 0):
+		answer.vote(user, true)
+	    answer.fix()
