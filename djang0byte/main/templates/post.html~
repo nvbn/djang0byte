@@ -1,6 +1,14 @@
-<a href="/blog/{{ post.blog.id }}">{{ post.blog.name }}</a>
-<br /><a href="/user/{{ author }}">{{ author }}</a>
-<br />{{ post.text }}<br />
+{% if post.blog %}
+<a href="/blog/{{ post.blog.id }}/">{{ post.blog }}</a>
+{% else %}
+<a href="/user/{{ post.author }}/">{{ post.author }}</a>
+{% endif %}
+ -- {{ post.title }}
+{% ifequal post.type 3 %}
+{% include 'answer.html' %}
+{% else %}
+<br />{{ post.getContent }}<br />
+{% endifequal %}
 {% for tag in tags %}
 <a href="/tag/{{ tag }}/">{{ tag }}</a>
 {% endfor %}

@@ -22,6 +22,19 @@ class Blog(models.Model):
         """Get posts in blog"""
         return Post.objects.filter(blog=self)
         
+    def rate(self, user, value):
+        """Rate user"""
+        if not BlogRate.objects.get(blog=self, user=user):
+	    self.rate += value
+	    self.rate_count += 1
+	    rate = BlogRate()
+	    rate.blog = self
+	    rate.user = user
+	    rate.save()
+	    return 1
+	else:
+	    return 0  
+        
     def __unicode__(self):
         """Return blog name"""
         return self.name
@@ -139,13 +152,27 @@ class Post(models.Model):
     def checkVote(self, user):
       """Check vote access"""
         if self.type > 2:     
-	  vote = AnswerVote.objects.filter(answer=self.post, user=user)
-	  if vote[0]:
+	  vote = AnswerVote.objects.get(answer=self, user=user)
+	  if vote:
 	    return 1
 	  else:
 	    return 0
 	else:
 	  return 0
+	  
+    def rate(self, user, value):
+        """Rate post"""
+        if not PostRate.objects.get(post=self, user=user):
+	    self.rate += value
+	    self.rate_count += 1
+	    rate = PostRate()
+	    rate.post = self
+	    rate.user = user
+	    rate.save()
+	    return 1
+	else:
+	    return 0
+	    
 
 class PostWithTag(models.Model):
     """match posts with tags"""
@@ -190,6 +217,19 @@ class Comment(NS_Node):
     
     class Meta:
         ordering = ['id']
+        
+    def rate(self, user, value):
+        """Rate Comment"""
+        if not CommentRate.objects.get(comment=self, user=user):
+	    self.rate += value
+	    self.rate_count += 1
+	    rate = ComentRate()
+	    rate.comment = self
+	    rate.user = user
+	    rate.save()
+	    return 1
+	else:
+	    return 0
 
 
 class UserInBlog(models.Model):
@@ -252,6 +292,19 @@ class Profile(models.Model):
     def getBlogs(self):
         """Get blogs contain it"""
         return UserInBlog.objects.filter(user=self.user)
+        
+    def rate(self, user, value):
+        """Rate user"""
+        if not UserRate.objects.get(user=self, user=user):
+	    self.rate += value
+	    self.rate_count += 1
+	    rate = UserRate()
+	    rate.profile = self
+	    rate.user = user
+	    rate.save()
+	    return 1
+	else:
+	    return 0    
 
     def __unicode__(self):
         """Return username"""
@@ -314,4 +367,33 @@ class Answer(models.Model):
 class AnswerVote(models.Model):
     answer = models.ForeignKey(Post)
     user = models.ForeignKey(User)
+    
+class Favourite(models.Model):
+    """Favourite posts table"""
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
 
+class Spy(models.Model):
+    """Spyed posts table"""
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
+
+class PostRate(models.Model):
+    """Post rates"""
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
+    
+class CommentRate(models.Model):
+    """Comment rates"""
+    comment = models.ForeignKey(Comment)
+    user = models.ForeignKey(User)
+    
+class BlogRate(models.Model):
+    """Blog rates"""
+    blog = models.ForeignKey(Blog)
+    user = models.ForeignKey(User)
+    
+class UserRate(models.Model):
+    """User rates"""
+    profile = models.ForeignKey(profile)#voted
+    user = models.ForeignKey(User)#who vote

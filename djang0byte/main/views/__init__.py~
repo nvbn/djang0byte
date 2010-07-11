@@ -10,3 +10,4 @@ from post import post
 from post import post_list
 from post import post_list_with_param
 from post import new_comment
+from install import install

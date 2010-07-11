@@ -135,3 +135,29 @@ def vote(request):
 	      if request.POST.get(str(answer.id), 0):
 		answer.vote(user, true)
 	    answer.fix()
+	    
+@login_required
+def action(request, type, id, action = None):
+    """Add or remove from favourite and spy, rate"""
+    post = Post.object.get(id=request.POST.get('id'))
+    if type == 'favourite':
+        favourite = Favourite.object.get(post=post, user=request.user)
+        if favourite:
+	  favourite.delete()
+	else:
+	  favourite.post = post
+	  favourite.user = request.user
+	  favourite.save()
+    elif type == 'spy'
+        spy = Spy.object.get(post=post, user=request.user)
+        if spy:
+	  spy.delete()
+	else:
+	  spy.post = post
+	  spy.user = request.user
+	  spy.save()
+    elif type == 'rate':
+        if action == True:
+	  post.rate(request.user, +1)
+	elif action == False:
+	  post.rate(request.user, -1)
