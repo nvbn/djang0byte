@@ -29,5 +29,19 @@ def newblog(request):
     else:
         form = CreateBlogForm()
     return render_to_response('newblog.html', {'form': form})
-
-
+    
+@login_required
+def join(request, blog_id):
+    """Join or withdraw from the blog"""
+    blog = Blog.objects.get(id=blog_id)
+    if blog.owner == request.user:
+        pass
+    if blog.checkUser(request.user):
+        userInBlog = UserInBlog.objects.get(user=request.user, blog=blog)
+        userInBlog.delete()
+    else:
+        userInBlog = UserInBlog()
+        userInBlog.user = request.user
+        userInBlog.blog = blog
+        userInBlog.save()
+    return HttpResponseRedirect('/blog/%d/' % (int(blog_id)))

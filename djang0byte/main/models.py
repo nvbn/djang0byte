@@ -15,14 +15,22 @@ class Blog(models.Model):
     rate_count = models.IntegerField(null=True)
     
     def getUsers(self):
-        """Get user in this blog"""
+        """Get users in this blog"""
         return UserInBlog.objects.filter(blog=self)
+    
+    def checkUser(self, user):
+		"""Check user in blog"""
+		try:
+			userInBlog = UserInBlog.objects.get(user=user, blog=self)
+			return(True)
+		except UserInBlog.DoesNotExist:
+			return(False)
         
     def getPosts(self):
         """Get posts in blog"""
         return Post.objects.filter(blog=self)
         
-    def rate(self, user, value):
+    def ratePost(self, user, value):
         """Rate user"""
         if not BlogRate.objects.get(blog=self, user=user):
 	    self.rate += value
@@ -31,9 +39,9 @@ class Blog(models.Model):
 	    rate.blog = self
 	    rate.user = user
 	    rate.save()
-	    return 1
+	    return(True)
 	else:
-	    return 0  
+	    return(False)
         
     def __unicode__(self):
         """Return blog name"""
@@ -151,14 +159,12 @@ class Post(models.Model):
         
     def checkVote(self, user):
       """Check vote access"""
-        if self.type > 2:     
-	  vote = AnswerVote.objects.get(answer=self, user=user)
-	  if vote:
+      if self.type > 2:     
+	    vote = AnswerVote.objects.get(answer=self, user=user)
+      if vote:
 	    return 1
-	  else:
-	    return 0
-	else:
-	  return 0
+      else:
+        return 0
 	  
     def rate(self, user, value):
         """Rate post"""
@@ -295,16 +301,16 @@ class Profile(models.Model):
         
     def rate(self, user, value):
         """Rate user"""
-        if not UserRate.objects.get(user=self, user=user):
-	    self.rate += value
-	    self.rate_count += 1
-	    rate = UserRate()
-	    rate.profile = self
-	    rate.user = user
-	    rate.save()
-	    return 1
-	else:
-	    return 0    
+        if not UserRate.objects.get(user=self):
+			self.rate += value
+			self.rate_count += 1
+			rate = UserRate()
+			rate.profile = self
+			rate.user = user
+			rate.save()
+			return 1
+        else:
+			return 0    
 
     def __unicode__(self):
         """Return username"""
@@ -395,5 +401,5 @@ class BlogRate(models.Model):
     
 class UserRate(models.Model):
     """User rates"""
-    profile = models.ForeignKey(profile)#voted
+    profile = models.ForeignKey(Profile)#voted
     user = models.ForeignKey(User)#who vote

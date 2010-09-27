@@ -69,5 +69,5 @@ def login(request, next = None):
 def logout(request):
     """Getting out from here!"""
     auth.logout(request)
-    return HttpResponseRedirect("/account/loggedout/")
+    return HttpResponseRedirect("/")
 # Create your views here.

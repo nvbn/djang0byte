@@ -60,7 +60,8 @@ def newpost(request, type = 'post'):
 
 def post(request, id):
     """Print single post"""
-    post = Post.objects.filter(id=id)[0]
+    print id
+    post = Post.objects.get(id=id)
     tags = post.getTags()
     author = post.author.get_profile()
     comments = post.getComment()
@@ -85,11 +86,17 @@ def post_list(request, frm = 0, type = None, param = None):
         user = User.objects.filter(username=param)[0]
         profile = user.get_profile()
         posts = profile.getPosts()[frm:][:10]
+    elif type == 'favourite':
+        favourites = Favourite.objects.filter(user=request.user)[frm:][:10]
+        posts = []
+        for post in favourites:
+            posts.append(post.post)
         
     return render_to_response('post_list.html', {'posts': posts})
 
-def post_list_with_param(request, type, param, frm = None):
+def post_list_with_param(request, type, param = None, frm = None):
     """Wrapper for post_list"""
+    print type
     return post_list(request, frm, type, param)
 
 @login_required
@@ -123,8 +130,8 @@ def new_comment(request, post = 0, comment = 0):
 def vote(request):
     """Vote to answer"""
     if request.method == 'POST':
-        post = Post.object.get(id=request.POST.get('id'))
-        answers = Answer.object.filter(post=post)
+        post = Post.objects.get(id=request.POST.get('id'))
+        answers = Answer.objects.filter(post=post)
         if post.type == 'Answer':
 	    for answer in answers:
 	      if request.POST.get(str(answer.id), 0):
@@ -139,16 +146,17 @@ def vote(request):
 @login_required
 def action(request, type, id, action = None):
     """Add or remove from favourite and spy, rate"""
-    post = Post.object.get(id=request.POST.get('id'))
+    post = Post.objects.get(id=id)
     if type == 'favourite':
-        favourite = Favourite.object.get(post=post, user=request.user)
-        if favourite:
-	  favourite.delete()
-	else:
-	  favourite.post = post
-	  favourite.user = request.user
-	  favourite.save()
-    elif type == 'spy'
+        try:
+          favourite = Favourite.objects.get(post=post, user=request.user)
+          favourite.delete()
+        except Favourite.DoesNotExist:
+            favourite = Favourite()
+            favourite.post = post
+            favourite.user = request.user
+            favourite.save()
+    elif type == 'spy':
         spy = Spy.object.get(post=post, user=request.user)
         if spy:
 	  spy.delete()
@@ -157,7 +165,9 @@ def action(request, type, id, action = None):
 	  spy.user = request.user
 	  spy.save()
     elif type == 'rate':
+        print 1
         if action == True:
-	  post.rate(request.user, +1)
+	  post.ratePost(request.user, +1)
 	elif action == False:
-	  post.rate(request.user, -1)
+	  post.ratePost(request.user, -1)
+    return HttpResponseRedirect('/post/%d/' % (int(id)))
