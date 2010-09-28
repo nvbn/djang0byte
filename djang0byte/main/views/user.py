@@ -65,7 +65,19 @@ def login(request, next = None):
         form = LoginForm()
     return render_to_response('login.html', {'form': form,
                               'next': next})
-
+@login_required
+def friend(request, name):
+    """Add or remove friends"""
+    user = User.objects.get(name=name)
+    try:
+        friend = Friends.objects.get(user=request.user,friend=user.id)
+        friend.delete()
+    except Friends.DoesNotExist:
+        friend = Friends()
+        friend.user = request.user
+        friend.friend = user.id
+        friend.save()
+    
 def logout(request):
     """Getting out from here!"""
     auth.logout(request)
