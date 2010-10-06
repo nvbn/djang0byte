@@ -73,6 +73,10 @@ def post_list(request, frm = 0, type = None, param = None):
     """Print post list"""
     if type == None:
         posts = Post.objects.all()[frm:][:10]
+    elif type == 'pers':
+        posts = Post.objects.filter(blog=None)[frm:][:10]
+    elif type == 'main':
+		posts = Post.objects.exclude(blog=None)[frm:][:10]
     elif type == 'blog':
         blog = Blog.objects.filter(id=param)[0]
         posts = blog.getPosts()[frm:][:10]
