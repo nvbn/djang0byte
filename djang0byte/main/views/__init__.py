@@ -4,3 +4,4 @@ from blog import *
 from post import *
 from install import *
 from list import *
+from pm import *

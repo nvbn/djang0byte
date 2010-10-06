@@ -336,6 +336,7 @@ class Messages(models.Model):
     """PM's"""
     sender = models.IntegerField()
     recivier = models.ForeignKey(User)
+    title = models.CharField(max_length=300)
     text = models.TextField()
     deleted = models.IntegerField(null=True)
     

@@ -28,3 +28,8 @@ class CreateCommentForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea)
     post = forms.IntegerField(widget=forms.HiddenInput)
     comment = forms.IntegerField(widget=forms.HiddenInput, required=False)
+    
+class CreatePmForm(forms.Form):
+    to = forms.CharField()
+    title = forms.CharField()
+    text = forms.CharField(widget=forms.Textarea)
