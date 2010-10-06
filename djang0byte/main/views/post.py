@@ -149,8 +149,8 @@ def action(request, type, id, action = None):
     post = Post.objects.get(id=id)
     if type == 'favourite':
         try:
-          favourite = Favourite.objects.get(post=post, user=request.user)
-          favourite.delete()
+            favourite = Favourite.objects.get(post=post, user=request.user)
+            favourite.delete()
         except Favourite.DoesNotExist:
             favourite = Favourite()
             favourite.post = post
@@ -164,10 +164,9 @@ def action(request, type, id, action = None):
 	  spy.post = post
 	  spy.user = request.user
 	  spy.save()
-    elif type == 'rate':
-        print 1
-        if action == True:
-	  post.ratePost(request.user, +1)
-	elif action == False:
-	  post.ratePost(request.user, -1)
+    elif type == 'rate' and request.user != post.author:
+        if action == '1':
+          post.ratePost(request.user, +1)
+        elif action == '0':
+          post.ratePost(request.user, -1)
     return HttpResponseRedirect('/post/%d/' % (int(id)))

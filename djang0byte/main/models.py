@@ -11,8 +11,8 @@ class Blog(models.Model):
     name = models.CharField(max_length=30)
     owner = models.ForeignKey(User)
     description = models.TextField()
-    rate = models.IntegerField(null=True)
-    rate_count = models.IntegerField(null=True)
+    rate = models.IntegerField(default=0)
+    rate_count = models.IntegerField(default=0)
     
     def getUsers(self):
         """Get users in this blog"""
@@ -30,19 +30,23 @@ class Blog(models.Model):
         """Get posts in blog"""
         return Post.objects.filter(blog=self)
         
-    def ratePost(self, user, value):
+    def rateBlog(self, user, value):
         """Rate user"""
-        if not BlogRate.objects.get(blog=self, user=user):
-	    self.rate += value
-	    self.rate_count += 1
-	    rate = BlogRate()
-	    rate.blog = self
-	    rate.user = user
-	    rate.save()
-	    return(True)
-	else:
-	    return(False)
-        
+        try:
+			br = BlogRate.objects.get(blog=self, user=user) 			
+			return(False)
+        except BlogRate.DoesNotExist:
+	        self.rate += value
+	        self.rate_count += 1
+	        rate = BlogRate()
+	        rate.blog = self
+	        rate.user = user
+	        rate.save()
+	        user = Profile.objects.get(user = self.user)
+	        user.blogs_rate += 1
+	        user.save()
+	        return(True)
+                
     def __unicode__(self):
         """Return blog name"""
         return self.name
@@ -86,8 +90,8 @@ class Post(models.Model):
     title = models.CharField(max_length=300)
     preview = models.TextField()
     text = models.TextField()
-    rate = models.IntegerField(null=True)
-    rate_count = models.IntegerField(null=True)
+    rate = models.IntegerField(default=0)
+    rate_count = models.IntegerField(default=0)
     type = models.IntegerField(choices=POST_TYPE, default=0)
     adittion = models.CharField(max_length=300, blank=True)
 
@@ -166,18 +170,21 @@ class Post(models.Model):
       else:
         return 0
 	  
-    def rate(self, user, value):
+    def ratePost(self, user, value):
         """Rate post"""
-        if not PostRate.objects.get(post=self, user=user):
-	    self.rate += value
-	    self.rate_count += 1
-	    rate = PostRate()
-	    rate.post = self
-	    rate.user = user
-	    rate.save()
-	    return 1
-	else:
-	    return 0
+        try:
+			pr = PostRate.objects.get(post=self, user=user)
+			return 0
+        except PostRate.DoesNotExist:
+	        print value
+	        self.rate = self.rate + value
+	        self.rate_count = self.rate_count + 1
+	        self.save()
+	        rate = PostRate()
+	        rate.post = self
+	        rate.user = user
+	        rate.save()
+	        return 1
 	    
 
 class PostWithTag(models.Model):
@@ -196,8 +203,8 @@ class Comment(NS_Node):
     #root = models.IntegerField(null=True)
     author = models.ForeignKey(User, null=True, blank=True)
     text = models.TextField(blank=True)
-    rate = models.IntegerField(null=True)
-    rate_count = models.IntegerField(null=True)
+    rate = models.IntegerField(default=0)
+    rate_count = models.IntegerField(default=0)
     
     # Exception Value: Cannot use None as a query value
     created = models.DateTimeField(editable=False)
@@ -226,16 +233,20 @@ class Comment(NS_Node):
         
     def rate(self, user, value):
         """Rate Comment"""
-        if not CommentRate.objects.get(comment=self, user=user):
-	    self.rate += value
-	    self.rate_count += 1
-	    rate = ComentRate()
-	    rate.comment = self
-	    rate.user = user
-	    rate.save()
-	    return 1
-	else:
-	    return 0
+        try:
+			cr = CommentRate.objects.get(comment=self, user=user)
+			return 0
+        except CommentRate.DoesNotExist:
+	        self.rate += value
+	        self.rate_count += 1
+	        rate = ComentRate()
+	        rate.comment = self
+	        rate.user = user
+	        rate.save()
+	        user = Profile.objects.get(user=self.user)
+	        user.comments_rate += 1
+	        user.save()
+	        return 1
 
 
 class UserInBlog(models.Model):
@@ -265,11 +276,11 @@ class Profile(models.Model):
     icq = models.CharField(max_length=10, blank=True)
     jabber = models.CharField(max_length=60, blank=True)
     site = models.URLField(blank=True)
-    rate = models.IntegerField(null=True)
-    rate_count = models.IntegerField(null=True)
-    posts_rate = models.IntegerField(null=True)
-    comments_rate = models.IntegerField(null=True)
-    blogs_rate = models.IntegerField(null=True)
+    rate = models.IntegerField(default=0)
+    rate_count = models.IntegerField(default=0)
+    posts_rate = models.IntegerField(default=0)
+    comments_rate = models.IntegerField(default=0)
+    blogs_rate = models.IntegerField(default=0)
     timezone = models.SmallIntegerField(null=True)
     avatar = models.CharField(max_length=60, blank=True)
     hide_mail = models.SmallIntegerField(null=True)

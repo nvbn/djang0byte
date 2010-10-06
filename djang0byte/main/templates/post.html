@@ -13,6 +13,7 @@
 <a href="/tag/{{ tag }}/">{{ tag }}</a>
 {% endfor %}
 <br />
+<a href='/action/rate/{{ post.id }}/0/'>-</a>{{ post.rate }}<a href='/action/rate/{{ post.id }}/1/'>+</a>
 {% for comment in comments %}
 <div style="margin-left:{{comment.getMargin}}px;">
 {{ comment.id }} {{ comment.author }} -- {{comment}} {{comment.depth}}<br />
