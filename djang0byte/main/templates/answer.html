@@ -1,1 +1,19 @@
-<br />OooooooooooooO!<br />
+{% if result %}
+    {% for answ in answer %}
+        <br /> {{ answ.value }} -- {{ answ.count }}
+    {% endfor %}
+{% else %}
+<form method='POST' action='/action/answer/{{ post.id }}/'>
+{% if post.type == 3 %}
+    {% for answ in answer %}
+    <input type='radio' name='answ' value='{{ answ.id }}'>{{ answ.value }}</option><br />
+    {% endfor %}
+{% endif %}
+{% if post.type == 4 %}
+    {% for answ in answer %}
+    <label><input type='checkbox' name='answ_{{ answ.id }}' />{{ answ.value }}</label><br />
+    {% endfor %}
+{% endif %}
+<input type='submit' />
+</form>
+{% endif %}

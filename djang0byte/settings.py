@@ -36,19 +36,12 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
-
+MEDIA_ROOT = '/home/nvbn/work/djang0byte/djang0byte/media/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash if there is a path component (optional in other cases).
-# Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
+URL_FILEBROWSER_MEDIA = '/media/filebrowser/'
+ADMIN_MEDIA_PREFIX = '/media/admin/'
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'r25ofx1lr43d%0yzcwfeog5nxed0^!fe4ck)w!r6et@qejhx*6'
@@ -60,27 +53,50 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.eggs.load_template_source',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.request',
+    "grappelli.context_processors.admin_template_path",
+)
+
 MIDDLEWARE_CLASSES = (
+     'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.cache.CacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-ROOT_URLCONF = 'djang0byte.main.urls'
+ROOT_URLCONF = 'djang0byte.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates'),
     "/usr/lib/pymodules/python2.6/django/contrib/admin/templates/",
+    '/usr/lib/pymodules/python2.6/debug_toolbar/templates/',
 )
 
 INSTALLED_APPS = (
+'tagging',
+    'grappelli',
+    'django.contrib.admin',
      'django.contrib.auth',
      'django.contrib.contenttypes',
      'django.contrib.sessions',
      'django.contrib.sites',
-     'south',
      'treebeard',
      'djang0byte.main',
      'djang0byte._parser',
+     'treemenus',
+     'feed',
+    'annoying',
+    'simplepagination',
+    
 )
 AUTH_PROFILE_MODULE = "main.profile"

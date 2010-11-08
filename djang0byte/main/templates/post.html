@@ -1,21 +1,38 @@
+{% extends "base.html" %}
+{% block title %}
+{% if post.blog %}
+{{ post.blog }}
+{% else %}
+{{ post.author }}
+{% endif %}
+ -- {{ post.title }}
+{% endblock %}
+{% block content %}
 {% if post.blog %}
 <a href="/blog/{{ post.blog.id }}/">{{ post.blog }}</a>
 {% else %}
 <a href="/user/{{ post.author }}/">{{ post.author }}</a>
 {% endif %}
  -- {{ post.title }}
-{% ifequal post.type 3 %}
+{% if is_answer %}
 {% include 'answer.html' %}
 {% else %}
 <br />{{ post.getContent }}<br />
-{% endifequal %}
-{% for tag in tags %}
-<a href="/tag/{{ tag }}/">{{ tag }}</a>
+{% endif %}
+{% load tagging_tags %}
+{% for tag in post.getTags %}
+<a href='/tag/{{ tag }}/'>{{ tag }}</a>
 {% endfor %}
 <br />
 <a href='/action/rate/{{ post.id }}/0/'>-</a>{{ post.rate }}<a href='/action/rate/{{ post.id }}/1/'>+</a>
 {% for comment in comments %}
 <div style="margin-left:{{comment.getMargin}}px;">
-{{ comment.id }} {{ comment.author }} -- {{comment}} {{comment.depth}}<br />
+<b>{{ comment.author }}:</b> {{comment}}<br />
+<a href='/newcomment/{{ post.id }}/{{ comment.id}}/'>reply</a>
 </div>
 {% endfor %}
+<form action="/newcomment/" method="POST">
+    {{ comment_form.as_ul }}
+    <input type="submit" />
+</form>
+{% endblock %}

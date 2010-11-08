@@ -1,4 +1,9 @@
-{% for post in posts %}
+{% extends "base.html" %}
+{% block title %}
+Post list
+{% endblock %}
+{% block content %}
+{% for post in object_list %}
 <h2>{% if post.blog %}
 <a href="/blog/{{ post.blog.id }}/">{{ post.blog }}</a>
 {% else %}
@@ -7,3 +12,7 @@
 {{ post.getContent  }}
 <br /><a href="/post/{{ post.id }}/">Полностью</a>{{ post.type }}
 {% endfor %}
+<div>
+    {% include "paginator_digg.html" %}
+</div>
+{% endblock %}

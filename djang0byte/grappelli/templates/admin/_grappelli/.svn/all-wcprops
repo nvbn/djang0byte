@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin/_grappelli
+END
+base_site.html
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin/_grappelli/base_site.html
+END
+app_index.html
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin/_grappelli/app_index.html
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin/_grappelli/index.html
+END
+base.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin/_grappelli/base.html
+END

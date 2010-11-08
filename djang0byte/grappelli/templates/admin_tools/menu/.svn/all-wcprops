@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1225/trunk/grappelli/templates/admin_tools/menu
+END
+item.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1224/trunk/grappelli/templates/admin_tools/menu/item.html
+END
+menu.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin_tools/menu/menu.txt
+END
+delete_confirm.html
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin_tools/menu/delete_confirm.html
+END
+add_bookmark_form.html
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/1171/trunk/grappelli/templates/admin_tools/menu/add_bookmark_form.html
+END
+form.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin_tools/menu/form.html
+END
+menu.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1225/trunk/grappelli/templates/admin_tools/menu/menu.html
+END
+remove_bookmark_form.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/1171/trunk/grappelli/templates/admin_tools/menu/remove_bookmark_form.html
+END
+css.html
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin_tools/menu/css.html
+END
+dummy.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/1159/trunk/grappelli/templates/admin_tools/menu/dummy.html
+END

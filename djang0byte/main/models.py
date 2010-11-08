@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 from django.db import models
 from _parser.models import _parser
 import datetime
-
+import tagging
+from tagging.fields import TagField
+from tagging.models import Tag
 
 class Blog(models.Model):
     """Blog entrys"""
@@ -19,12 +21,12 @@ class Blog(models.Model):
         return UserInBlog.objects.filter(blog=self)
     
     def checkUser(self, user):
-		"""Check user in blog"""
-		try:
-			userInBlog = UserInBlog.objects.get(user=user, blog=self)
-			return(True)
-		except UserInBlog.DoesNotExist:
-			return(False)
+        """Check user in blog"""
+        try:
+            userInBlog = UserInBlog.objects.get(user=user, blog=self)
+            return(True)
+        except UserInBlog.DoesNotExist:
+            return(False)
         
     def getPosts(self):
         """Get posts in blog"""
@@ -33,35 +35,22 @@ class Blog(models.Model):
     def rateBlog(self, user, value):
         """Rate user"""
         try:
-			br = BlogRate.objects.get(blog=self, user=user) 			
-			return(False)
+            br = BlogRate.objects.get(blog=self, user=user)
+            return(False)
         except BlogRate.DoesNotExist:
-	        self.rate += value
-	        self.rate_count += 1
-	        rate = BlogRate()
-	        rate.blog = self
-	        rate.user = user
-	        rate.save()
-	        user = Profile.objects.get(user = self.user)
-	        user.blogs_rate += 1
-	        user.save()
-	        return(True)
+            self.rate += value
+            self.rate_count += 1
+            rate = BlogRate()
+            rate.blog = self
+            rate.user = user
+            rate.save()
+            user = Profile.objects.get(user=self.user)
+            user.blogs_rate += 1
+            user.save()
+            return(True)
                 
     def __unicode__(self):
         """Return blog name"""
-        return self.name
-
-class Tag(models.Model):
-    """Tags table"""
-    name = models.CharField(max_length=30)
-    
-    def getPosts(self):
-        """Get posts with tag"""
-        posts = PostWithTag.objects.filter(tag=self)
-	return posts
-
-    def __unicode__(self):
-        """Return tag name"""
         return self.name
 
 class City(models.Model):
@@ -76,16 +65,16 @@ class City(models.Model):
 class Post(models.Model):
     """Posts table"""
 
-    POST_TYPE=(
-        (0, 'Post'),
-        (1, 'Link'),
-        (2, 'Translate'),
-        (3, 'Answer'),
-        (4, 'Multiple Answer')
-    )
+    POST_TYPE = (
+                 (0, 'Post'),
+                 (1, 'Link'),
+                 (2, 'Translate'),
+                 (3, 'Answer'),
+                 (4, 'Multiple Answer')
+                 )
 
     author = models.ForeignKey(User)
-    date = models.DateTimeField(auto_now=True,editable=False)
+    date = models.DateTimeField(auto_now=True, editable=False)
     blog = models.ForeignKey(Blog, blank=True, null=True)
     title = models.CharField(max_length=300)
     preview = models.TextField()
@@ -94,107 +83,80 @@ class Post(models.Model):
     rate_count = models.IntegerField(default=0)
     type = models.IntegerField(choices=POST_TYPE, default=0)
     adittion = models.CharField(max_length=300, blank=True)
+    tags = TagField()
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ('-id', )
 
     def getComment(self):
         """Return first level comments in post"""
-        comments = Comment.objects.filter(post=self)[0]
-        return comments.get_descendants()
-        
-    def getTags(self):
-        """Return tags in post"""
-        return PostWithTag.objects.filter(post=self)
+        try:
+            comments = Comment.objects.filter(post=self, depth=1)[0]
+            return comments.get_descendants()
+        except IndexError:
+            return(None)
 
-    def insertTags(self, tags):
-        """Insert new tags and assign it to post"""
-        tags = tags.split(',')
-        for tag in tags:
-            if tag != '':
-                try:
-                    tag_object = Tag.objects.filter(name=tag)[0]
-                except:
-                    tag_object = Tag()
-                    tag_object.name = tag
-                    tag_object.save()
-                post_in_tag = PostWithTag()
-                post_in_tag.tag = tag_object
-                post_in_tag.post = self
-                post_in_tag.save()
-
-    def removeTags(self):
-        """Remove tags"""
-        PostWithTag.objects.filter(post=self).delete()
-        
     def setBlog(self, blog):
         """Set blog to post"""
         if int(blog) == 0:
-	  self.blog = None
-	else:
-	  self.blog = Blog.objects.get(id=blog)
+            self.blog = None
+        else:
+            self.blog = Blog.objects.get(id=blog)
 	  
     def createCommentRoot(self):
         """Create comment root for post"""
         comment_root = Comment.add_root(post=self, created=datetime.datetime.now())
         return comment_root
         
-    def _getContent(self, type = 0):
+    def _getContent(self, type=0):
         """Return post content, 0 - preview, 1 - post"""
         if self.type > 2:
-	  return Answer.objects.filter(post=self)
+            return Answer.objects.filter(post=self)
 	elif type == 0:
-	  return self.preview
+            return self.preview
 	else:
-	  return self.text
+            return self.text
 	  
-    def getContent(self, type = 0):
-       """_getContent wrapper"""
-       return self._getContent(type)
+    def getContent(self, type=0):
+        """_getContent wrapper"""
+        return self._getContent(type)
 	  
-    def getFullContent(self, type = 1):
-       """Return preview"""
-       return self._getContent(1)
+    def getFullContent(self, type=1):
+        """Return preview"""
+        return self._getContent(1)
 	  
     def setText(self, text):
         """Set text and preview"""
         text = _parser.parse(text)
         [self.preview, self.text] = _parser.cut(text)
-        
-    def checkVote(self, user):
-      """Check vote access"""
-      if self.type > 2:     
-	    vote = AnswerVote.objects.get(answer=self, user=user)
-      if vote:
-	    return 1
-      else:
-        return 0
 	  
     def ratePost(self, user, value):
         """Rate post"""
         try:
-			pr = PostRate.objects.get(post=self, user=user)
-			return 0
+            pr = PostRate.objects.get(post=self, user=user)
+            return(False)
         except PostRate.DoesNotExist:
-	        print value
-	        self.rate = self.rate + value
-	        self.rate_count = self.rate_count + 1
-	        self.save()
-	        rate = PostRate()
-	        rate.post = self
-	        rate.user = user
-	        rate.save()
-	        return 1
-	    
-
-class PostWithTag(models.Model):
-    """match posts with tags"""
-    tag = models.ForeignKey(Tag)
-    post = models.ForeignKey(Post)
-
-    def __unicode__(self):
-        """Return tag name"""
-        return self.tag.name
+            print value
+            self.rate = self.rate + value
+            self.rate_count = self.rate_count + 1
+            self.save()
+            rate = PostRate()
+            rate.post = self
+            rate.user = user
+            rate.save()
+            return(True)
+            
+    def getTags(self):
+        return Tag.objects.get_for_object(self)
+    
+    def setTags(self, tag_list):
+        Tag.objects.update_tags(self, tag_list)
+'''
+try:
+    tagging.register(Post)
+except tagging.AlreadyRegistered:
+    pass
+'''	    
     
 class Comment(NS_Node):
     """Comments table"""
@@ -223,7 +185,7 @@ class Comment(NS_Node):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('node-view', ('ns', str(self.id),))
+        return ('node-view', ('ns', str(self.id), ))
     
     def getMargin(self):
         return (self.depth - 2) * 20
@@ -234,19 +196,19 @@ class Comment(NS_Node):
     def rate(self, user, value):
         """Rate Comment"""
         try:
-			cr = CommentRate.objects.get(comment=self, user=user)
-			return 0
+            cr = CommentRate.objects.get(comment=self, user=user)
+            return(False)
         except CommentRate.DoesNotExist:
-	        self.rate += value
-	        self.rate_count += 1
-	        rate = ComentRate()
-	        rate.comment = self
-	        rate.user = user
-	        rate.save()
-	        user = Profile.objects.get(user=self.user)
-	        user.comments_rate += 1
-	        user.save()
-	        return 1
+            self.rate += value
+            self.rate_count += 1
+            rate = ComentRate()
+            rate.comment = self
+            rate.user = user
+            rate.save()
+            user = Profile.objects.get(user=self.user)
+            user.comments_rate += 1
+            user.save()
+            return(True)
 
 
 class UserInBlog(models.Model):
@@ -283,10 +245,10 @@ class Profile(models.Model):
     blogs_rate = models.IntegerField(default=0)
     timezone = models.SmallIntegerField(null=True)
     avatar = models.CharField(max_length=60, blank=True)
-    hide_mail = models.SmallIntegerField(null=True)
-    reply_post = models.SmallIntegerField(null=True, default=1)
-    reply_comment = models.SmallIntegerField(null=True, default=1)
-    reply_pm = models.SmallIntegerField(null=True, default=1)
+    hide_mail = models.BooleanField(default=True)
+    reply_post = models.BooleanField(default=True)
+    reply_comment = models.BooleanField(default=True)
+    reply_pm = models.BooleanField(default=True)
     about = models.TextField(blank=True)
     other = models.TextField(blank=True)
     
@@ -313,15 +275,15 @@ class Profile(models.Model):
     def rate(self, user, value):
         """Rate user"""
         if not UserRate.objects.get(user=self):
-			self.rate += value
-			self.rate_count += 1
-			rate = UserRate()
-			rate.profile = self
-			rate.user = user
-			rate.save()
-			return 1
+            self.rate += value
+            self.rate_count += 1
+            rate = UserRate()
+            rate.profile = self
+            rate.user = user
+            rate.save()
+            return 1
         else:
-			return 0    
+            return 0
 
     def __unicode__(self):
         """Return username"""
@@ -349,38 +311,43 @@ class Messages(models.Model):
 class Answer(models.Model):
     """Answers class"""
     post = models.ForeignKey(Post)
-    vote = models.IntegerField(null=True)
+    count = models.IntegerField(default=0)
     value = models.TextField()
     
     def fix(self, user):
         """Fixate votes and block next vote"""
-        reply = AnswerVote()
-        reply.answer = self.answer
-        reply.user = user
-        reply.save()
+        vote = AnswerVote()
+        vote.answer = self.post
+        vote.user = user
+        vote.save()
     
-    def _vote(self, user, multiple):
+    def _vote(self, user, multiple=False):
         """Vote to answer"""
         if multiple == False:
-	  self.fix(user)
-        self.vote += 1
+            self.fix(user)
+        self.count = self.count + 1
         self.save()
         
-    def check(self, user):
+    @staticmethod
+    def check(post, user):
         """Check vote access"""
-        vote = AnswerVote.objects.filter(answer=self.post, user=user)
-        if vote[0]:
-	    return 0
-	else:
-	    return 1
+        try:
+            vote = AnswerVote.objects.filter(answer=post, user=user)[0]     
+            return(False)
+        except 	IndexError:
+            return(True)
 	    
-    def vote(self, user, multiple = False):
+    def vote(self, user, multiple=False):
         """Vote to answer"""
-        if self.check(user):
-	    self._vote(user)
-	    return 1
-	else:
-	    return 0
+        if Answer.check(self.post, user) or multiple:
+            self._vote(user)
+            return(True)
+        else:
+            return(False)
+            
+    def __unicode__(self):
+        """Return value"""
+        return(self.value)
 	    
 class AnswerVote(models.Model):
     answer = models.ForeignKey(Post)
