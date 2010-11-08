@@ -1,4 +1,4 @@
-from BeautifulSoup import BeautifulSoup, Comment
+from BeautifulSoup import BeautifulSoup
 
 
 def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img',
@@ -34,10 +34,10 @@ def cut(text):
         
     """
     cutted = text.split('[cut]')
-    if cutted.length() == 2:
+    if cutted.count() == 2:
         return cutted[0], text
     cutted = text.split('[fcut]')
-    if cutted.length() == 2:
-        return cutted[0], cutted[1] + '[fcut]'
+    if cutted.count() == 2:
+        return cutted[0], '[fcut]' + cutted[1]
     else:
         return text, text
