@@ -2,11 +2,14 @@
 from treebeard.ns_tree import NS_Node
 from django.contrib.auth.models import User
 from django.db import models
-from _parser.models import _parser
 import datetime
 import tagging
 from tagging.fields import TagField
 from tagging.models import Tag
+from timezones.fields import TimeZoneField
+from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS
+from utils import file_upload_path
+import parser.utils
 
 class Blog(models.Model):
     """Blog entrys"""
@@ -18,7 +21,7 @@ class Blog(models.Model):
     
     def getUsers(self):
         """Get users in this blog"""
-        return UserInBlog.objects.filter(blog=self)
+        return UserInBlog.objects.select_related('user').filter(blog=self)
     
     def checkUser(self, user):
         """Check user in blog
@@ -40,7 +43,7 @@ class Blog(models.Model):
         return Post.objects.filter(blog=self)
         
     def rateBlog(self, user, value):
-        """Rate user
+        """Rate blog
         
         Keyword arguments:
         user -- User
@@ -63,6 +66,23 @@ class Blog(models.Model):
             user.blogs_rate += 1
             user.save()
             return(True)
+                
+    def addOrRemoveUser(self, user):
+        """add or remove user from blog
+        
+        Keyword arguments:
+        user -- User
+        
+        Returns: None
+        
+        """
+        if self.checkUser(user):
+            UserInBlog.objects.get(user=user).delete()
+        else:
+            uib = UserInBlog()
+            uib.blog = self
+            uib.user = user
+            uib.save()
                 
     def __unicode__(self):
         """Return blog name"""
@@ -92,8 +112,8 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now=True, editable=False)
     blog = models.ForeignKey(Blog, blank=True, null=True)
     title = models.CharField(max_length=300)
-    preview = models.TextField()
-    text = models.TextField()
+    preview = models.CharField(blank=True)
+    text = models.CharField(blank=True)
     rate = models.IntegerField(default=0)
     rate_count = models.IntegerField(default=0)
     type = models.IntegerField(choices=POST_TYPE, default=0)
@@ -168,18 +188,6 @@ class Post(models.Model):
         """
         return self._getContent(1)
 	  
-    def setText(self, text):
-        """Set text and preview
-        
-        Keyword arguments:
-        text -- Text
-        
-        Returns: None
-        
-        """
-        text = _parser.parse(text)
-        [self.preview, self.text] = _parser.cut(text)
-	  
     def ratePost(self, user, value):
         """Rate post
         
@@ -209,17 +217,35 @@ class Post(models.Model):
         return Tag.objects.get_for_object(self)
     
     def setTags(self, tag_list):
-        """Set tags for post"""
+        """Set tags for post
+        
+        Keyword arguments:
+        tag_list -- Tag
+        
+        Returns: None
+        
+        """
         Tag.objects.update_tags(self, tag_list)
+        
+        
+    def save(self):
+        """Parse html and save"""
+        if self.type < 3:
+            self.preview, self.text = utils.cut(self.text)
+            utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
+            utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
+        super(Post, self).save() # Call the "real" save() method
+        
+    def __unicode__(self):
+        """Return post title"""
+        return(self.title)
  
     
 class Comment(NS_Node):
     """Comments table"""
     post = models.ForeignKey(Post)
-    #root = models.ForeignKey('self', null=True, blank=True, related_name='child_set')
-    #root = models.IntegerField(null=True)
     author = models.ForeignKey(User, null=True, blank=True)
-    text = models.TextField(blank=True)
+    text = models.CharField(blank=True)
     rate = models.IntegerField(default=0)
     rate_count = models.IntegerField(default=0)
     
@@ -232,6 +258,11 @@ class Comment(NS_Node):
     def __unicode__(self):
         """Return comment content"""
         return self.text
+    
+    def save(self):
+        """Parse html and save"""
+        utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
+        super(Comment, self).save() # Call the "real" save() method
     
     @models.permalink
     def get_absolute_url(self):
@@ -301,8 +332,8 @@ class Profile(models.Model):
     posts_rate = models.IntegerField(default=0)
     comments_rate = models.IntegerField(default=0)
     blogs_rate = models.IntegerField(default=0)
-    timezone = models.SmallIntegerField(null=True)
-    avatar = models.CharField(max_length=60, blank=True)
+    timezone = TimeZoneField(default=TIME_ZONE)
+    avatar = models.ImageField(upload_to=file_upload_path)
     hide_mail = models.BooleanField(default=True)
     reply_post = models.BooleanField(default=True)
     reply_comment = models.BooleanField(default=True)
@@ -316,7 +347,7 @@ class Profile(models.Model):
         
     def getFriends(self):
         """Get user friends"""
-        return Friends.objects.filter(user=self).user
+        return Friends.objects.select_related('friend').filter(user=self)
         
     def getSendedMessages(self):
         """Get messages sended by user"""
@@ -499,6 +530,7 @@ class Notify(models.Model):
         Returns: Notify
         
         """
+        self = Notify()
         self.user = user
         if is_post:
             self.post = alien
@@ -517,9 +549,15 @@ class Notify(models.Model):
         Returns: None
         
         """
-        users = Profile.objects.get(user=post.author).getFriends()
+        users = list(Profile.objects.get(user=post.author).getFriends())
+        users = [user.friend for user in users]
         if post.blog != None:
-            users.append(post.blog.getUsers())
+            users += [blog_user.user for blog_user in post.blog.getUsers()]
+        d = {}
+        for x in users:
+            if x != post.author: 
+                d[x]=x
+        users = d.values()
         for user in users:
             Notify.newNotify(True, post, user)
     
@@ -533,10 +571,27 @@ class Notify(models.Model):
         Returns: None
         
         """
-        users = []
-        users.append(comment.get_parent.author)
         if comment.depth == 2:
-            users.append(comment.post.author)
-        for user in users:
-            Notify.newNotify(False, comment, user)
+            Notify.newNotify(False, comment, comment.post.author)
+            spy = Spy.objects.select_related('user').filter(post=comment.post)
+            try:
+                for spy_elem in Spy:
+                    Notify.newNotify(False, comment, spy_elem.user)
+            except TypeError:
+                pass
+        else:
+            Notify.newNotify(False, comment, comment.get_parent().author)
             
+    def getType(self):
+        """Return notify type"""
+        if self.post != None:
+            return('post')
+        else:
+            return('comment')
+    
+    def __unicode__(self):
+        """Return notify description"""
+        if self.post != None:
+            return("post %s -- %s" % (self.post, self.user))
+        else:
+            return("comment %s -- %s" % (self.comment, self.user))

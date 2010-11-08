@@ -24,7 +24,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # although not all choices may be available on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'Asia/Irkutsk'
+TIME_ZONE = 'Europe/Moscow'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -64,7 +64,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-     'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.cache.CacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -83,6 +83,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+'timezones',
 'tagging',
     'grappelli',
     'django.contrib.admin',
@@ -92,11 +93,14 @@ INSTALLED_APPS = (
      'django.contrib.sites',
      'treebeard',
      'djang0byte.main',
-     'djang0byte._parser',
+     'djang0byte.parser',
      'treemenus',
      'feed',
     'annoying',
     'simplepagination',
+    'djang0byte.parser',
     
 )
 AUTH_PROFILE_MODULE = "main.profile"
+VALID_TAGS = 'p i strong b u a h1 h2 h3 pre br img code'
+VALID_ATTRS = 'href src lang alt'

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}
+Lenta
+{% endblock %}
+{% block content %}
+{% for object in object_list %}
+{{ object.getType }}<br />
+{% endfor %}
+<div>
+    {% include "paginator_digg.html" %}
+</div>
+{% endblock %}

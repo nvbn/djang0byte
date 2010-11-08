@@ -10,6 +10,7 @@ from main.models import *
 from django.views.decorators.cache import cache_page
 from simplepagination import paginate
 from annoying.decorators import render_to
+from tagging.models import TaggedItem
 
 @transaction.commit_on_success
 @login_required
@@ -25,12 +26,13 @@ def newpost(request, type = 'post'):
 	      post.author = request.user
 	      post.setBlog(request.POST.get('blog'))
 	      post.title = data['title']
-	      post.setText(data['text'])
+	      post.text = data['text']
 	      post.owner = request.user
 	      post.type = 0#'Post'
 	      post.save()
 	      post.setTags(data['tags'])
 	      post.createCommentRoot()
+	      Notify.newPostNotify(post)
 	      #comment_root = Comment.add_root(post=post, created=datetime.datetime.now())
 	      #comment_root.save()
 	      return HttpResponseRedirect('/post/%d/' % (post.id))
@@ -98,24 +100,18 @@ def post_list(request, type = None, param = None):
     elif type == 'main':
 		posts = Post.objects.exclude(blog=None)
     elif type == 'blog':
-        blog = Blog.objects.filter(id=param)[0]
+        blog = Blog.objects.get(id=param)
         posts = blog.getPosts()
     elif type == 'tag':
-        tag = Tag.objects.get(name=param)
-        posts_with_tag = tag.getPosts()
-        posts = []
-        for post in posts_with_tag:
-	  posts.append(post.post)
+        posts = TaggedItem.objects.get_by_model(Post, param)
+        #posts = [post.post for post in posts_with_tag]
     elif type == 'auth':
-        user = User.objects.filter(username=param)[0]
+        user = User.objects.get(username=param)
         profile = user.get_profile()
         posts = profile.getPosts()
     elif type == 'favourite':
         favourites = Favourite.objects.filter(user=request.user)
-        posts = []
-        for post in favourites:
-            posts.append(post.post)
-        
+        posts = [post.post for post in favourites]
     return {'object_list': posts}
 
 def post_list_with_param(request, type, param = None):
@@ -139,6 +135,7 @@ def new_comment(request, post = 0, comment = 0):
             author=request.user, text=data['text'],
             created=datetime.datetime.now())
             comment.save()
+            Notify.newCommentNotify(comment)
             return HttpResponseRedirect('/post/%d/#cmnt%d' %
                             (comment.post.id, comment.id))
     else:
@@ -149,6 +146,11 @@ def new_comment(request, post = 0, comment = 0):
 @login_required
 def action(request, type, id, action = None):
     """Add or remove from favourite and spy, rate"""
+    if type == 'inblog':
+        blog = Blog.objects.get(id=id)
+        blog.addOrRemoveUser(request.user)       
+        return HttpResponseRedirect('/blog/%d/' % (int(id)))
+        
     post = Post.objects.get(id=id)
     if type == 'favourite':
         try:
@@ -181,4 +183,13 @@ def action(request, type, id, action = None):
                 if request.POST.get('answ_' + str(answer.id), 0):
                     answer.vote(request.user, True)
             answer.fix(request.user)
+        
     return HttpResponseRedirect('/post/%d/' % (int(id)))
+
+@login_required
+@render_to('lenta.html')
+@paginate(style='digg', per_page=10)   
+def lenta(request):
+    notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user)
+    return {'object_list': notifs}
+    
