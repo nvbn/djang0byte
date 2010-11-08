@@ -5,7 +5,13 @@ from django.contrib import admin
 from feed.models import PostFeed
 admin.autodiscover()
 
+if settings.DEBUG:
+    urlpatterns = patterns('',
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/nvbn/work/djang0byte/djang0byte/media/'}),
+    )
+
 urlpatterns = patterns('',
+(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/nvbn/work/djang0byte/djang0byte/media/'}),
     (r'^admin/', include(admin.site.urls)),
     (r'^grappelli/', include('grappelli.urls')),
     (r'^rss/', PostFeed()),
@@ -18,7 +24,4 @@ urlpatterns = patterns('',
     
 )
 
-if settings.DEBUG:
-    urlpatterns += patterns('',
-        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/nvbn/work/anikraft/anikraft/media/'}),
-    )
+

@@ -21,7 +21,14 @@ class Blog(models.Model):
         return UserInBlog.objects.filter(blog=self)
     
     def checkUser(self, user):
-        """Check user in blog"""
+        """Check user in blog
+        
+        Keyword arguments:
+        user -- User
+        
+        Returns: Boolean
+        
+        """
         try:
             userInBlog = UserInBlog.objects.get(user=user, blog=self)
             return(True)
@@ -33,7 +40,15 @@ class Blog(models.Model):
         return Post.objects.filter(blog=self)
         
     def rateBlog(self, user, value):
-        """Rate user"""
+        """Rate user
+        
+        Keyword arguments:
+        user -- User
+        value -- Integer
+        
+        Returns: Boolean
+        
+        """
         try:
             br = BlogRate.objects.get(blog=self, user=user)
             return(False)
@@ -97,7 +112,14 @@ class Post(models.Model):
             return(None)
 
     def setBlog(self, blog):
-        """Set blog to post"""
+        """Set blog to post
+        
+        Keyword arguments:
+        blog -- Blog
+        
+        Returns: None
+        
+        """
         if int(blog) == 0:
             self.blog = None
         else:
@@ -106,32 +128,68 @@ class Post(models.Model):
     def createCommentRoot(self):
         """Create comment root for post"""
         comment_root = Comment.add_root(post=self, created=datetime.datetime.now())
-        return comment_root
+        return(comment_root)
         
     def _getContent(self, type=0):
-        """Return post content, 0 - preview, 1 - post"""
+        """Return post content, 0 - preview, 1 - post
+        
+        Keyword arguments:
+        type -- Integer
+        
+        Returns: Text
+        
+        """
         if self.type > 2:
             return Answer.objects.filter(post=self)
-	elif type == 0:
-            return self.preview
-	else:
-            return self.text
+        elif type == 0:
+            return(self.preview)
+        else:
+            return(self.text)
 	  
     def getContent(self, type=0):
-        """_getContent wrapper"""
+        """_getContent wrapper
+        
+        Keyword arguments:
+        type -- Integer
+        
+        Returns: Text
+        
+        """
         return self._getContent(type)
 	  
     def getFullContent(self, type=1):
-        """Return preview"""
+        """Return preview
+        
+        Keyword arguments:
+        type -- Integer
+        
+        Returns: Text
+        
+        """
         return self._getContent(1)
 	  
     def setText(self, text):
-        """Set text and preview"""
+        """Set text and preview
+        
+        Keyword arguments:
+        text -- Text
+        
+        Returns: None
+        
+        """
         text = _parser.parse(text)
         [self.preview, self.text] = _parser.cut(text)
 	  
     def ratePost(self, user, value):
-        """Rate post"""
+        """Rate post
+        
+        Keyword arguments:
+        user -- User
+        value -- Integer
+        
+        Returns: Integer
+        
+        """
         try:
             pr = PostRate.objects.get(post=self, user=user)
             return(False)
@@ -147,16 +205,13 @@ class Post(models.Model):
             return(True)
             
     def getTags(self):
+        """Return post tags"""
         return Tag.objects.get_for_object(self)
     
     def setTags(self, tag_list):
+        """Set tags for post"""
         Tag.objects.update_tags(self, tag_list)
-'''
-try:
-    tagging.register(Post)
-except tagging.AlreadyRegistered:
-    pass
-'''	    
+ 
     
 class Comment(NS_Node):
     """Comments table"""
@@ -174,11 +229,6 @@ class Comment(NS_Node):
     
     node_order_by = ['created']
     
-    
-    #def getComment(self):
-    #    """Return second levels comments"""
-    #    return self.objects.filter(id=root)
-
     def __unicode__(self):
         """Return comment content"""
         return self.text
@@ -194,7 +244,15 @@ class Comment(NS_Node):
         ordering = ['id']
         
     def rate(self, user, value):
-        """Rate Comment"""
+        """Rate Comment
+        
+        Keyword arguments:
+        user -- User
+        value -- Integer
+        
+        Returns: Boolean
+        
+        """
         try:
             cr = CommentRate.objects.get(comment=self, user=user)
             return(False)
@@ -273,7 +331,15 @@ class Profile(models.Model):
         return UserInBlog.objects.filter(user=self.user)
         
     def rate(self, user, value):
-        """Rate user"""
+        """Rate user
+        
+        Keyword arguments:
+        user -- User
+        value -- Integer
+        
+        Returns: Integer
+        
+        """
         if not UserRate.objects.get(user=self):
             self.rate += value
             self.rate_count += 1
@@ -281,9 +347,9 @@ class Profile(models.Model):
             rate.profile = self
             rate.user = user
             rate.save()
-            return 1
+            return(True)
         else:
-            return 0
+            return(False)
 
     def __unicode__(self):
         """Return username"""
@@ -291,8 +357,8 @@ class Profile(models.Model):
 
 class Friends(models.Model):
     """Friends table"""
-    friend = models.IntegerField()
-    user = models.ForeignKey(User)
+    friend = models.ForeignKey(User)
+    user = models.ForeignKey(Profile)
 
 class Messages(models.Model):
     """PM's"""
@@ -315,14 +381,29 @@ class Answer(models.Model):
     value = models.TextField()
     
     def fix(self, user):
-        """Fixate votes and block next vote"""
+        """Fixate votes and block next vote
+        
+        Keyword arguments:
+        user -- User
+        
+        Returns: None
+        
+        """
         vote = AnswerVote()
         vote.answer = self.post
         vote.user = user
         vote.save()
     
     def _vote(self, user, multiple=False):
-        """Vote to answer"""
+        """Vote to answer
+        
+        Keyword arguments:
+        user -- User
+        multiple -- Boolean
+        
+        Returns: Boolean
+        
+        """
         if multiple == False:
             self.fix(user)
         self.count = self.count + 1
@@ -330,7 +411,15 @@ class Answer(models.Model):
         
     @staticmethod
     def check(post, user):
-        """Check vote access"""
+        """Check vote access
+        
+        Keyword arguments:
+        post -- Post
+        user -- User
+        
+        Returns: Boolean
+        
+        """
         try:
             vote = AnswerVote.objects.filter(answer=post, user=user)[0]     
             return(False)
@@ -338,7 +427,15 @@ class Answer(models.Model):
             return(True)
 	    
     def vote(self, user, multiple=False):
-        """Vote to answer"""
+        """Vote to answer
+        
+        Keyword arguments:
+        user -- User
+        multiple -- Boolean
+        
+        Returns: Boolean
+        
+        """
         if Answer.check(self.post, user) or multiple:
             self._vote(user)
             return(True)
@@ -350,6 +447,7 @@ class Answer(models.Model):
         return(self.value)
 	    
 class AnswerVote(models.Model):
+    """Votes for answer"""
     answer = models.ForeignKey(Post)
     user = models.ForeignKey(User)
     
@@ -382,3 +480,63 @@ class UserRate(models.Model):
     """User rates"""
     profile = models.ForeignKey(Profile)#voted
     user = models.ForeignKey(User)#who vote
+
+class Notify(models.Model):
+    """Class contain notifys for 'lenta'"""
+    user = models.ForeignKey(User)
+    post = models.ForeignKey(Post, blank=True, null=True)
+    comment = models.ForeignKey(Comment, blank=True, null=True)
+    
+    @classmethod
+    def newNotify(self, is_post, alien, user):
+        """Create notify
+        
+        Keyword arguments:
+        is_post -- Boolean
+        alien -- Post or Comment
+        user - User
+        
+        Returns: Notify
+        
+        """
+        self.user = user
+        if is_post:
+            self.post = alien
+        else:
+            self.comment = alien
+        self.save()
+        return(self)
+            
+    @staticmethod
+    def newPostNotify(post):
+        """Notify for new post
+        
+        Keyword arguments:
+        post -- Post
+        
+        Returns: None
+        
+        """
+        users = Profile.objects.get(user=post.author).getFriends()
+        if post.blog != None:
+            users.append(post.blog.getUsers())
+        for user in users:
+            Notify.newNotify(True, post, user)
+    
+    @staticmethod
+    def newCommentNotify(comment):
+        """Notify for new comment
+        
+        Keyword arguments:
+        comment -- Comment
+        
+        Returns: None
+        
+        """
+        users = []
+        users.append(comment.get_parent.author)
+        if comment.depth == 2:
+            users.append(comment.post.author)
+        for user in users:
+            Notify.newNotify(False, comment, user)
+            
