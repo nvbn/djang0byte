@@ -13,6 +13,19 @@
         <div id='menu'>
             {% load tree_menu_tags %}
             {% show_menu "menu" "ordered-list" %}
+            <div id="user_setting">
+                {% if user.is_authenticated %}
+                    <span class="left">{{ user.username }} <a href="/newpost/">New post</a> / <a href='/newblog/'>blog</a>.
+                        Your <a href='/myblogs/'>blogs</a> and <a href="/pm/">PM's</a>
+                        {% if messages_inbox_count %}
+                            {{ messages_inbox_count }}
+                        {% endif %}</span>
+                    <span class="right"><a href='/logout/'>Log out</a></span>
+                {% else %}
+                    <span class="left"><a href='/register/'>Register</a></span>
+                    <span class="right"><a href='/login/'>Log in</a></span>
+                {% endif %}
+            </div>
         </div>
        
         {% endcache %}
@@ -21,7 +34,13 @@
             {% block content %}{% endblock %}
         </div>
     
-    
+        <div id="sidebar">
+            {% load tagging_tags %}
+            {% tag_cloud_for_model main.Post as tags with steps=9 distribution=log %}
+            {% for tag in tags %}
+               <a class='tag_{{tag.font_size }}' href='/tag/{{ tag|urlencode }}/'>{{ tag }}</a>
+            {% endfor %}
+        </div>
    
 </body>
 </html>

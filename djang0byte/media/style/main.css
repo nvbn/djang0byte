@@ -1,10 +1,16 @@
 body {
     font-size: 16px;
     padding: 0;
+    overflow-y:none;
 }
 
 #logo {
     margin: 20px;
+}
+
+a, a:hover, a:active {
+    color: #464646;
+    text-decoration: none;
 }
 
 #menu ol li {
@@ -29,11 +35,6 @@ body {
     background: #d8dbde url('rgt.png') no-repeat right;
 }
 
-#menu ol li a, #menu ol li a:hover, #menu ol li a:active {
-    color: #464646;
-    text-decoration: none;
-}
-
 #menu {
     margin-left: -10px;
     margin-right: 0px;
@@ -46,3 +47,63 @@ body {
     background: url('sb.png') repeat-x bottom;
 }
 
+#menu #user_setting {
+    float: right;
+    overflow: hidden;
+    height: 25px;
+    vertical-align: middle;
+    line-height: 25px;
+}
+
+#user_setting .left {
+    float: left;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#user_setting .right {
+    float: right;
+    background: #d8dbde;
+    border-left: #a6a6a6 1px solid;
+    padding-left: 5px;
+    padding-right: 15px;
+}
+
+#content {
+    float: left;
+    widht: 80%;
+}
+
+#sidebar {
+    float: right;
+    width: 20%;
+}
+
+
+.tag_1 {
+    font-size: 8px;
+}
+.tag_2 {
+    font-size: 10px;
+}
+.tag_3 {
+    font-size: 12px;
+}
+.tag_4 {
+    font-size: 14px;
+}
+.tag_5 {
+    font-size: 16px;
+}
+.tag_6 {
+    font-size: 20px;
+}
+.tag_7 {
+    font-size: 24px;
+}
+.tag_8 {
+    font-size: 28px;
+}
+.tag_9 {
+    font-size: 32px;
+}
