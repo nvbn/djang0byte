@@ -8,17 +8,8 @@
  -- {{ post.title }}
 {% endblock %}
 {% block content %}
-{% if post.blog %}
-<a href="/blog/{{ post.blog.id }}/">{{ post.blog }}</a>
-{% else %}
-<a href="/user/{{ post.author }}/">{{ post.author }}</a>
-{% endif %}
- -- {{ post.title }}
-{% if is_answer %}
-{% include 'answer.html' %}
-{% else %}
-<br />{{ post.getContent }}<br />
-{% endif %}
+{% include 'post_item.html' %}
+    <br />
 {% load tagging_tags %}
 {% for tag in post.getTags %}
 <a href='/tag/{{ tag }}/'>{{ tag }}</a>

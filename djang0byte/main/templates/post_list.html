@@ -4,13 +4,9 @@ Post list
 {% endblock %}
 {% block content %}
 {% for post in object_list %}
-<h2>{% if post.blog %}
-<a href="/blog/{{ post.blog.id }}/">{{ post.blog }}</a>
-{% else %}
-<a href="/user/{{ post.author }}/">{{ post.author }}</a>
-{% endif %} — {{ post.title }}</h2>
-{{ post.getContent  }}
-<br /><a href="/post/{{ post.id }}/">Show full.</a>{{ post.type }}
+{% include 'post_item.html' %}
+<br/>
+<a href="/post/{{ post.id }}/">Show full.</a>{{ post.type }}
 {% endfor %}
 <div>
     {% include "paginator_digg.html" %}

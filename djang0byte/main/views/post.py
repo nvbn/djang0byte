@@ -110,7 +110,7 @@ def post(request, id):
         post.getContent = post.getFullContent
     return render_to_response('post.html', 
         {'post': post, 'author': author, 'comments': comments, 'comment_form': form,
-        'is_answer': is_answer, 'result': result, 'answer': answer}
+        'is_answer': is_answer, 'result': result, 'answer': answer, 'single': True}
         )
 
 @cache_page(0)  
@@ -140,7 +140,7 @@ def post_list(request, type = None, param = None):
     elif type == 'favourite':
         favourites = Favourite.objects.filter(user=request.user)
         posts = [post.post for post in favourites]
-    return {'object_list': posts}
+    return {'object_list': posts, 'single': False}
 
 def post_list_with_param(request, type, param = None):
     """Wrapper for post_list"""

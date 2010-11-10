@@ -25,11 +25,11 @@ def djbyte(request):
     objects = objects[0:][:10]
     try:
         profiles = Profile.objects.select_related('user').extra(select={'fullrate':
-            'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate DESC'
-            % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT) },
-            order_by='-fullrate')[0:][:10]
+            'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
+            % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
+            order_by=['-fullrate',])[0:][:10]
         profiles = [{'name': profile.user.username, 'rate': profile.getRate()} for profile in profiles]
-    except FieldError:
+    except Profile.DoesNotExist:
         profiles = []
     blogs = Blog.objects.order_by('-rate')[0:][:10]
 

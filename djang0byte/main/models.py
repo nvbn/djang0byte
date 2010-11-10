@@ -28,12 +28,13 @@ from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_R
 from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
 from utils import file_upload_path, Access
 from parser import utils
+from django.utils.translation import gettext as _
 import parser.utils
 
 class BlogType(models.Model):
     """Types of blog"""
-    name = models.CharField(max_length=30)
-    display_default = models.BooleanField(default=True)
+    name = models.CharField(max_length=30, verbose_name=_('Name'))
+    display_default = models.BooleanField(default=True, verbose_name=_('Display in "all"?'))
 
     @staticmethod
     def check(name):
@@ -59,15 +60,20 @@ class BlogType(models.Model):
         """Return self name"""
         return(self.name)
 
+    class Meta:
+        verbose_name = _("Blog type")
+        verbose_name_plural = _("Blogs types")
+
+
 class Blog(models.Model):
     """Blog entrys"""
-    name = models.CharField(max_length=30)
-    owner = models.ForeignKey(User)
-    description = models.TextField()
-    rate = models.IntegerField(default=0)
-    rate_count = models.IntegerField(default=0)
-    type = models.ForeignKey(BlogType)
-    default = models.BooleanField(default=False)
+    name = models.CharField(max_length=30, verbose_name=_('Blog name'))
+    owner = models.ForeignKey(User, verbose_name=_('Owner of blog'))
+    description = models.TextField(verbose_name=_('Blog description'))
+    rate = models.IntegerField(default=0, verbose_name=_('Blog rate'))
+    rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
+    type = models.ForeignKey(BlogType, verbose_name=_('Blog type'))
+    default = models.BooleanField(default=False, verbose_name=_('Does not need join?'))
 
     
     def getUsers(self):
@@ -139,13 +145,22 @@ class Blog(models.Model):
         """Return blog name"""
         return self.name
 
+    class Meta:
+        verbose_name = _("Blog")
+        verbose_name_plural = _("Blogs")
+
+
 class City(models.Model):
-    """All of citys"""
-    name = models.CharField(max_length=60)
+    """All of cities"""
+    name = models.CharField(max_length=60, verbose_name=_('Name of city'))
 
     def __unicode__(self):
         """Return name"""
         return self.name
+
+    class Meta:
+        verbose_name = _("City")
+        verbose_name_plural = _("Cities")
 
     
 class Post(models.Model):
@@ -159,17 +174,17 @@ class Post(models.Model):
                  (4, 'Multiple Answer')
                  )
 
-    author = models.ForeignKey(User)
-    date = models.DateTimeField(auto_now=True, editable=False)
-    blog = models.ForeignKey(Blog, blank=True, null=True)
-    title = models.CharField(max_length=300)
-    preview = models.TextField(blank=True)
-    text = models.TextField(blank=True)
-    rate = models.IntegerField(default=0)
-    rate_count = models.IntegerField(default=0)
-    type = models.IntegerField(choices=POST_TYPE, default=0)
-    adittion = models.CharField(max_length=300, blank=True)
-    tags = TagField()
+    author = models.ForeignKey(User, verbose_name=_('Author'))
+    date = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('Date'))
+    blog = models.ForeignKey(Blog, blank=True, null=True, verbose_name=_('Blog'))
+    title = models.CharField(max_length=300, verbose_name=_('Post title'))
+    preview = models.TextField(blank=True, verbose_name=_('Preview text'))
+    text = models.TextField(blank=True, verbose_name=_('Main text'))
+    rate = models.IntegerField(default=0, verbose_name=_('Post rate'))
+    rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
+    type = models.IntegerField(choices=POST_TYPE, default=0, verbose_name=_('Type of post'))
+    adittion = models.CharField(max_length=300, blank=True, verbose_name=_('Adittion field'))
+    tags = TagField(verbose_name=_('Tags'))
 
     class Meta:
         ordering = ('-id', )
@@ -294,18 +309,22 @@ class Post(models.Model):
     def __unicode__(self):
         """Return post title"""
         return(self.title)
+
+    class Meta:
+        verbose_name = _("Post")
+        verbose_name_plural = _("Posts")
  
     
 class Comment(NS_Node):
     """Comments table"""
-    post = models.ForeignKey(Post)
-    author = models.ForeignKey(User, null=True, blank=True)
-    text = models.TextField(blank=True)
-    rate = models.IntegerField(default=0)
-    rate_count = models.IntegerField(default=0)
+    post = models.ForeignKey(Post, verbose_name=_('Post'))
+    author = models.ForeignKey(User, null=True, blank=True, verbose_name=_('Author'))
+    text = models.TextField(blank=True, verbose_name=_('Text'))
+    rate = models.IntegerField(default=0, verbose_name=_('Comment rate'))
+    rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
     
     # Exception Value: Cannot use None as a query value
-    created = models.DateTimeField(editable=False)
+    created = models.DateTimeField(editable=False, verbose_name=_('Creation date'))
     
     
     node_order_by = ['created']
@@ -354,6 +373,10 @@ class Comment(NS_Node):
             user.save()
             return(True)
 
+    class Meta:
+        verbose_name = _("Comment")
+        verbose_name_plural = _("Comments")
+
 
 class UserInBlog(models.Model):
     """Compared list of users and blogs"""
@@ -366,6 +389,11 @@ class UserInBlog(models.Model):
     def getId(self):
         return self.blog.id
 
+    class Meta:
+        verbose_name = _("User in blog list")
+        verbose_name_plural = _("Users in blogs list")
+
+
 class BlogWithUser(UserInBlog):
     """Abstract class"""
     def __unicode__(self):
@@ -377,24 +405,24 @@ class BlogWithUser(UserInBlog):
 
 class Profile(models.Model):
     """User profile"""
-    user = models.ForeignKey(User, unique=True)
-    city = models.ForeignKey(City, blank=True, null=True)
-    icq = models.CharField(max_length=10, blank=True)
-    jabber = models.CharField(max_length=60, blank=True)
-    site = models.URLField(blank=True)
-    rate = models.IntegerField(default=0)
-    rate_count = models.IntegerField(default=0)
-    posts_rate = models.IntegerField(default=0)
-    comments_rate = models.IntegerField(default=0)
-    blogs_rate = models.IntegerField(default=0)
-    timezone = TimeZoneField(default=TIME_ZONE)
-    avatar = models.ImageField(upload_to=file_upload_path, blank=True, null=True)
-    hide_mail = models.BooleanField(default=True)
-    reply_post = models.BooleanField(default=True)
-    reply_comment = models.BooleanField(default=True)
-    reply_pm = models.BooleanField(default=True)
-    about = models.TextField(blank=True)
-    other = models.TextField(blank=True)
+    user = models.ForeignKey(User, unique=True, verbose_name=_('User'))
+    city = models.ForeignKey(City, blank=True, null=True, verbose_name=_('City'))
+    icq = models.CharField(max_length=10, blank=True, verbose_name=_('Icq'))
+    jabber = models.CharField(max_length=60, blank=True, verbose_name=_('Jabber'))
+    site = models.URLField(blank=True, verbose_name=_('Web site'))
+    rate = models.IntegerField(default=0, verbose_name=_('Personal rate'))
+    rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
+    posts_rate = models.IntegerField(default=0, verbose_name=_('Rate earned by posts'))
+    comments_rate = models.IntegerField(default=0, verbose_name=_('Rate earned by comments'))
+    blogs_rate = models.IntegerField(default=0, verbose_name=_('Rate earned by blogs'))
+    timezone = TimeZoneField(default=TIME_ZONE, verbose_name=_('Timezone'))
+    avatar = models.ImageField(upload_to=file_upload_path, blank=True, null=True, verbose_name=_('User picture'))
+    hide_mail = models.BooleanField(default=True, verbose_name=_('Show email?'))
+    reply_post = models.BooleanField(default=True, verbose_name=_('Send notify about reply to post?'))
+    reply_comment = models.BooleanField(default=True, verbose_name=_('Send notify about reply to comment?'))
+    reply_pm = models.BooleanField(default=True, verbose_name=_('Send notify about PM?'))
+    about = models.TextField(blank=True, verbose_name=_('About'))
+    other = models.TextField(blank=True, verbose_name=_('Field for adittion'))
     
     def getPosts(self):
         """Get posts by user"""
@@ -464,19 +492,28 @@ class Profile(models.Model):
 
     def __unicode__(self):
         """Return username"""
-        return self.user.username;
+        return self.user.username
+
+    class Meta:
+        verbose_name = _("User profile")
+        verbose_name_plural = _("User profiles")
+
 
 class Friends(models.Model):
     """Friends table"""
-    friend = models.ForeignKey(User)
-    user = models.ForeignKey(Profile)
+    friend = models.ForeignKey(User, verbose_name=_('Friend'))
+    user = models.ForeignKey(Profile, verbose_name=_('User'))
+
+    class Meta:
+        verbose_name = _("Friend")
+        verbose_name_plural = _("Friends")
 
 
 class Answer(models.Model):
     """Answers class"""
-    post = models.ForeignKey(Post)
-    count = models.IntegerField(default=0)
-    value = models.TextField()
+    post = models.ForeignKey(Post, verbose_name=_('Post'))
+    count = models.IntegerField(default=0, verbose_name=_('Count of choose'))
+    value = models.TextField(verbose_name=_('Answer variant'))
     
     def fix(self, user):
         """Fixate votes and block next vote
@@ -543,47 +580,86 @@ class Answer(models.Model):
     def __unicode__(self):
         """Return value"""
         return(self.value)
+
+    class Meta:
+        verbose_name = _("Answer variant")
+        verbose_name_plural = _("Answers variants")
+
 	    
 class AnswerVote(models.Model):
     """Votes for answer"""
-    answer = models.ForeignKey(Post)
-    user = models.ForeignKey(User)
+    answer = models.ForeignKey(Post, verbose_name=_('Answer'))
+    user = models.ForeignKey(User, verbose_name=_('User'))
+
+    class Meta:
+        verbose_name = _("Vote to answer log")
+        verbose_name_plural = _("Answers votes log")
     
 class Favourite(models.Model):
     """Favourite posts table"""
-    post = models.ForeignKey(Post)
-    user = models.ForeignKey(User)
+    post = models.ForeignKey(Post, verbose_name=_('Post'))
+    user = models.ForeignKey(User, verbose_name=_('User'))
+
+    class Meta:
+        verbose_name = _("Favourite post")
+        verbose_name_plural = _("Favourite posts")
+
 
 class Spy(models.Model):
     """Spyed posts table"""
-    post = models.ForeignKey(Post)
-    user = models.ForeignKey(User)
+    post = models.ForeignKey(Post, verbose_name=_('Post'))
+    user = models.ForeignKey(User, verbose_name=_('User'))
+
+    class Meta:
+        verbose_name = _("Post spying")
+        verbose_name_plural = _("Post spyings")
+
 
 class PostRate(models.Model):
     """Post rates"""
-    post = models.ForeignKey(Post)
-    user = models.ForeignKey(User)
+    post = models.ForeignKey(Post, verbose_name=_('Post'))
+    user = models.ForeignKey(User, verbose_name=_('User'))
+
+    class Meta:
+        verbose_name = _("Post rate log")
+        verbose_name_plural = _("Post rates log")
+
     
 class CommentRate(models.Model):
     """Comment rates"""
-    comment = models.ForeignKey(Comment)
-    user = models.ForeignKey(User)
-    
+    comment = models.ForeignKey(Comment, verbose_name=_('Comment'))
+    user = models.ForeignKey(User, verbose_name=_('User'))
+
+    class Meta:
+        verbose_name = _("Comment rate log")
+        verbose_name_plural = _("Comment rates log")
+
+
 class BlogRate(models.Model):
     """Blog rates"""
-    blog = models.ForeignKey(Blog)
-    user = models.ForeignKey(User)
-    
+    blog = models.ForeignKey(Blog, verbose_name=_('Blog'))
+    user = models.ForeignKey(User, verbose_name=_('User'))
+
+    class Meta:
+        verbose_name = _("Blog rate log")
+        verbose_name_plural = _("Blog rates log")
+
+
 class UserRate(models.Model):
     """User rates"""
-    profile = models.ForeignKey(Profile)#voted
-    user = models.ForeignKey(User)#who vote
+    profile = models.ForeignKey(Profile, verbose_name=_('Profile'))#voted
+    user = models.ForeignKey(User, verbose_name=_('User'))#who vote
+
+    class Meta:
+        verbose_name = _("User rate log")
+        verbose_name_plural = _("User rates log")
+
 
 class Notify(models.Model):
     """Class contain notifys for 'lenta'"""
-    user = models.ForeignKey(User)
-    post = models.ForeignKey(Post, blank=True, null=True)
-    comment = models.ForeignKey(Comment, blank=True, null=True)
+    user = models.ForeignKey(User, verbose_name=_('User'))
+    post = models.ForeignKey(Post, verbose_name=_('Post'), blank=True, null=True)
+    comment = models.ForeignKey(Comment, verbose_name=_('Comment'), blank=True, null=True)
     
     @classmethod
     def newNotify(self, is_post, alien, user):
@@ -655,10 +731,36 @@ class Notify(models.Model):
             return('post')
         else:
             return('comment')
-    
+
     def __unicode__(self):
         """Return notify description"""
         if self.post != None:
             return("post %s -- %s" % (self.post, self.user))
         else:
             return("comment %s -- %s" % (self.comment, self.user))
+
+    class Meta:
+        verbose_name = _("Notify")
+        verbose_name_plural = _("Notify messages")
+
+
+class TextPage(models.Model):
+    """Page contain a text"""
+    url = models.CharField(verbose_name=_('Page url'), max_length=30)
+    name = models.CharField(verbose_name=_('Page name'), max_length=30)
+    content = models.TextField(verbose_name=_('Content'), blank=True)
+
+    class Meta:
+        verbose_name = _("Page")
+        verbose_name_plural = _("Text pages")
+
+    def __unicode__(self):
+        """Get page content
+
+        Keyword arguments:
+        self -- TextPage
+
+        Returns: String
+
+        """
+        return(self.name)

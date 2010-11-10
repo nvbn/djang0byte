@@ -5,6 +5,27 @@ body {
     widht: 100%;
 }
 
+.title {
+    overflow: hidden;
+    widht: 100%;
+    height: 20px;
+}
+
+.title a {
+    float: right;
+    color: #686868 !important;
+}
+
+h2 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.title span {
+    float: left;
+}
+
 #logo {
     margin: 20px;
 }
@@ -73,6 +94,7 @@ a, a:hover, a:active {
 #content {
     float: left;
     widht: 80%;
+    padding: 20px;
 }
 
 #sidebar {
