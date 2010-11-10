@@ -61,6 +61,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
     "grappelli.context_processors.admin_template_path",
+    'messages.context_processors.inbox',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -99,6 +100,7 @@ INSTALLED_APPS = (
     'annoying',
     'simplepagination',
     'djang0byte.parser',
+    'messages',
     
 )
 AUTH_PROFILE_MODULE = "main.profile"

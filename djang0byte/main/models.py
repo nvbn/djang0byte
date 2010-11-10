@@ -402,14 +402,6 @@ class Profile(models.Model):
     def getFriends(self):
         """Get user friends"""
         return Friends.objects.select_related('friend').filter(user=self)
-        
-    def getSendedMessages(self):
-        """Get messages sended by user"""
-        return Messages.objects.filter(sender=self.id)
-        
-    def getRecievedMessages(self):
-        """Get messages recieved by user"""
-        return Messages.objects.filter(recivier=self)
 
     def getBlogs(self):
         """Get blogs contain it"""
@@ -445,20 +437,7 @@ class Friends(models.Model):
     friend = models.ForeignKey(User)
     user = models.ForeignKey(Profile)
 
-class Messages(models.Model):
-    """PM's"""
-    sender = models.IntegerField()
-    recivier = models.ForeignKey(User)
-    title = models.CharField(max_length=300)
-    text = models.TextField()
-    deleted = models.IntegerField(null=True)
-    
-    def remove(self):
-        """Remove message"""
-        self.deleted += 1
-        if self.deleted == 2:
-            self.delete()
-            
+
 class Answer(models.Model):
     """Answers class"""
     post = models.ForeignKey(Post)
