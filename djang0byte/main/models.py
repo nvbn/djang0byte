@@ -24,7 +24,8 @@ import tagging
 from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
-from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, RATECOM_RATE, RATEUSER_RATE
+from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE
+from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
 from utils import file_upload_path, Access
 from parser import utils
 import parser.utils
@@ -407,7 +408,7 @@ class Profile(models.Model):
         """Get blogs contain it"""
         return UserInBlog.objects.select_related('blog').filter(user=self.user)
         
-    def rate(self, user, value):
+    def rateUser(self, user, value):
         """Rate user
         
         Keyword arguments:
@@ -427,6 +428,12 @@ class Profile(models.Model):
             return(True)
         else:
             return(False)
+
+    def getRate(self):
+        """Get user rate"""
+        return(self.rate + self.posts_rate * POST_RATE_COEFFICIENT
+               + self.blogs_rate * BLOG_RATE_COEFFICIENT
+               + self.comments_rate * COMMENT_RATE_COEFFICIENT)
 
     def checkAccess(self, type):
         """Check user access

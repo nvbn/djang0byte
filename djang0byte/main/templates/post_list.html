@@ -8,9 +8,9 @@ Post list
 <a href="/blog/{{ post.blog.id }}/">{{ post.blog }}</a>
 {% else %}
 <a href="/user/{{ post.author }}/">{{ post.author }}</a>
-{% endif %} -- {{ post.title }}</h2>
+{% endif %} — {{ post.title }}</h2>
 {{ post.getContent  }}
-<br /><a href="/post/{{ post.id }}/">Полностью</a>{{ post.type }}
+<br /><a href="/post/{{ post.id }}/">Show full.</a>{{ post.type }}
 {% endfor %}
 <div>
     {% include "paginator_digg.html" %}
