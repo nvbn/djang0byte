@@ -21,6 +21,9 @@ from pygments.lexers import get_lexer_by_name, PhpLexer
 from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
 from BeautifulSoup import BeautifulSoup
+from django import template
+
+register = template.Library()
 
 @register.filter
 def highlight_template(value):
@@ -32,8 +35,5 @@ def highlight_template(value):
     except ClassNotFound:
       lexer = get_lexer_by_name('text')
     formatter = HtmlFormatter(encoding='utf-8', style='colorful', linenos='table', cssclass='highlight', lineanchors="line")
-    code = highlight(code, lexer, formatter)  
+    code.replaceWith(highlight(code.contents[0], lexer, formatter))
   return soup.renderContents().decode('utf8')
-
-print highlight_template('''asdasdsad<code lang="bash">ls
-rm -rf/''')

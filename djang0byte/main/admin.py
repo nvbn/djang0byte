@@ -17,11 +17,12 @@
 
 
 from django.contrib import admin
-from main.models import Post, Blog, Profile, Comment, Answer, AnswerVote, UserInBlog, Notify
+from main.models import Post, Blog, Profile, Comment, Answer, AnswerVote, UserInBlog, Notify, BlogType
 
 
 admin.site.register(Post)
 admin.site.register(Blog)
+admin.site.register(BlogType)
 admin.site.register(Profile)
 admin.site.register(Comment)
 admin.site.register(Answer)

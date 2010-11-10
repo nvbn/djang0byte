@@ -23,6 +23,7 @@ from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from main.models import *
+from settings import DEFAULT_BLOG_TYPE
 
 @login_required
 def newblog(request):
@@ -37,6 +38,7 @@ def newblog(request):
             blog.owner = request.user
             blog.rate = 0
             blog.rate_count = 0
+            blog.type = BlogType.objects.get(name=DEFAULT_BLOG_TYPE)
             blog.save()
             owner = UserInBlog()
             owner.blog = blog

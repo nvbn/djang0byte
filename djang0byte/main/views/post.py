@@ -29,6 +29,8 @@ from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
 
+
+
 @transaction.commit_on_success
 @login_required
 def newpost(request, type = 'post'):
@@ -36,49 +38,55 @@ def newpost(request, type = 'post'):
     profile = request.user.get_profile()
     if type == 'post':
       if request.method == 'POST':
-	  form = CreatePostForm(request.POST)
-	  if form.is_valid():
-	      data = form.cleaned_data
-	      post = Post()
-	      post.author = request.user
-	      post.setBlog(request.POST.get('blog'))
-	      post.title = data['title']
-	      post.text = data['text']
-	      post.owner = request.user
-	      post.type = 0#'Post'
-	      post.save()
-	      post.setTags(data['tags'])
-	      post.createCommentRoot()
-	      Notify.newPostNotify(post)
-	      #comment_root = Comment.add_root(post=post, created=datetime.datetime.now())
-	      #comment_root.save()
-	      return HttpResponseRedirect('/post/%d/' % (post.id))
+          form = CreatePostForm(request.POST)
+          if form.is_valid():
+              data = form.cleaned_data
+              post = Post()
+              post.author = request.user
+              post.setBlog(request.POST.get('blog'))
+              post.title = data['title']
+              post.text = data['text']
+              post.owner = request.user
+              post.type = 0#'Post'
+              post.save()
+              post.setTags(data['tags'])
+              post.createCommentRoot()
+              Notify.newPostNotify(post)
+              #comment_root = Comment.add_root(post=post, created=datetime.datetime.now())
+              #comment_root.save()
+              return HttpResponseRedirect('/post/%d/' % (post.id))
       else:
-          form = CreatePostForm()
-      return render_to_response('newpost.html', {'form': form, 'blogs': profile.getBlogs()})
+           form = CreatePostForm()
+           blogs = [uib.blog for uib in profile.getBlogs()]
+           blogs += Blog.objects.filter(default=True)
+           d = {}
+           for x in blogs:
+                d[x]=x
+           blogs = d.values()
+           return render_to_response('newpost.html', {'form': form, 'blogs': blogs})
     else:
       if request.method == 'POST':
         post = Post()
         post.title = request.POST.get('title')
         post.author = request.user
         post.setBlog(request.POST.get('blog'))
-	if request.POST.get('multi', 0):
-	  post.type = 4#'Multiple Answer'
-	else:
-	  post.type = 3#post.type = 'Answer'
-	post.save()
-	post.setTags(request.POST.get('tags'))
-	post.createCommentRoot()
-	for answer_item in range(int(request.POST.get('count'))):
-	  answer = Answer()
-	  answer.value = request.POST.get(str(answer_item))
-	  answer.post = post
-	  answer.save()
-	return HttpResponseRedirect('/post/%d/' % (post.id))
+        if request.POST.get('multi', 0):
+          post.type = 4#'Multiple Answer'
+        else:
+          post.type = 3#post.type = 'Answer'
+        post.save()
+        post.setTags(request.POST.get('tags'))
+        post.createCommentRoot()
+        for answer_item in range(int(request.POST.get('count'))):
+          answer = Answer()
+          answer.value = request.POST.get(str(answer_item))
+          answer.post = post
+          answer.save()
+        return HttpResponseRedirect('/post/%d/' % (post.id))
       multi = False
       count = 2
       return render_to_response('newanswer.html', {'answers_count': range(count),
-	'count': count, 'blogs': profile.getBlogs(), 'multi': multi})
+    'count': count, 'blogs': profile.getBlogs(), 'multi': multi})
 
 @cache_page(0)  
 def post(request, id):
@@ -111,11 +119,14 @@ def post_list(request, type = None, param = None):
     """Print post list"""
     posts = None
     if type == None:
-        posts = Post.objects.all()
+        blog_types = BlogType.objects.filter(display_default=False)
+        blogs = Blog.objects.filter(type__in=blog_types)
+        posts = Post.objects.exclude(blog__in=blogs)
+    elif BlogType.check(type):
+        posts = Post.objects.filter(blog__in=BlogType.objects.get(name=type).getBlogs())
+        print BlogType.objects.get(name=type).getBlogs()
     elif type == 'pers':
         posts = Post.objects.filter(blog=None)
-    elif type == 'main':
-		posts = Post.objects.exclude(blog=None)
     elif type == 'blog':
         blog = Blog.objects.get(id=param)
         posts = blog.getPosts()
@@ -158,8 +169,8 @@ def new_comment(request, post = 0, comment = 0):
     else:
         form = CreateCommentForm({'post': post, 'comment': comment})
     return render_to_response('new_comment.html', {'form': form})
-        
-	    
+
+
 @login_required
 def action(request, type, id, action = None):
     """Add or remove from favourite and spy, rate"""
@@ -167,7 +178,7 @@ def action(request, type, id, action = None):
         blog = Blog.objects.get(id=id)
         blog.addOrRemoveUser(request.user)       
         return HttpResponseRedirect('/blog/%d/' % (int(id)))
-        
+
     post = Post.objects.get(id=id)
     if type == 'favourite':
         try:
@@ -200,7 +211,7 @@ def action(request, type, id, action = None):
                 if request.POST.get('answ_' + str(answer.id), 0):
                     answer.vote(request.user, True)
             answer.fix(request.user)
-        
+
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 
 @login_required
@@ -209,4 +220,4 @@ def action(request, type, id, action = None):
 def lenta(request):
     notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user)
     return {'object_list': notifs}
-    
+

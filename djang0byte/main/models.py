@@ -24,9 +24,39 @@ import tagging
 from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
-from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS
+from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, DEFAULT_BLOG_TYPE
 from utils import file_upload_path
+from parser import utils
 import parser.utils
+
+class BlogType(models.Model):
+    """Types of blog"""
+    name = models.CharField(max_length=30)
+    display_default = models.BooleanField(default=True)
+
+    @staticmethod
+    def check(name):
+        """Check for exist
+
+        Keyword arguments:
+        name -- String
+
+        Returns: Boolean
+
+        """
+        try:
+            bt = BlogType.objects.get(name=name)
+            return(True)
+        except BlogType.DoesNotExist:
+            return(False)
+
+    def getBlogs(self):
+        """Return blogs in type"""
+        return(Blog.objects.filter(type=self))
+
+    def __unicode__(self):
+        """Return self name"""
+        return(self.name)
 
 class Blog(models.Model):
     """Blog entrys"""
@@ -35,6 +65,9 @@ class Blog(models.Model):
     description = models.TextField()
     rate = models.IntegerField(default=0)
     rate_count = models.IntegerField(default=0)
+    type = models.ForeignKey(BlogType)
+    default = models.BooleanField(default=False)
+
     
     def getUsers(self):
         """Get users in this blog"""
@@ -129,8 +162,8 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now=True, editable=False)
     blog = models.ForeignKey(Blog, blank=True, null=True)
     title = models.CharField(max_length=300)
-    preview = models.CharField(blank=True)
-    text = models.CharField(blank=True)
+    preview = models.TextField(blank=True)
+    text = models.TextField(blank=True)
     rate = models.IntegerField(default=0)
     rate_count = models.IntegerField(default=0)
     type = models.IntegerField(choices=POST_TYPE, default=0)
@@ -154,13 +187,17 @@ class Post(models.Model):
         Keyword arguments:
         blog -- Blog
         
-        Returns: None
+        Returns: Blog
         
         """
         if int(blog) == 0:
             self.blog = None
         else:
             self.blog = Blog.objects.get(id=blog)
+            if self.blog.default or not self.blog.checkUser(self.author):
+                 self.blog = None
+
+        return(self.blog)
 	  
     def createCommentRoot(self):
         """Create comment root for post"""
@@ -262,7 +299,7 @@ class Comment(NS_Node):
     """Comments table"""
     post = models.ForeignKey(Post)
     author = models.ForeignKey(User, null=True, blank=True)
-    text = models.CharField(blank=True)
+    text = models.TextField(blank=True)
     rate = models.IntegerField(default=0)
     rate_count = models.IntegerField(default=0)
     
@@ -350,7 +387,7 @@ class Profile(models.Model):
     comments_rate = models.IntegerField(default=0)
     blogs_rate = models.IntegerField(default=0)
     timezone = TimeZoneField(default=TIME_ZONE)
-    avatar = models.ImageField(upload_to=file_upload_path)
+    avatar = models.ImageField(upload_to=file_upload_path, blank=True, null=True)
     hide_mail = models.BooleanField(default=True)
     reply_post = models.BooleanField(default=True)
     reply_comment = models.BooleanField(default=True)
@@ -376,7 +413,7 @@ class Profile(models.Model):
 
     def getBlogs(self):
         """Get blogs contain it"""
-        return UserInBlog.objects.filter(user=self.user)
+        return UserInBlog.objects.select_related('blog').filter(user=self.user)
         
     def rate(self, user, value):
         """Rate user

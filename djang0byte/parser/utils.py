@@ -14,10 +14,10 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
+from BeautifulSoup import BeautifulSoup
 
-
-def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img',
-    valid_attrs = 'href src'):
+def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code',
+    valid_attrs = 'href src lang'):
     """Cleans non-allowed HTML from the input.
     
     Keyword arguments:
@@ -49,10 +49,10 @@ def cut(text):
         
     """
     cutted = text.split('[cut]')
-    if cutted.count() == 2:
+    if len(cutted) == 2:
         return cutted[0], text
     cutted = text.split('[fcut]')
-    if cutted.count() == 2:
+    if len(cutted) == 2:
         return cutted[0], '[fcut]' + cutted[1]
     else:
         return text, text
