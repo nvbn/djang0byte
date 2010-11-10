@@ -24,8 +24,8 @@ import tagging
 from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
-from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, DEFAULT_BLOG_TYPE
-from utils import file_upload_path
+from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, RATECOM_RATE, RATEUSER_RATE
+from utils import file_upload_path, Access
 from parser import utils
 import parser.utils
 
@@ -328,7 +328,7 @@ class Comment(NS_Node):
     class Meta:
         ordering = ['id']
         
-    def rate(self, user, value):
+    def rateComment(self, user, value):
         """Rate Comment
         
         Keyword arguments:
@@ -424,6 +424,33 @@ class Profile(models.Model):
             rate.profile = self
             rate.user = user
             rate.save()
+            return(True)
+        else:
+            return(False)
+
+    def checkAccess(self, type):
+        """Check user access
+
+        Keyword arguments:
+        type -- Access:
+
+        Returns: Boolean
+
+        """
+        rate = self.getRate()
+        if type == Access.newBlog and rate >= NEWBLOG_RATE:
+            return(True)
+        elif type == Access.newComment and rate >= NEWCOMMENT_RATE:
+            return(True)
+        elif type == Access.newPost and rate >= NEWPOST_RATE:
+            return(True)
+        elif type == Access.rateComment and rate >= RATECOM_RATE:
+            return(True)
+        elif type == Access.rateBlog and rate >= RATEBLOG_RATE:
+            return(True)
+        elif type == Access.ratePost and rate >= RATEPOST_RATE:
+            return(True)
+        elif type == Access.rateUser and rate >= RATEUSER_RATE:
             return(True)
         else:
             return(False)

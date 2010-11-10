@@ -30,3 +30,12 @@ def file_upload_path(instance, filename):
     str = "%s.%s" % (slugify(translify(parts[0])), slugify(translify(parts[1])))
     return "%s/%s/%s/%s" % (strftime('%Y'), 
        strftime('%m'), strftime('%d'), str)
+
+class Access:
+    newPost = 0
+    newBlog = 1
+    newComment = 2
+    ratePost = 3
+    rateComment = 4
+    rateUser = 5
+    rateBlog = 6

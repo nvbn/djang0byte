@@ -28,6 +28,7 @@ from django.views.decorators.cache import cache_page
 from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
+from main.utils import Access
 
 
 
@@ -173,10 +174,26 @@ def new_comment(request, post = 0, comment = 0):
 @login_required
 def action(request, type, id, action = None):
     """Add or remove from favourite and spy, rate"""
+    profile = Profile.objects.get(user=request.user)
     if type == 'inblog':
         blog = Blog.objects.get(id=id)
         blog.addOrRemoveUser(request.user)       
         return HttpResponseRedirect('/blog/%d/' % (int(id)))
+    elif type == 'ratecom' and request.user != post.author and profile.checkAccess(Access.rateComment):
+        comment = Comment.objects.select_related('post').get(id=id)
+        if action == '1':
+          comment.rateComment(request.user, +1)
+        elif action == '0':
+          comment.rateComment(request.user, -1)
+        return HttpResponseRedirect('/post/%d/#cmnt%d' % (comment.post.id, int(id)))
+    elif type == 'rateblog' and request.user != post.author and profile.checkAccess(Access.rateBlog):
+        blog = Blog.objects.get(id=id)
+        if action == '1':
+          blog.rateBlog(request.user, +1)
+        elif action == '0':
+          blog.rateBlog(request.user, -1)
+        return HttpResponseRedirect('/blog/%d/' % (int(id)))
+
 
     post = Post.objects.get(id=id)
     if type == 'favourite':
@@ -196,7 +213,7 @@ def action(request, type, id, action = None):
             spy.post = post
             spy.user = request.user
             spy.save()
-    elif type == 'rate' and request.user != post.author:
+    elif type == 'ratepost' and request.user != post.author and profile.checkAccess(Access.ratePost):
         if action == '1':
           post.ratePost(request.user, +1)
         elif action == '0':
