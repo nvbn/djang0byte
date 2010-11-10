@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+{% block title %}
+list
+{% endblock %}
+{% block content %}
 <form action='/newpost/answer/' method='post'>
 <select name="blog">
 	<option value="0">Персональный</option>
@@ -15,3 +20,4 @@
 <input type='hidden' name='count' value='{{ count }}' />
 <input type='submit'>
 </form>
+{% endblock %}

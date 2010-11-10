@@ -22,25 +22,42 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from main.models import *
+from django.views.decorators.cache import cache_page
+from simplepagination import paginate
+from annoying.decorators import render_to
+from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
 
-def users(request, frm = 0, order = None, param = None, param_value = None):
+@cache_page(0)
+@render_to('list.html')
+@paginate(style='digg', per_page=100)
+def list_users(request, order = None, param = None, param_value = None):
     """Users list with params"""
-    if order == 'rate':
-        order_query = '(rate+blogs_rate*%d+posts_rate*%d+comments_rate*%d)' % (0.5, 0.3, 0.1)
-    elif order == 'rate_desc':
-        order_query = '-(rate+blogs_rate*%d+posts_rate*%d+comments_rate*%d)' % (0.5, 0.3, 0.1)
-    elif order == 'name_desc':
-        order_query = '-user_name'
-    else:
-        order_query = 'user_name'
     if param == 'city':
-        pass
-       # users = Profile.objects.filter(city.name=param_value).order_by(order_query)[frm:][:100]
+        items = Profile.objects.select_related('user').filter(city=City.objects.get(name=param_value))
     else:
-        users = Profile.objects.order_by(order_query)[frm:][:100]
-    return render_to_response('list.html', {'items': users, 'type': 'users', 'param': param, 'param_value': param_value, 'order': order})
+        items = Profile.objects.select_related('user')
 
-def blogs(request, frm = 0, order = None, param = None, param_value = None):
+    if order == 'rate':
+        items = items.extra(select={'fullrate':
+            'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
+            % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
+            order_by=['-fullrate',])
+    elif order == 'rate_desc':
+         items = items.extra(select={'fullrate':
+            'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
+            % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
+            order_by=['fullrate',])
+    elif order == 'name_desc':
+        items = items.order_by('-user')
+    else:
+        items = items.order_by('user')
+
+    return({'object_list': items, 'type': 'users', 'param': param, 'param_value': param_value, 'order': order})
+
+@cache_page(0)
+@render_to('list.html')
+@paginate(style='digg', per_page=100)
+def list_blogs(request, order = None, param = None, param_value = None):
     """Blogs list with params"""
     if order == 'rate':
         order_query = 'rate'
@@ -50,15 +67,22 @@ def blogs(request, frm = 0, order = None, param = None, param_value = None):
         order_query = '-name'
     else:
         order_query = 'name'
-    blogs = Blog.objects.order_by(order_query)[frm:][:100]
-    return render_to_response('list.html', {'items': blogs, 'type': 'blogs', 'param': param, 'param_value': param_value, 'order': order})
-    
-def cities(request, frm, order = None):
+    blogs = Blog.objects.order_by(order_query)
+    if param == 'my':
+        blogs = blogs.filter(owner=request.user)
+    return({'object_list': blogs, 'type': 'blogs', 'param': param, 'param_value': param_value, 'order': order})
+
+@cache_page(0)
+@render_to('list.html')
+@paginate(style='digg', per_page=100)
+def list_city(request, order = None):
     """City list"""
     if order == 'name_desc':
         order_query = '-name'
     else:
         order_query = 'name'
-    cities = City.objects.order_by(order_query)[frm:][:100]
-    return render_to_response('list.html', {'items': cities, 'type': 'cities', 'param': None, 'param_value': None, 'order': order})
+    cities = City.objects.order_by(order_query)
+    return({'object_list': cities, 'type': 'cities', 'param': None, 'param_value': None, 'order': order})
     
+def myblogs(request, order = None):
+    return(list_blogs(request, order, 'my'))

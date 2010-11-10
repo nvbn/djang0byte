@@ -1,0 +1,17 @@
+<div class="title">
+{% if post.blog %}
+    <a href="/user/{{ post.author }}/">{{ post.author }}</a>
+{% endif %}
+<span>{{ post.date }}</span>
+</div>
+<h2>{% if post.blog %}
+<a href="/blog/{{ post.blog.id }}/">{{ post.blog }}</a>
+{% else %}
+<a href="/user/{{ post.author }}/">{{ post.author }}</a>
+{% endif %}
+ — <a href="/post/{{ post.id }}/">{{ post.title }}</a></h2>
+{% if is_answer %}
+{% include 'answer.html' %}
+{% else %}
+{{ post.getContent }}
+{% endif %}

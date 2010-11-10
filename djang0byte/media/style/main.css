@@ -35,7 +35,7 @@ a, a:hover, a:active {
     text-decoration: none;
 }
 
-#menu ol li {
+.menu ol li {
     display: inline;
     padding: 5px;
     padding-right: 15px;
@@ -47,17 +47,17 @@ a, a:hover, a:active {
     vertical-align: middle;
 }
 
-#menu ol {
+.menu ol {
     float: left;
     padding: 0;
     margin: 0;
 }
 
-#menu ol li:first-child {
-    background: #d8dbde url('rgt.png') no-repeat right;
+.menu ol li:first-child {
+    background: #edeff0 url('rgt.png') no-repeat right;
 }
 
-#menu {
+.menu {
     margin-left: 0;
     margin-right: 0;
     padding-left: 0;
@@ -69,7 +69,7 @@ a, a:hover, a:active {
     background: url('sb.png') repeat-x bottom;
 }
 
-#menu #user_setting {
+.menu #user_setting {
     float: right;
     overflow: hidden;
     height: 25px;
@@ -148,4 +148,9 @@ li.post {
 }
 .tag_9 {
     font-size: 32px;
+}
+
+#bottom {
+    position: absolute;
+    bottom:0;
 }
