@@ -27,7 +27,14 @@ from settings import DEFAULT_BLOG_TYPE
 
 @login_required
 def newblog(request):
-    """Create blog form and action"""
+    """Create blog form and action
+
+    Keyword arguments:
+    request -- request object
+
+    Returns: HttpResponse
+
+    """
     if request.method == 'POST':
         form = CreateBlogForm(request.POST)
         if form.is_valid():
@@ -51,7 +58,15 @@ def newblog(request):
     
 @login_required
 def join(request, blog_id):
-    """Join or withdraw from the blog"""
+    """Join or withdraw from the blog
+
+    Keyword arguments:
+    request -- request object
+    blog_id -- Integer
+
+    Returns: HttpResponse
+
+    """
     blog = Blog.objects.get(id=blog_id)
     if blog.owner == request.user:
         pass

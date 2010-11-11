@@ -35,7 +35,15 @@ from main.utils import Access
 @transaction.commit_on_success
 @login_required
 def newpost(request, type = 'post'):
-    """Create post form and action"""
+    """Create post form and action
+
+    Keyword arguments:
+    request -- request object
+    type -- String
+
+    Returns: HttpResponse
+
+    """
     profile = request.user.get_profile()
     if type == 'post':
       if request.method == 'POST':
@@ -91,7 +99,15 @@ def newpost(request, type = 'post'):
 
 @cache_page(0)  
 def post(request, id):
-    """Print single post"""
+    """Print single post
+
+    Keyword arguments:
+    request -- request object
+    id -- Integer
+
+    Returns: HttpResponse
+
+    """
     post = Post.objects.get(id=id)
     author = post.author.get_profile()
     comments = post.getComment()
@@ -117,7 +133,16 @@ def post(request, id):
 @render_to('post_list.html')
 @paginate(style='digg', per_page=10)   
 def post_list(request, type = None, param = None):
-    """Print post list"""
+    """Print post list
+
+    Keyword arguments:
+    request -- request object
+    type -- String
+    param -- String
+
+    Returns: Array
+
+    """
     posts = None
     if type == None:
         blog_types = BlogType.objects.filter(display_default=False)
@@ -143,12 +168,30 @@ def post_list(request, type = None, param = None):
     return {'object_list': posts, 'single': False}
 
 def post_list_with_param(request, type, param = None):
-    """Wrapper for post_list"""
+    """Wrapper for post_list
+
+    Keyword arguments:
+    request -- request object
+    type -- String
+    param -- String
+
+    Returns: HttpResponse
+
+    """
     return post_list(request, type, param)
 
 @login_required
 def new_comment(request, post = 0, comment = 0):
-    """New comment form"""
+    """New comment form
+
+    Keyword arguments:
+    request -- request object
+    post -- Integer
+    comment -- Integer
+
+    Returns: HttpResponse
+
+    """
     if request.method == 'POST':
         form = CreateCommentForm(request.POST)
         if form.is_valid():
@@ -173,7 +216,17 @@ def new_comment(request, post = 0, comment = 0):
 
 @login_required
 def action(request, type, id, action = None):
-    """Add or remove from favourite and spy, rate"""
+    """Add or remove from favourite and spy, rate
+
+    Keyword arguments:
+    request -- request object
+    type -- String
+    id -- Integer
+    action -- String
+
+    Returns: Array
+
+    """
     profile = Profile.objects.get(user=request.user)
     if type == 'inblog':
         blog = Blog.objects.get(id=id)
@@ -234,6 +287,14 @@ def action(request, type, id, action = None):
 @render_to('lenta.html')
 @paginate(style='digg', per_page=10)   
 def lenta(request):
+    """Return last posts and comments, adresed to user
+
+    Keyword arguments:
+    request -- request object
+
+    Returns: Array
+
+    """
     notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user)
     return {'object_list': notifs}
 

@@ -31,7 +31,17 @@ from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_
 @render_to('list.html')
 @paginate(style='digg', per_page=100)
 def list_users(request, order = None, param = None, param_value = None):
-    """Users list with params"""
+    """Users list with params
+
+    Keyword arguments:
+    request -- request object
+    order -- String
+    param -- String
+    param_value -- String
+
+    Returns: Array
+
+    """
     if param == 'city':
         items = Profile.objects.select_related('user').filter(city=City.objects.get(name=param_value))
     else:
@@ -58,7 +68,17 @@ def list_users(request, order = None, param = None, param_value = None):
 @render_to('list.html')
 @paginate(style='digg', per_page=100)
 def list_blogs(request, order = None, param = None, param_value = None):
-    """Blogs list with params"""
+    """Blogs list with params
+
+    Keyword arguments:
+    request -- request object
+    order -- String
+    param -- Strign
+    param_value -- String
+
+    Returns: Array
+
+    """
     if order == 'rate':
         order_query = 'rate'
     elif order == 'rate_desc':
@@ -76,13 +96,31 @@ def list_blogs(request, order = None, param = None, param_value = None):
 @render_to('list.html')
 @paginate(style='digg', per_page=100)
 def list_city(request, order = None):
-    """City list"""
+    """City list
+
+    Keyword arguments:
+    request -- request object
+    order -- String
+
+    Returns: Array
+
+    """
     if order == 'name_desc':
         order_query = '-name'
     else:
         order_query = 'name'
     cities = City.objects.order_by(order_query)
     return({'object_list': cities, 'type': 'cities', 'param': None, 'param_value': None, 'order': order})
-    
+
+@login_required
 def myblogs(request, order = None):
+    """Return users blogs, wrap on list_blogs
+
+    Keyword arguments:
+    request -- request object
+    order -- String
+
+    Returns: Array
+
+    """
     return(list_blogs(request, order, 'my'))

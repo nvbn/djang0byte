@@ -25,7 +25,15 @@ from main.forms import RegisterForm
 from main.models import *
     
 def register(request, next = None):
-    """Register new user"""
+    """Register new user
+
+    Keyword arguments:
+    request -- request object
+    next -- String
+
+    Returns: HttpResponse
+
+        """
     if next == None:
         if request.GET.get('next') == None:
             next = '/'
@@ -49,20 +57,43 @@ def register(request, next = None):
     return render_to_response('register.html', {'form': form, 'next': next})
     
 def profile(request, name):
-    """View user profile"""
+    """View user profile
+
+    Keyword arguments:
+    request -- request object
+    name -- String
+
+    Returns: HttpResponse
+
+    """
     user = User.objects.filter(username=name)[0]
     profile = user.get_profile()
     return render_to_response('user.html', {'profile': profile, 'user': user})
     
 @login_required
 def myprofile(request):
-    """View your own profile"""
+    """View your own profile
+
+    Keyword arguments:
+    request -- request object
+
+    Returns: HttpResponse
+
+    """
     user = request.user
     profile = user.get_profile()
     return render_to_response('user.html', {'profile': profile, 'user': user})
     
 def login(request, next = None):
-    """Login user"""
+    """Login user
+
+    Keyword arguments:
+    request -- request object
+    next -- String
+
+    Returns: HttpResponse
+
+    """
     if next == None:
         if request.GET.get('next') == None:
             next = '/'
@@ -84,7 +115,15 @@ def login(request, next = None):
                               'next': next})
 @login_required
 def friend(request, name):
-    """Add or remove friends"""
+    """Add or remove friends
+
+    Keyword arguments:
+    request -- request object
+    name -- String
+
+    Returns: HttpResponse
+
+    """
     user = User.objects.get(name=name)
     try:
         friend = Friends.objects.get(user=request.user,friend=user.id)
@@ -96,7 +135,14 @@ def friend(request, name):
         friend.save()
     
 def logout(request):
-    """Getting out from here!"""
+    """Getting out from here!
+
+    Keyword arguments:
+    request -- request object
+
+    Returns: HttpResponse
+
+    """
     auth.logout(request)
     return HttpResponseRedirect("/")
-# Create your views here.
+
