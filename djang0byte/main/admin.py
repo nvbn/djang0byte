@@ -17,7 +17,7 @@
 
 
 from django.contrib import admin
-from main.models import Post, Blog, Profile, Comment, Answer, AnswerVote, UserInBlog, Notify, BlogType, TextPage
+from main.models import Post, Blog, Profile, Comment, Answer, AnswerVote, UserInBlog, Notify, BlogType, TextPage, MeOn, Statused
 
 
 admin.site.register(Post)
@@ -30,3 +30,5 @@ admin.site.register(AnswerVote)
 admin.site.register(UserInBlog)
 admin.site.register(Notify)
 admin.site.register(TextPage)
+admin.site.register(MeOn)
+admin.site.register(Statused)

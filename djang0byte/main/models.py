@@ -30,6 +30,7 @@ from utils import file_upload_path, Access
 from parser import utils
 from django.utils.translation import gettext as _
 import parser.utils
+from urlparse import urlparse
 
 class BlogType(models.Model):
     """Types of blog"""
@@ -272,7 +273,6 @@ class Post(models.Model):
             pr = PostRate.objects.get(post=self, user=user)
             return(False)
         except PostRate.DoesNotExist:
-            print value
             self.rate = self.rate + value
             self.rate_count = self.rate_count + 1
             self.save()
@@ -764,3 +764,55 @@ class TextPage(models.Model):
 
         """
         return(self.name)
+
+
+class MeOn(models.Model):
+    """User on other site record"""
+    url = models.URLField(verbose_name=_("Page url"))
+    title = models.CharField(verbose_name=_("Title"), max_length=30)
+    user = models.ForeignKey(User, verbose_name=_("User"))
+
+    def _is_statused(self):
+        """Match url for statused service"""
+        parsed = urlparse(self.url)
+        for name in Statused.SERVICE_TYPE:
+            if name[1] in parsed.netloc.split('.'):
+                return({'service': name[0], 'username': parsed.path.split('/')[1]})
+
+    def parse(self):
+        """Check type and save"""
+        type = self._is_statused()
+        if 'http' not in self.url:
+            self.url = 'http://' + self.url
+        if len(type) == 2:
+            service = Statused()
+            service.url = self.url
+            service.title = self.title
+            service.type = type['service']
+            service.name = type['username']
+            service.save()
+            return(True)
+        else:
+            return(False)
+
+    class Meta:
+        verbose_name = _("User on other site")
+        verbose_name_plural = _("Users on other sites")
+
+class Statused(MeOn):
+    """Service with status users"""
+
+    SERVICE_TYPE = (
+        (0, 'lastfm'),
+        (1, 'twitter'),
+        (2, 'juick')
+    )
+
+    show = models.BooleanField(default=True)
+    type = models.IntegerField(choices=SERVICE_TYPE, default=0, verbose_name=_('Name of service'))
+    name = models.CharField(max_length=30, verbose_name=_('User name in service'))
+
+    def get_status(self):
+        """Get status"""
+        pass
+

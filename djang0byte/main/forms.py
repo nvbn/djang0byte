@@ -17,6 +17,7 @@
 
 
 from django import forms
+from timezones.forms import LocalizedDateTimeField
 
 class RegisterForm(forms.Form):
     """Registration form"""
@@ -46,7 +47,17 @@ class CreateCommentForm(forms.Form):
     post = forms.IntegerField(widget=forms.HiddenInput)
     comment = forms.IntegerField(widget=forms.HiddenInput, required=False)
     
-class CreatePmForm(forms.Form):
-    to = forms.CharField()
-    title = forms.CharField()
-    text = forms.CharField(widget=forms.Textarea)
+class EditUserForm(forms.Form):
+    """Edit user settings form"""
+    mail = forms.EmailField()
+    show_mail = forms.BooleanField(required=False)
+    icq = forms.CharField(required=False)
+    jabber = forms.CharField(required=False)
+    city = forms.CharField(required=False)
+    timezone = LocalizedDateTimeField(required=False)
+    site = forms.URLField(required=False)
+    about = forms.CharField(widget=forms.Textarea)
+    notify_post_reply = forms.BooleanField()
+    notify_comment_reply = forms.BooleanField()
+    notify_pm = forms.BooleanField()
+    userpic = forms.ImageField()

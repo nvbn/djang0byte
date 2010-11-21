@@ -20,8 +20,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from main.forms import LoginForm
-from main.forms import RegisterForm
+from main.forms import LoginForm, RegisterForm, EditUserForm
 from main.models import *
     
 def register(request, next = None):
@@ -146,3 +145,18 @@ def logout(request):
     auth.logout(request)
     return HttpResponseRedirect("/")
 
+@login_required
+def edit_user(request):
+    if request.method == 'POST':
+        form = EditUserForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            return HttpResponseRedirect('/')
+    else:
+        form = EditUserForm()
+        profile = request.user.get_profile()
+        form.mail = request.user.email
+        form.about = profile.about
+        form.icq = profile.icq
+        form.timezone = profile.timezone
+    return render_to_response('edit_user.html', {'form': form,})
