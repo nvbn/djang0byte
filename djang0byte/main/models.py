@@ -155,6 +155,25 @@ class City(models.Model):
     """All of cities"""
     name = models.CharField(max_length=60, verbose_name=_('Name of city'))
 
+    @staticmethod
+    def get_city(name):
+        """Get city from name (create if it doesn't exis)
+
+        Keyword arguments:
+        name -- String
+
+        Returns: City
+
+        """
+        try:
+            self = City.objects.get(name=name)
+        except City.DoesNotExist:
+            self = City()
+            self.name = name
+            self.save()
+
+        return(self)
+
     def __unicode__(self):
         """Return name"""
         return self.name

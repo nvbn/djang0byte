@@ -22,6 +22,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from main.forms import LoginForm, RegisterForm, EditUserForm
 from main.models import *
+from django.db import transaction
     
 def register(request, next = None):
     """Register new user
@@ -146,17 +147,49 @@ def logout(request):
     return HttpResponseRedirect("/")
 
 @login_required
+@transaction.commit_on_success
 def edit_user(request):
+    """Edit user data form
+
+    Keyword arguments:
+    request -- request object
+
+    Returns: HttpResponse
+
+    """
     if request.method == 'POST':
         form = EditUserForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            return HttpResponseRedirect('/')
+            profile = request.user.get_profile()
+            request.user.email = data['mail']
+            profile.about = data['about']
+            profile.icq = data['icq']
+            profile.jabber = data['jabber']
+            #profile.timezone = data['timezone']
+            profile.city = City.get_city(data['city'])
+            profile.hide_mail = data['show_mail']
+            profile.reply_comment = data['notify_comment_reply']
+            profile.reply_pm = data['notify_pm']
+            profile.reply_post = data['notify_post_reply']
+            #profile.avatar = data['userpic']
+            profile.site= data['site']
+            profile.save()
+            request.user.save()
+            return HttpResponseRedirect('/user/')
     else:
-        form = EditUserForm()
         profile = request.user.get_profile()
-        form.mail = request.user.email
-        form.about = profile.about
-        form.icq = profile.icq
-        form.timezone = profile.timezone
+        data = {'mail': request.user.email,
+                'about': profile.about,
+                'icq': profile.icq,
+                'jabber': profile.jabber,
+                'timezone': profile.timezone,
+                'show_mail': profile.hide_mail,
+                'notify_comment_reply': profile.reply_comment,
+                'notify_post_reply': profile.reply_post,
+                'notify_pm': profile.reply_pm,
+                'city': profile.city,
+                'site': profile.site,
+        }
+        form = EditUserForm(data)
     return render_to_response('edit_user.html', {'form': form,})
