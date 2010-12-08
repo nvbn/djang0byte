@@ -16,13 +16,12 @@
 
 
 
-from djang0byte.main.forms import CreateCommentForm
 from django.db import transaction
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from main.forms import CreatePostForm, CreateCommentForm
+from main.forms import *
 from main.models import *
 from django.views.decorators.cache import cache_page
 from simplepagination import paginate
@@ -45,7 +44,8 @@ def newpost(request, type = 'post'):
 
     """
     profile = request.user.get_profile()
-    if type == 'post':
+    type = request.GET.get('type') or 'post'
+    if type != 'answer':
       if request.method == 'POST':
           form = CreatePostForm(request.POST)
           if form.is_valid():
@@ -65,14 +65,19 @@ def newpost(request, type = 'post'):
               #comment_root.save()
               return HttpResponseRedirect('/post/%d/' % (post.id))
       else:
-           form = CreatePostForm()
+           if type == 'post':
+             form = CreatePostForm()
+           elif type == 'link':
+             form = CreatePostLinkForm()
+           elif type == 'translate':
+             form = CreatePostTranslateForm()
            blogs = [uib.blog for uib in profile.getBlogs()]
            blogs += Blog.objects.filter(default=True)
            d = {}
            for x in blogs:
                 d[x]=x
            blogs = d.values()
-           return render_to_response('newpost.html', {'form': form, 'blogs': blogs})
+           return render_to_response('newpost.html', {'form': form, 'blogs': blogs, 'type': type})
     else:
       if request.method == 'POST':
         post = Post()
@@ -95,9 +100,9 @@ def newpost(request, type = 'post'):
       multi = False
       count = 2
       return render_to_response('newanswer.html', {'answers_count': range(count),
-    'count': count, 'blogs': profile.getBlogs(), 'multi': multi})
+      'count': count, 'blogs': profile.getBlogs(), 'multi': multi})
 
-@cache_page(0)  
+@cache_page(0)
 def post(request, id):
     """Print single post
 
@@ -124,14 +129,14 @@ def post(request, id):
         result = False
         answer= None
         post.getContent = post.getFullContent
-    return render_to_response('post.html', 
+    return render_to_response('post.html',
         {'post': post, 'author': author, 'comments': comments, 'comment_form': form,
         'is_answer': is_answer, 'result': result, 'answer': answer, 'single': True}
         )
 
-@cache_page(0)  
+@cache_page(0)
 @render_to('post_list.html')
-@paginate(style='digg', per_page=10)   
+@paginate(style='digg', per_page=10)
 def post_list(request, type = None, param = None):
     """Print post list
 
@@ -230,7 +235,7 @@ def action(request, type, id, action = None):
     profile = Profile.objects.get(user=request.user)
     if type == 'inblog':
         blog = Blog.objects.get(id=id)
-        blog.addOrRemoveUser(request.user)       
+        blog.addOrRemoveUser(request.user)
         return HttpResponseRedirect('/blog/%d/' % (int(id)))
     elif type == 'ratecom' and request.user != post.author and profile.checkAccess(Access.rateComment):
         comment = Comment.objects.select_related('post').get(id=id)
@@ -285,7 +290,7 @@ def action(request, type, id, action = None):
 
 @login_required
 @render_to('lenta.html')
-@paginate(style='digg', per_page=10)   
+@paginate(style='digg', per_page=10)
 def lenta(request):
     """Return last posts and comments, adresed to user
 

@@ -3,7 +3,35 @@
 {{ user.username }}
 {% endblock %}
 {% block content %}
-{{ user.username }}<br>
-{{ user.email }}<br>
-{{ profile.city }}<br>
+<img class="userpic_profile" src="{{ profile.getAvatar }}" alt="" />
+<h2>{{ user.username }} <span{% if profile.getRate > 0 %} class='plus_rate' {% endif %}{% if profile.getRate < 0 %} class='minus_rate' {% endif %}>{{ profile.getRate }}</span></h2>
+{% if profile.city %}<a href='/user/city/{{ profile.city }}/'><img src='/media/style/city.png' /> {{ profile.city }}</a>, {% endif %}
+<a href='/pm/new/{{ profile.city }}/'><img src='/media/style/envelope.gif' /> PM</a>
+{% if profile.hide_mail %}, <a href='mailto:{{ user.email }}'><img src='/media/style/mailing.gif' /> {{ user.email }}</a>{% endif %}
+{% if profile.icq %}, <img src='/media/style/icq.png' /> {{ profile.icq }}{% endif %}
+{% if profile.jabber %}, <a href='xmpp:{{ profile.jabber }}'><img src='/media/style/jabber.png' /> {{ profile.jabber }}</a>{% endif %}
+{% if profile.site %}, <a href='{{ profile.site }}'><img src='/media/style/world.gif' /> {{ profile.site }}</a>{% endif %}
+<br /><br />
+{% if profile.about %}
+About user:<br />
+{{ profile.about }}
+{% endif %}
+<br /><hr />
+{% if profile.getBlogs %}
+    Blogs: {% for blog in profile.getBlogs %}
+    <a href='/blog/{{ blog.id }}/'>{{ blog }}</a>
+    {% endfor %}
+{% endif %}
+{% if profile.getFriends %}
+    Blogs: {% for friend in profile.getFriends %}
+    <a href='/user/{{ friend }}/'>{{ friend }}</a>
+    {% endfor %}
+{% endif %}
+<br />
+Write {{ profile.postCount }} posts and {{ profile.commentCount }} comments.
+{% if mine %}
+    <br />
+    <hr />
+    <a href='/action/edit_user/'><img src="/media/style/edit.png" /> Edit profile</a> <a href='/action/edit_user/'><img src="/media/style/edit.png" /> Change userpic</a>  <a href='/action/change_password/'><img src="/media/style/edit.png" /> Change password</a>
+{% endif %}
 {%  endblock %}

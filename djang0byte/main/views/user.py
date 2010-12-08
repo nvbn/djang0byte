@@ -68,21 +68,8 @@ def profile(request, name):
     """
     user = User.objects.filter(username=name)[0]
     profile = user.get_profile()
-    return render_to_response('user.html', {'profile': profile, 'user': user})
-    
-@login_required
-def myprofile(request):
-    """View your own profile
+    return render_to_response('user.html', {'profile': profile, 'user': user, 'mine': user == request.user})
 
-    Keyword arguments:
-    request -- request object
-
-    Returns: HttpResponse
-
-    """
-    user = request.user
-    profile = user.get_profile()
-    return render_to_response('user.html', {'profile': profile, 'user': user})
     
 def login(request, next = None):
     """Login user
@@ -166,7 +153,7 @@ def edit_user(request):
             profile.about = data['about']
             profile.icq = data['icq']
             profile.jabber = data['jabber']
-            #profile.timezone = data['timezone']
+            profile.timezone = data['timezone']
             profile.city = City.get_city(data['city'])
             profile.hide_mail = data['show_mail']
             profile.reply_comment = data['notify_comment_reply']
@@ -192,4 +179,9 @@ def edit_user(request):
                 'site': profile.site,
         }
         form = EditUserForm(data)
-    return render_to_response('edit_user.html', {'form': form,})
+    return render_to_response('edit_user.html', {'form': form, 'user': request.user, 'profile': request.user.get_profile()})
+
+@login_required
+@transaction.commit_on_success
+def change_userpic(self):
+    pass

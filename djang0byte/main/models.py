@@ -509,6 +509,21 @@ class Profile(models.Model):
         else:
             return(False)
 
+    def postCount(self):
+        return(int(Post.objects.filter(author=self.user).count() or 0))
+
+    def commentCount(self):
+        return(int(Comment.objects.filter(author=self.user).count()))
+
+    def getAvatar(self):
+        return(self.avatar.url)
+
+    def getMeOn(self):
+        try:
+            return(MeOn.objects.filter(user=self.user))
+        except MeOn.DoesNotExist:
+            return(False)
+
     def __unicode__(self):
         """Return username"""
         return self.user.username

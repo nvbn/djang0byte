@@ -1,17 +1,27 @@
 {% extends "base.html" %}
 {% block title %}
-list
+New post
 {% endblock %}
 {% block content %}
-<form action='/newpost/' method='post'>
+<div id="post_type">
+<a href="?">Post</a> <a href="?type=link">Link</a> <a href="?type=translate">Translate</a> <a href="?type=answer">Answer</a>
+</div>
+<form action='/newpost/?type={{ type }}' method='post'>
     <select name="blog">
-	<option value="0">Персональный</option>
+	<option value="0">Not in blog</option>
        {% for blog in blogs %}
         <option value="{{ blog.id }}">{{ blog }}</option>
        {% endfor %}
     </select>
-
-{{ form.as_ul }}
+{{ form.title }}<br />
+{{ form.text }}<br />
+{% if form.link %}
+<label>Link: {{ form.link }}<br /></label>
+{%  endif %}
+{% if form.source %}
+<label>Source: {{ form.source }}</label><br />
+{%  endif %}
+<label>Tags: {{ form.tags }}</label><br />
 <input type='submit'>
 </form>
 {%  endblock %}

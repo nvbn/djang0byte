@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block title %}
-list
+New post
 {% endblock %}
 {% block content %}
-<form action='/newpost/answer/' method='post'>
+<div id="post_type">
+<a href="?">Post</a> <a href="?type=link">Link</a> <a href="?type=translate">Translate</a> <a href="?type=answer">Answer</a>
+</div>
+<form action='/newpost/?type=answer' method='post'>
 <select name="blog">
 	<option value="0">Персональный</option>
        {% for blog in blogs %}

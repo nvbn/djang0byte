@@ -91,9 +91,23 @@ a, a:hover, a:active {
     padding-right: 15px;
 }
 
+.plus_rate {
+    color: #73BF60 !important;
+}
+
+.minus_rate {
+    color: #802021 !important;
+}
+
+.userpic_profile {
+    float: right;
+    position:relative;
+    max-width: 150px;
+}
+
 #content {
     float: left;
-    widht: 80%;
+    width: 75%;
     padding: 20px;
 }
 
