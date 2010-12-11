@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}
+    list
+{% endblock %}
+{% block content %}
+    <h2>Edit user account</h2>
+    <form action="/action/edit_user/" method="post">
+        <ul class="form">
+            {{ form.as_ul }}
+        </ul>
+        Your accounts on other web sites:
+        <div id='meon_area'>
+            {% if profile.getMeOn %}
+                {% for meon in profile.getMeOn %}
+                    <p id="meonp_{{ meon.num }}"><input class='meon' type="text" name="meon[{{ meon.num }}]"
+                                                        value="{{ meon.title }}"/><input class='meon_url' type="text"
+                                                                                         name="meon_url[{{ meon.num }}]"
+                                                                                         value="{{ meon.url }}"/><input
+                            type='checkbox' name="meon_status[{{ meon.num }}]"
+                            {% if meon.statused %}
+                            {% if meon.show %}
+                            checked="checked"
+                            {% endif %}
+                            {% else %}
+                            style='display: none'
+                            {% endif %}/>
+                        <a href="#" id="{{ meon.num }}" class="rm_meon">X</a>
+                    </p>
+                {% endfor %}
+                <input type='hidden' name='count' id="meon_count" value='{{  profile.getMeOn|length }}'/>
+            {% else %}
+                <p id="meonp_0"><input class='meon' type="text" name="meon[0]" value="Title"/>
+                    <input class='meon_url' type="text" name="meon_url[0]" value="Url"/>
+                    <input type='checkbox' name="meon_status[0]" style='display: none'/><a href="#" id="0"
+                                                                                           class="rm_meon">X</a></p>
+                <input type='hidden' name='count' id="meon_count" value='1'/>
+            {% endif %}
+        </div>
+        <input type="button" id="add" value="Add"/><input type="button" id="rm" value="Remove"/><br/><br/><br/>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

@@ -170,7 +170,7 @@ li.post {
     top: 100%;
 }
 
-#meon_area p {
+#meon_area p, #answ_area p {
     margin: 0;
 }
 .form {

@@ -14,13 +14,15 @@ New post
        {% endfor %}
     </select>
 <input type='text' name='title'/>
-<br />
+<div id="answ_area">
 {% for i in answers_count %}
-<input type='text' name='{{ i }}'/><br />
+<p id="answp_{{ i }}"><input type='text' name='{{ i }}'/><a href="#" id="{{ i }}" class="rm_answ">X</a></p>
 {% endfor %}
-<input type='checkbox' name='multi' /><br />
+</div>
+<input type="button" id="add_answ" value="Add"/><input type="button" id="rm_answ" value="Remove"/><br/><br/><br/>
+<label><input type='checkbox' name='multi' />Allow multiple answer</label><br />
 <input type='text' name='tags'/><br />
-<input type='hidden' name='count' value='{{ count }}' />
+<input type='hidden' name='count' value='{{ count }}' id='count' />
 <input type='submit'>
 </form>
 {% endblock %}

@@ -30,7 +30,7 @@ from parser import utils
 from django.utils.translation import gettext as _
 import parser.utils
 from urlparse import urlparse
-from datetime import datetime
+import datetime
 
 class BlogType(models.Model):
     """Types of blog"""

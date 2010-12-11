@@ -88,7 +88,6 @@ TEMPLATE_DIRS = (
 INSTALLED_APPS = (
 'timezones',
 'tagging',
-    'grappelli',
     'django.contrib.admin',
      'django.contrib.auth',
      'django.contrib.contenttypes',
