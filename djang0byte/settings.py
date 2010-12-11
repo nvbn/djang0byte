@@ -103,7 +103,7 @@ INSTALLED_APPS = (
     'simplepagination',
     'djang0byte.parser',
     'messages',
-    
+    'south',
 )
 AUTH_PROFILE_MODULE = "main.profile"
 VALID_TAGS = 'p i strong b u a h1 h2 h3 pre br img code'

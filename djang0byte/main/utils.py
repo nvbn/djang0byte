@@ -15,6 +15,8 @@
 #       MA 02110-1301, USA.
 from pytils.translit import slugify, translify
 from time import strftime
+import urllib
+import xml.dom.minidom
 
 
 def file_upload_path(instance, filename):
@@ -31,6 +33,10 @@ def file_upload_path(instance, filename):
     str = "%s.%s" % (slugify(translify(parts[0])), slugify(translify(parts[1])))
     return "%s/%s/%s/%s" % (strftime('%Y'), 
        strftime('%m'), strftime('%d'), str)
+
+def getStatus(url, content=False):
+    document = xml.dom.minidom.parse(urllib.urlopen(url))
+    return(document.getElementsByTagName('item')[0].getElementsByTagName('description')[0].firstChild.data)
 
 class Access:
     newPost = 0

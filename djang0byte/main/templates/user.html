@@ -2,15 +2,30 @@
 {% block title %}
 {{ user.username }}
 {% endblock %}
+{% load cache %}
 {% block content %}
 <img class="userpic_profile" src="{{ profile.getAvatar }}" alt="" />
 <h2>{{ user.username }} <span{% if profile.getRate > 0 %} class='plus_rate' {% endif %}{% if profile.getRate < 0 %} class='minus_rate' {% endif %}>{{ profile.getRate }}</span></h2>
+    {% cache 500 user.username %}    
+    {% for status in profile.get_status %}
+        <p class="status">
+        <a href="{{ status.obj.url }}">
+            {{ status.obj.name }}@{% if status.obj.type == 0 %}last.fm{% endif %}{% if status.obj.type == 1 %}twitter.com{% endif %}{% if status.obj.type == 2 %}juick.com{% endif %}:
+            {{ status.text }}</a>
+        </p>
+    {% endfor %}
+    {% endcache %}
 {% if profile.city %}<a href='/user/city/{{ profile.city }}/'><img src='/media/style/city.png' /> {{ profile.city }}</a>, {% endif %}
 <a href='/pm/new/{{ profile.city }}/'><img src='/media/style/envelope.gif' /> PM</a>
 {% if profile.hide_mail %}, <a href='mailto:{{ user.email }}'><img src='/media/style/mailing.gif' /> {{ user.email }}</a>{% endif %}
 {% if profile.icq %}, <img src='/media/style/icq.png' /> {{ profile.icq }}{% endif %}
 {% if profile.jabber %}, <a href='xmpp:{{ profile.jabber }}'><img src='/media/style/jabber.png' /> {{ profile.jabber }}</a>{% endif %}
 {% if profile.site %}, <a href='{{ profile.site }}'><img src='/media/style/world.gif' /> {{ profile.site }}</a>{% endif %}
+{% if meon %}
+    {% for site in meon %}
+        , <a href="{{ site.url }}"><img src="{{ site.favicon }}" /> {{ site.title }}</a>
+    {% endfor %}
+{% endif %}
 <br /><br />
 {% if profile.about %}
 About user:<br />

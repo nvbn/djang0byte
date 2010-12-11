@@ -165,6 +165,15 @@ li.post {
 }
 
 #bottom {
-    position: absolute;
-    bottom:0;
+    position: relative;
+    bottom: 0;
+    top: 100%;
+}
+
+#meon_area p {
+    margin: 0;
+}
+.form {
+    list-style: none;
+    padding-left: inherit;
 }

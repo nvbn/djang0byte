@@ -19,18 +19,18 @@
 from treebeard.ns_tree import NS_Node
 from django.contrib.auth.models import User
 from django.db import models
-import datetime
 import tagging
 from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
 from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE
 from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
-from utils import file_upload_path, Access
+from utils import file_upload_path, Access, getStatus
 from parser import utils
 from django.utils.translation import gettext as _
 import parser.utils
 from urlparse import urlparse
+from datetime import datetime
 
 class BlogType(models.Model):
     """Types of blog"""
@@ -520,9 +520,34 @@ class Profile(models.Model):
 
     def getMeOn(self):
         try:
-            return(MeOn.objects.filter(user=self.user))
+            return(self._getmeon)
+        except:
+            pass
+        try:
+            class num:
+                val = -1
+                def inc(self):
+                    self.val += 1
+                    return(True)
+            num = num()
+            meon = MeOn.objects.filter(user=self.user)
+            statused = Statused.objects.filter(user=self.user).all()
+            for site in statused:
+                meon = meon.exclude(url=site.url)
+            action = lambda site: num.inc() and {'url': site.url, 'title': site.title, 'statused': False, 'show': False, 'num': num.val }
+            action_statused = lambda site: site.get_status() and num.inc() and {'url': site.url, 'title': site.title, 'statused': True, 'show': site.show, 'num': num.val}
+            self._getmeon = ([action(site) for site in meon] +
+                   [action_statused(site) for site in statused])
+            return(self._getmeon)
         except MeOn.DoesNotExist:
             return(False)
+
+    def get_status(self):
+        try:
+            return(self._status)
+        except:
+            self._status = [{'obj': service , 'text': service.get_status()} for service in Statused.objects.filter(user=self.user, show=True)]
+            return(self._status)
 
     def __unicode__(self):
         """Return username"""
@@ -806,28 +831,39 @@ class MeOn(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=30)
     user = models.ForeignKey(User, verbose_name=_("User"))
 
-    def _is_statused(self):
+    def is_statused(self):
         """Match url for statused service"""
         parsed = urlparse(self.url)
         for name in Statused.SERVICE_TYPE:
             if name[1] in parsed.netloc.split('.'):
-                return({'service': name[0], 'username': parsed.path.split('/')[1]})
+                if name == 'lastfm':
+                    return({'service': name[0], 'username': parsed.path.split('/')[2]})
+                else:
+                    return({'service': name[0], 'username': parsed.path.split('/')[1]})
+        return(False)
 
-    def parse(self):
+    def parse(self, show):
         """Check type and save"""
-        type = self._is_statused()
+        type = self.is_statused()
         if 'http' not in self.url:
             self.url = 'http://' + self.url
-        if len(type) == 2:
+        if type and len(type) == 2:
             service = Statused()
             service.url = self.url
+            service.user = self.user
             service.title = self.title
             service.type = type['service']
             service.name = type['username']
+            if show:
+                service.show = True
+            else:
+                service.show = False
             service.save()
             return(True)
         else:
+            self.save()
             return(False)
+
 
     class Meta:
         verbose_name = _("User on other site")
@@ -848,5 +884,11 @@ class Statused(MeOn):
 
     def get_status(self):
         """Get status"""
-        pass
+        if self.type == 0:
+            return(getStatus('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (self.name)))
+        elif self.type == 1:
+            return(getStatus('http://twitter.com/statuses/user_timeline/%s.rss' % (self.name)))
+        else:
+            return(getStatus('http://rss.juick.com/%s/blog' % (self.name)))
+
 

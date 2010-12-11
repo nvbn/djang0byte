@@ -23,7 +23,8 @@ from django.shortcuts import render_to_response
 from main.forms import LoginForm, RegisterForm, EditUserForm
 from main.models import *
 from django.db import transaction
-    
+from urlparse import urlparse
+
 def register(request, next = None):
     """Register new user
 
@@ -68,7 +69,12 @@ def profile(request, name):
     """
     user = User.objects.filter(username=name)[0]
     profile = user.get_profile()
-    return render_to_response('user.html', {'profile': profile, 'user': user, 'mine': user == request.user})
+    meon = profile.getMeOn()
+    for site in meon:
+        parsed = urlparse(site['url'])
+        site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'
+    return render_to_response('user.html', {'profile': profile, 'user': user,
+                                            'mine': user == request.user, 'meon': meon})
 
     
 def login(request, next = None):
@@ -163,7 +169,19 @@ def edit_user(request):
             profile.site= data['site']
             profile.save()
             request.user.save()
-            return HttpResponseRedirect('/user/')
+            count = int(request.POST['count'])
+            MeOn.objects.filter(user=request.user).delete()
+            Statused.objects.filter(user=request.user).delete()
+            for i in range(count):
+                meon = MeOn()
+                meon.url = request.POST['meon_url[%d]' % (i)]
+                meon.title = request.POST['meon[%d]' % (i)]
+                meon.user = request.user
+                try:
+                    meon.parse(request.POST['meon_status[%d]' % (i)])
+                except:
+                    meon.parse(False)
+            return HttpResponseRedirect('/user/%s/' % (request.user))
     else:
         profile = request.user.get_profile()
         data = {'mail': request.user.email,
