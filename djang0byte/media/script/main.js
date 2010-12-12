@@ -1,5 +1,6 @@
 var meons = Array();
 var post_type = Array();
+var current_reply = -1;
 
 function addMeOn() {
     //Add meon input to edit user page
@@ -80,6 +81,19 @@ function initAnswers() {
     });
 }
 
+function initCommentSubmit() {
+    $(".comment_reply_form>form").submit(function(event){
+        event.preventDefault();
+        $.ajax({ url: "/newcomment/?json=1", type: 'POST', data: $(this).serialize(),
+            context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+            data = eval('(' + data + ')');
+            $(data.content).insertAfter('#cmnt'+current_reply);
+            commentReplyForm(-1);
+        }});
+        return false;
+    });
+}
+
 function _get(val, select) {
         try {
             if (select) {
@@ -133,6 +147,7 @@ function commentReplyForm(url) {
     });
     if (url != -1) {
         id = url.split('/')[3];
+        current_reply = id;
         $('#main_form_hide').css("display", 'inline');
         $('#cmnt' + id + '>a.comment_reply').css('display', 'none');
         if ($('#comment_reply_form_' + id).length) {
@@ -146,10 +161,12 @@ function commentReplyForm(url) {
             form = $('<div>').attr('class', 'comment_reply_form').attr('id', 'comment_reply_form_' + id).append(data.content);
             $('#cmnt' + id).append(form);
             document.location.hash = 'cmnt' + id;
+            initCommentSubmit();
         }});
     } else {
         $('#main_form_hide').css("display", 'none');
         $('#main_form').css('display', 'block');
+        current_reply = -1;
     }
 }
 
@@ -177,4 +194,5 @@ $(document).ready(function(){
     })
     initPostType();
     initAnswers();
+    initCommentSubmit();
 });

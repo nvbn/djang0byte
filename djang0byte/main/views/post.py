@@ -195,9 +195,10 @@ def new_comment(request, post = 0, comment = 0):
     """
     extend = 'base.html'
     json = False
-    if request.GET.get('json'):
+    if request.GET.get('json', 0):
         extend = 'json.html'
         json = True
+    print request.GET.get('json')
     if request.method == 'POST':
         form = CreateCommentForm(request.POST)
         if form.is_valid():
@@ -213,7 +214,10 @@ def new_comment(request, post = 0, comment = 0):
             created=datetime.datetime.now())
             comment.save()
             Notify.new_comment_notify(comment)
-            return HttpResponseRedirect('/post/%d/#cmnt%d' %
+            if json:
+                return(render_to_response('comment.html', {'post': comment.post, 'comment': comment, 'extend': extend}))
+            else:
+                return HttpResponseRedirect('/post/%d/#cmnt%d' %
                             (comment.post.id, comment.id))
     else:
         form = CreateCommentForm({'post': post, 'comment': comment})

@@ -3,7 +3,7 @@
 Create comment
 {% endblock %}
 {% block content %}
-<form id="/newcomment/{{ pid }}/{{ cid }}/" action="/newcomment/" method="POST">
+<form id="/newcomment/{{ pid }}/{{ cid }}/" action="/newcomment/?json=1" method="POST">
     {{ form.text }}
     {{ form.comment }}
     {{ form.post }}<br />
