@@ -10,8 +10,8 @@
 <a href="/user/{{ post.author }}/">{{ post.author }}</a>
 {% endif %}
  — <a href="/post/{{ post.id }}/">{{ post.title }}</a></h2>
-{% if is_answer %}
-{% include 'answer.html' %}
+{% if post.is_answer %}
+    {% include 'answer.html' %}
 {% else %}
-{{ post.getContent }}
+    {{ post.getContent }}
 {% endif %}

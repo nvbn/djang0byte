@@ -1,20 +1,26 @@
-{% if result %}
-    {% for answ in answer %}
-        <br /> {{ answ.value }} -- {{ answ.count }}
+{% if post.is_result %}
+    <table>
+    {% for answ in post.is_answer %}
+        <tr>
+            <td>{{ answ.value }}</td>
+            <td>{{ answ.count }}</td>
+            <td><span class="result" style="width: {{ answ.width }}px"> </span></td>
+        </tr>
     {% endfor %}
+    </table>
 {% else %}
 <form method='POST' action='/action/answer/{{ post.id }}/'>
 {% if post.type == 3 %}
-    {% for answ in answer %}
+    {% for answ in post.is_answer %}
     <input type='radio' name='answ' value='{{ answ.id }}'>{{ answ.value }}<br />
     {% endfor %}
 {% endif %}
 {% if post.type == 4 %}
-    {% for answ in answer %}
+    {% for answ in post.is_answer %}
     <label><input type='checkbox' name='answ_{{ answ.id }}' />{{ answ.value }}</label><br />
     {% endfor %}
 {% endif %}
 <input type='submit' />
 </form>
 {% endif %}
-<br />
+

@@ -18,6 +18,7 @@
 
 from django import forms
 from timezones.forms import TimeZoneField
+from tagging_autocomplete.widgets import TagAutocomplete
 
 class RegisterForm(forms.Form):
     """Registration form"""
@@ -38,8 +39,8 @@ class CreateBlogForm(forms.Form):
 class CreatePostForm(forms.Form):
     """Create new post form"""
     title = forms.CharField()
-    text = forms.CharField(widget=forms.Textarea)
-    tags = forms.CharField()
+    text = forms.CharField(widget=forms.Textarea())
+    tags = forms.CharField(widget=TagAutocomplete())
 
 class CreatePostLinkForm(CreatePostForm):
     """Create post link form"""

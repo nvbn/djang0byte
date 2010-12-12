@@ -61,7 +61,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
-    "grappelli.context_processors.admin_template_path",
     'messages.context_processors.inbox',
 
 )
@@ -85,6 +84,8 @@ TEMPLATE_DIRS = (
     '/usr/lib/pymodules/python2.6/debug_toolbar/templates/',
 )
 
+TAGGING_AUTOCOMPLETE_JS_BASE_URL = '/media/script/jquery-autocomplete/'
+
 INSTALLED_APPS = (
 'timezones',
 'tagging',
@@ -103,6 +104,7 @@ INSTALLED_APPS = (
     'djang0byte.parser',
     'messages',
     'south',
+'tagging_autocomplete',
 )
 AUTH_PROFILE_MODULE = "main.profile"
 VALID_TAGS = 'p i strong b u a h1 h2 h3 pre br img code'

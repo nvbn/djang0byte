@@ -4,7 +4,9 @@ Post list
 {% endblock %}
 {% block content %}
 {% for post in object_list %}
-{% include 'post_item.html' %}
+
+    {% include 'post_item.html' %}
+
 <br/>
 <a href="/post/{{ post.id }}/">Show full.</a>{{ post.type }}
 {% endfor %}

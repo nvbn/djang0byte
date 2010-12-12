@@ -45,6 +45,9 @@ def newpost(request, type = 'post'):
     """
     profile = request.user.get_profile()
     type = request.GET.get('type') or 'post'
+    extend = 'base.html'
+    if request.GET.get('json') or False:
+        extend = 'json.html'
     if type != 'answer':
       if request.method == 'POST':
           form = CreatePostForm(request.POST)
@@ -77,7 +80,7 @@ def newpost(request, type = 'post'):
            for x in blogs:
                 d[x]=x
            blogs = d.values()
-           return render_to_response('newpost.html', {'form': form, 'blogs': blogs, 'type': type})
+           return render_to_response('newpost.html', {'form': form, 'blogs': blogs, 'type': type, 'extend': extend})
     else:
       if request.method == 'POST':
         post = Post()
@@ -100,7 +103,7 @@ def newpost(request, type = 'post'):
       multi = False
       count = 2
       return render_to_response('newanswer.html', {'answers_count': range(count),
-      'count': count, 'blogs': profile.getBlogs(), 'multi': multi})
+      'count': count, 'blogs': profile.getBlogs(), 'multi': multi, 'extend': extend})
 
 @cache_page(0)
 def post(request, id):
@@ -117,21 +120,11 @@ def post(request, id):
     author = post.author.get_profile()
     comments = post.getComment()
     form = CreateCommentForm({'post': id, 'comment': 0})
-    if post.type in (3, 4):
-        is_answer = True
-        answer = Answer.objects.filter(post=post)
-        if request.user.is_authenticated() and Answer.check(post, request.user):
-            result = False
-        else:
-            result = True
-    else:
-        is_answer = False
-        result = False
-        answer= None
-        post.getContent = post.getFullContent
+    post.getContent = post.getFullContent
+    post.is_answer(request.user)
     return render_to_response('post.html',
         {'post': post, 'author': author, 'comments': comments, 'comment_form': form,
-        'is_answer': is_answer, 'result': result, 'answer': answer, 'single': True}
+        'single': True}
         )
 
 @cache_page(0)
@@ -170,6 +163,9 @@ def post_list(request, type = None, param = None):
     elif type == 'favourite':
         favourites = Favourite.objects.filter(user=request.user)
         posts = [post.post for post in favourites]
+    posts = posts.order_by('-id')
+    for post in posts:
+        print post.is_answer(request.user)
     return {'object_list': posts, 'single': False}
 
 def post_list_with_param(request, type, param = None):

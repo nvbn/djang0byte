@@ -1,4 +1,5 @@
 var meons = Array();
+var post_type = Array();
 
 function addMeOn() {
     //Add meon input to edit user page
@@ -54,6 +55,60 @@ function rmAnsw(number) {
     $("#answ_area>p#answp_"+number).remove();
 }
 
+function initPostType() {
+    $("#post_type>a").each(function(){
+        lnk = $(this).attr('href');
+        lnk = lnk.replace('?type=', '');
+        $(this).attr('href', '#' + lnk);
+        $(this).click(function(){
+            setPostType($(this).attr('href').split('#')[1]);
+        });
+    });
+}
+
+function _get(val, select) {
+        try {
+            if (select) {
+                post_type[val] = $('select[name=' + val + ']').val();
+            } else {
+                post_type[val] = $('input[name=' + val + ']').val();
+            }
+        } catch (err) {}
+    }
+    function _set(val, select) {
+        try {
+             if (select) {
+                 $('select[name=' + val + ']').val(post_type[val]);
+             } else {
+                 $('input[name=' + val + ']').val(post_type[val]);
+             }
+        } catch (err) {}
+    }
+    function set(val) {_set(val, false);}
+    function get(val) {_get(val, false);}
+
+function setPostType(type) {
+
+    _get('blog', true);
+    get('title');
+    get('text');
+    get('tags');
+    get('link');
+    get('source');
+    if (type == '?') type = 'post';
+    $.ajax({ url: "newpost/?type=" + type + "&json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest){
+        data = eval('(' + data + ')');
+        $('#content').html(data.content);
+        initPostType();
+        _set('blog', true);
+        set('title');
+        set('text');
+        set('tags');
+        set('link');
+        set('source');
+    }});
+}
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();
@@ -77,4 +132,5 @@ $(document).ready(function(){
     $("#rm_answ").click(function(){
             rmAnsw(-1);
     });
+    initPostType();
 });

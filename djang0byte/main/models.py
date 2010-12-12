@@ -324,6 +324,22 @@ class Post(models.Model):
             utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
             utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         super(Post, self).save() # Call the "real" save() method
+
+    def is_answer(self, user = None):
+        try:
+            return(self._is_answer)
+        except:
+            try:
+                answer = Answer.objects.filter(post=self).all()
+                action = lambda count: count and (answer.order_by('-count')[0].count*200)/count or 0
+                self._is_answer = [{'count': answ.count, 'value': answ.value, 'width': action(answ.count)} for answ in answer]
+                if user != None: self.is_result = user.is_authenticated() and not Answer.check(self, user)
+                return(self._is_answer)
+            except Answer.DoesNotExist:
+                self._is_answer = False
+                self.is_result = False
+                return(False)
+
         
     def __unicode__(self):
         """Return post title"""

@@ -177,3 +177,9 @@ li.post {
     list-style: none;
     padding-left: inherit;
 }
+
+.result {
+    background: #D8DBDE;
+    height: 12px;
+    display: inline-block;
+}
