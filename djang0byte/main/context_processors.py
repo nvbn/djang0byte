@@ -28,7 +28,7 @@ def djbyte(request):
             'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
             % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
             order_by=['-fullrate',])[0:][:10]
-        profiles = [{'name': profile.user.username, 'rate': profile.getRate()} for profile in profiles]
+        profiles = [{'name': profile.user.username, 'rate': profile.get_rate()} for profile in profiles]
     except Profile.DoesNotExist:
         profiles = []
     blogs = Blog.objects.order_by('-rate')[0:][:10]

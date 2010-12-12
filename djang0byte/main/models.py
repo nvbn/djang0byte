@@ -25,7 +25,7 @@ from tagging.models import Tag
 from timezones.fields import TimeZoneField
 from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE
 from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
-from utils import file_upload_path, Access, getStatus
+from utils import file_upload_path, Access, get_status
 from parser import utils
 from django.utils.translation import gettext as _
 import parser.utils
@@ -53,7 +53,7 @@ class BlogType(models.Model):
         except BlogType.DoesNotExist:
             return(False)
 
-    def getBlogs(self):
+    def get_blogs(self):
         """Return blogs in type"""
         return(Blog.objects.filter(type=self))
 
@@ -77,11 +77,11 @@ class Blog(models.Model):
     default = models.BooleanField(default=False, verbose_name=_('Does not need join?'))
 
     
-    def getUsers(self):
+    def get_users(self):
         """Get users in this blog"""
         return UserInBlog.objects.select_related('user').filter(blog=self)
     
-    def checkUser(self, user):
+    def check_user(self, user):
         """Check user in blog
         
         Keyword arguments:
@@ -96,11 +96,11 @@ class Blog(models.Model):
         except UserInBlog.DoesNotExist:
             return(False)
         
-    def getPosts(self):
+    def get_posts(self):
         """Get posts in blog"""
         return Post.objects.filter(blog=self)
         
-    def rateBlog(self, user, value):
+    def rate_blog(self, user, value):
         """Rate blog
         
         Keyword arguments:
@@ -125,7 +125,7 @@ class Blog(models.Model):
             user.save()
             return(True)
                 
-    def addOrRemoveUser(self, user):
+    def add_or_remove_user(self, user):
         """add or remove user from blog
         
         Keyword arguments:
@@ -134,7 +134,7 @@ class Blog(models.Model):
         Returns: None
         
         """
-        if self.checkUser(user):
+        if self.check_user(user):
             UserInBlog.objects.get(user=user).delete()
         else:
             uib = UserInBlog()
@@ -209,7 +209,7 @@ class Post(models.Model):
     class Meta:
         ordering = ('-id', )
 
-    def getComment(self):
+    def get_comment(self):
         """Return first level comments in post"""
         try:
             comments = Comment.objects.filter(post=self, depth=1)[0]
@@ -217,7 +217,7 @@ class Post(models.Model):
         except IndexError:
             return(None)
 
-    def setBlog(self, blog):
+    def set_blog(self, blog):
         """Set blog to post
         
         Keyword arguments:
@@ -230,17 +230,17 @@ class Post(models.Model):
             self.blog = None
         else:
             self.blog = Blog.objects.get(id=blog)
-            if self.blog.default or not self.blog.checkUser(self.author):
+            if self.blog.default or not self.blog.check_user(self.author):
                  self.blog = None
 
         return(self.blog)
 	  
-    def createCommentRoot(self):
+    def create_comment_root(self):
         """Create comment root for post"""
         comment_root = Comment.add_root(post=self, created=datetime.datetime.now())
         return(comment_root)
         
-    def _getContent(self, type=0):
+    def _get_content(self, type=0):
         """Return post content, 0 - preview, 1 - post
         
         Keyword arguments:
@@ -256,8 +256,8 @@ class Post(models.Model):
         else:
             return(self.text)
 	  
-    def getContent(self, type=0):
-        """_getContent wrapper
+    def get_content(self, type=0):
+        """_get_content wrapper
         
         Keyword arguments:
         type -- Integer
@@ -265,9 +265,9 @@ class Post(models.Model):
         Returns: Text
         
         """
-        return self._getContent(type)
+        return self._get_content(type)
 	  
-    def getFullContent(self, type=1):
+    def get_full_content(self, type=1):
         """Return preview
         
         Keyword arguments:
@@ -276,9 +276,9 @@ class Post(models.Model):
         Returns: Text
         
         """
-        return self._getContent(1)
+        return self._get_content(1)
 	  
-    def ratePost(self, user, value):
+    def rate_post(self, user, value):
         """Rate post
         
         Keyword arguments:
@@ -301,11 +301,11 @@ class Post(models.Model):
             rate.save()
             return(True)
             
-    def getTags(self):
+    def get_tags(self):
         """Return post tags"""
         return Tag.objects.get_for_object(self)
     
-    def setTags(self, tag_list):
+    def set_tags(self, tag_list):
         """Set tags for post
         
         Keyword arguments:
@@ -377,13 +377,11 @@ class Comment(NS_Node):
     def get_absolute_url(self):
         return ('node-view', ('ns', str(self.id), ))
     
-    def getMargin(self):
+    def get_margin(self):
+        """Get margin from comment tree"""
         return (self.depth - 2) * 20
-    
-    class Meta:
-        ordering = ['id']
         
-    def rateComment(self, user, value):
+    def rate_comment(self, user, value):
         """Rate Comment
         
         Keyword arguments:
@@ -409,6 +407,7 @@ class Comment(NS_Node):
             return(True)
 
     class Meta:
+        ordering = ['id']
         verbose_name = _("Comment")
         verbose_name_plural = _("Comments")
 
@@ -420,9 +419,6 @@ class UserInBlog(models.Model):
 
     def __unicode__(self):
         return self.blog.name
-
-    def getId(self):
-        return self.blog.id
 
     class Meta:
         verbose_name = _("User in blog list")
@@ -459,19 +455,19 @@ class Profile(models.Model):
     about = models.TextField(blank=True, verbose_name=_('About'))
     other = models.TextField(blank=True, verbose_name=_('Field for adittion'))
     
-    def getPosts(self):
+    def get_posts(self):
         """Get posts by user"""
         return Post.objects.filter(author=self.user)
         
-    def getFriends(self):
+    def get_friends(self):
         """Get user friends"""
         return Friends.objects.select_related('friend').filter(user=self)
 
-    def getBlogs(self):
+    def get_blogs(self):
         """Get blogs contain it"""
         return UserInBlog.objects.select_related('blog').filter(user=self.user)
         
-    def rateUser(self, user, value):
+    def rate_user(self, user, value):
         """Rate user
         
         Keyword arguments:
@@ -492,13 +488,13 @@ class Profile(models.Model):
         else:
             return(False)
 
-    def getRate(self):
+    def get_rate(self):
         """Get user rate"""
         return(self.rate + self.posts_rate * POST_RATE_COEFFICIENT
                + self.blogs_rate * BLOG_RATE_COEFFICIENT
                + self.comments_rate * COMMENT_RATE_COEFFICIENT)
 
-    def checkAccess(self, type):
+    def check_access(self, type):
         """Check user access
 
         Keyword arguments:
@@ -507,7 +503,7 @@ class Profile(models.Model):
         Returns: Boolean
 
         """
-        rate = self.getRate()
+        rate = self.get_rate()
         if type == Access.newBlog and rate >= NEWBLOG_RATE:
             return(True)
         elif type == Access.newComment and rate >= NEWCOMMENT_RATE:
@@ -525,16 +521,20 @@ class Profile(models.Model):
         else:
             return(False)
 
-    def postCount(self):
+    def post_count(self):
+        """Return post count"""
         return(int(Post.objects.filter(author=self.user).count() or 0))
 
-    def commentCount(self):
+    def comment_count(self):
+        """Return comment count"""
         return(int(Comment.objects.filter(author=self.user).count()))
 
-    def getAvatar(self):
+    def get_avatar(self):
+        """Get url of user avatar"""
         return(self.avatar.url)
 
-    def getMeOn(self):
+    def get_me_on(self):
+        """Return array of sites, where user is registered"""
         try:
             return(self._getmeon)
         except:
@@ -559,6 +559,7 @@ class Profile(models.Model):
             return(False)
 
     def get_status(self):
+        """Get array of user statuses from other sites"""
         try:
             return(self._status)
         except:
@@ -737,7 +738,7 @@ class Notify(models.Model):
     comment = models.ForeignKey(Comment, verbose_name=_('Comment'), blank=True, null=True)
     
     @classmethod
-    def newNotify(self, is_post, alien, user):
+    def new_notify(self, is_post, alien, user):
         """Create notify
         
         Keyword arguments:
@@ -758,7 +759,7 @@ class Notify(models.Model):
         return(self)
             
     @staticmethod
-    def newPostNotify(post):
+    def new_post_notify(post):
         """Notify for new post
         
         Keyword arguments:
@@ -770,17 +771,17 @@ class Notify(models.Model):
         users = list(Profile.objects.get(user=post.author).getFriends())
         users = [user.friend for user in users]
         if post.blog != None:
-            users += [blog_user.user for blog_user in post.blog.getUsers()]
+            users += [blog_user.user for blog_user in post.blog.get_users()]
         d = {}
         for x in users:
             if x != post.author: 
                 d[x]=x
         users = d.values()
         for user in users:
-            Notify.newNotify(True, post, user)
+            Notify.new_notify(True, post, user)
     
     @staticmethod
-    def newCommentNotify(comment):
+    def new_comment_notify(comment):
         """Notify for new comment
         
         Keyword arguments:
@@ -790,17 +791,17 @@ class Notify(models.Model):
         
         """
         if comment.depth == 2:
-            Notify.newNotify(False, comment, comment.post.author)
+            Notify.new_notify(False, comment, comment.post.author)
             spy = Spy.objects.select_related('user').filter(post=comment.post)
             try:
                 for spy_elem in Spy:
-                    Notify.newNotify(False, comment, spy_elem.user)
+                    Notify.new_notify(False, comment, spy_elem.user)
             except TypeError:
                 pass
         else:
-            Notify.newNotify(False, comment, comment.get_parent().author)
+            Notify.new_notify(False, comment, comment.get_parent().author)
             
-    def getType(self):
+    def get_type(self):
         """Return notify type"""
         if self.post != None:
             return('post')
@@ -901,10 +902,10 @@ class Statused(MeOn):
     def get_status(self):
         """Get status"""
         if self.type == 0:
-            return(getStatus('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (self.name)))
+            return(get_status('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (self.name)))
         elif self.type == 1:
-            return(getStatus('http://twitter.com/statuses/user_timeline/%s.rss' % (self.name)))
+            return(get_status('http://twitter.com/statuses/user_timeline/%s.rss' % (self.name)))
         else:
-            return(getStatus('http://rss.juick.com/%s/blog' % (self.name)))
+            return(get_status('http://rss.juick.com/%s/blog' % (self.name)))
 
 

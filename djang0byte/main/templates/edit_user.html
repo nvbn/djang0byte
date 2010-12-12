@@ -10,8 +10,8 @@
         </ul>
         Your accounts on other web sites:
         <div id='meon_area'>
-            {% if profile.getMeOn %}
-                {% for meon in profile.getMeOn %}
+            {% if profile.get_me_on %}
+                {% for meon in profile.get_me_on %}
                     <p id="meonp_{{ meon.num }}"><input class='meon' type="text" name="meon[{{ meon.num }}]"
                                                         value="{{ meon.title }}"/><input class='meon_url' type="text"
                                                                                          name="meon_url[{{ meon.num }}]"
@@ -27,7 +27,7 @@
                         <a href="#" id="{{ meon.num }}" class="rm_meon">X</a>
                     </p>
                 {% endfor %}
-                <input type='hidden' name='count' id="meon_count" value='{{  profile.getMeOn|length }}'/>
+                <input type='hidden' name='count' id="meon_count" value='{{  profile.get_me_on|length }}'/>
             {% else %}
                 <p id="meonp_0"><input class='meon' type="text" name="meon[0]" value="Title"/>
                     <input class='meon_url' type="text" name="meon_url[0]" value="Url"/>

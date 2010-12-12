@@ -69,7 +69,7 @@ def profile(request, name):
     """
     user = User.objects.filter(username=name)[0]
     profile = user.get_profile()
-    meon = profile.getMeOn()
+    meon = profile.get_me_on()
     for site in meon:
         parsed = urlparse(site['url'])
         site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'

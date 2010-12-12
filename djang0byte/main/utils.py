@@ -34,9 +34,20 @@ def file_upload_path(instance, filename):
     return "%s/%s/%s/%s" % (strftime('%Y'), 
        strftime('%m'), strftime('%d'), str)
 
-def getStatus(url, content=False):
-    document = xml.dom.minidom.parse(urllib.urlopen(url))
-    return(document.getElementsByTagName('item')[0].getElementsByTagName('description')[0].firstChild.data)
+def get_status(url):
+    """Parse rss and get status
+
+    Keyword arguments:
+    url -- String
+
+    Returns: String/Boolena
+
+    """
+    try:
+        document = xml.dom.minidom.parse(urllib.urlopen(url))
+        return(document.getElementsByTagName('item')[0].getElementsByTagName('description')[0].firstChild.data)
+    except:
+        return(False)
 
 class Access:
     newPost = 0

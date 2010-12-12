@@ -55,15 +55,15 @@ def newpost(request, type = 'post'):
               data = form.cleaned_data
               post = Post()
               post.author = request.user
-              post.setBlog(request.POST.get('blog'))
+              post.set_blog(request.POST.get('blog'))
               post.title = data['title']
               post.text = data['text']
               post.owner = request.user
               post.type = 0#'Post'
               post.save()
-              post.setTags(data['tags'])
-              post.createCommentRoot()
-              Notify.newPostNotify(post)
+              post.set_tags(data['tags'])
+              post.create_comment_root()
+              Notify.new_post_notify(post)
               #comment_root = Comment.add_root(post=post, created=datetime.datetime.now())
               #comment_root.save()
               return HttpResponseRedirect('/post/%d/' % (post.id))
@@ -74,7 +74,7 @@ def newpost(request, type = 'post'):
              form = CreatePostLinkForm()
            elif type == 'translate':
              form = CreatePostTranslateForm()
-           blogs = [uib.blog for uib in profile.getBlogs()]
+           blogs = [uib.blog for uib in profile.get_blogs()]
            blogs += Blog.objects.filter(default=True)
            d = {}
            for x in blogs:
@@ -86,14 +86,14 @@ def newpost(request, type = 'post'):
         post = Post()
         post.title = request.POST.get('title')
         post.author = request.user
-        post.setBlog(request.POST.get('blog'))
+        post.set_blog(request.POST.get('blog'))
         if request.POST.get('multi', 0):
           post.type = 4#'Multiple Answer'
         else:
           post.type = 3#post.type = 'Answer'
         post.save()
-        post.setTags(request.POST.get('tags'))
-        post.createCommentRoot()
+        post.set_tags(request.POST.get('tags'))
+        post.create_comment_root()
         for answer_item in range(int(request.POST.get('count'))):
           answer = Answer()
           answer.value = request.POST.get(str(answer_item))
@@ -103,7 +103,7 @@ def newpost(request, type = 'post'):
       multi = False
       count = 2
       return render_to_response('newanswer.html', {'answers_count': range(count),
-      'count': count, 'blogs': profile.getBlogs(), 'multi': multi, 'extend': extend})
+      'count': count, 'blogs': profile.get_blogs(), 'multi': multi, 'extend': extend})
 
 @cache_page(0)
 def post(request, id):
@@ -118,9 +118,9 @@ def post(request, id):
     """
     post = Post.objects.get(id=id)
     author = post.author.get_profile()
-    comments = post.getComment()
+    comments = post.get_comment()
     form = CreateCommentForm({'post': id, 'comment': 0})
-    post.getContent = post.getFullContent
+    post.get_content = post.get_full_content
     post.is_answer(request.user)
     return render_to_response('post.html',
         {'post': post, 'author': author, 'comments': comments, 'comment_form': form,
@@ -159,7 +159,7 @@ def post_list(request, type = None, param = None):
     elif type == 'auth':
         user = User.objects.get(username=param)
         profile = user.get_profile()
-        posts = profile.getPosts()
+        posts = profile.get_posts()
     elif type == 'favourite':
         favourites = Favourite.objects.filter(user=request.user)
         posts = [post.post for post in favourites]
@@ -207,7 +207,7 @@ def new_comment(request, post = 0, comment = 0):
             author=request.user, text=data['text'],
             created=datetime.datetime.now())
             comment.save()
-            Notify.newCommentNotify(comment)
+            Notify.new_comment_notify(comment)
             return HttpResponseRedirect('/post/%d/#cmnt%d' %
                             (comment.post.id, comment.id))
     else:
@@ -236,9 +236,9 @@ def action(request, type, id, action = None):
     elif type == 'ratecom' and request.user != post.author and profile.checkAccess(Access.rateComment):
         comment = Comment.objects.select_related('post').get(id=id)
         if action == '1':
-          comment.rateComment(request.user, +1)
+          comment.rate_comment(request.user, +1)
         elif action == '0':
-          comment.rateComment(request.user, -1)
+          comment.rate_comment(request.user, -1)
         return HttpResponseRedirect('/post/%d/#cmnt%d' % (comment.post.id, int(id)))
     elif type == 'rateblog' and request.user != post.author and profile.checkAccess(Access.rateBlog):
         blog = Blog.objects.get(id=id)

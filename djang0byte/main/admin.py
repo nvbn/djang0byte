@@ -17,18 +17,11 @@
 
 
 from django.contrib import admin
+import models
 from main.models import Post, Blog, Profile, Comment, Answer, AnswerVote, UserInBlog, Notify, BlogType, TextPage, MeOn, Statused
 
 
-admin.site.register(Post)
-admin.site.register(Blog)
-admin.site.register(BlogType)
-admin.site.register(Profile)
-admin.site.register(Comment)
-admin.site.register(Answer)
-admin.site.register(AnswerVote)
-admin.site.register(UserInBlog)
-admin.site.register(Notify)
-admin.site.register(TextPage)
-admin.site.register(MeOn)
-admin.site.register(Statused)
+for stuff in ('Post', 'UserInBlog', 'Notify', 'TextPage', 'MeOn', 'Statused', 'Blog',
+              'Profile', 'Comment', 'Answer', 'AnswerVote', 'BlogType'):
+    admin.site.register(getattr(models, stuff))
+

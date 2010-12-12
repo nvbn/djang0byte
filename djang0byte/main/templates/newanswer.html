@@ -10,7 +10,7 @@ New post
 <select name="blog">
 	<option value="0">Персональный</option>
        {% for blog in blogs %}
-        <option value="{{ blog.getId }}">{{ blog }}</option>
+        <option value="{{ blog.id }}">{{ blog }}</option>
        {% endfor %}
     </select>
 <input type='text' name='title'/>

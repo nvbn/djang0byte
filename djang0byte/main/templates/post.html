@@ -11,13 +11,13 @@
 {% include 'post_item.html' %}
     <br />
 {% load tagging_tags %}
-{% for tag in post.getTags %}
+{% for tag in post.get_tags %}
 <a href='/tag/{{ tag }}/'>{{ tag }}</a>
 {% endfor %}
 <br />
 <a href='/action/rate/{{ post.id }}/0/'>-</a>{{ post.rate }}<a href='/action/rate/{{ post.id }}/1/'>+</a>
 {% for comment in comments %}
-<div style="margin-left:{{comment.getMargin}}px;">
+<div style="margin-left:{{comment.get_margin}}px;">
 <b>{{ comment.author }}:</b> {{comment}}<br />
 <a href='/newcomment/{{ post.id }}/{{ comment.id}}/'>reply</a>
 </div>

@@ -4,7 +4,7 @@ Lenta
 {% endblock %}
 {% block content %}
 {% for object in object_list %}
-{{ object.getType }}<br />
+{{ object.get_type }}<br />
 {% endfor %}
 <div>
     {% include "paginator_digg.html" %}

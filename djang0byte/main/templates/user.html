@@ -4,8 +4,8 @@
 {% endblock %}
 {% load cache %}
 {% block content %}
-<img class="userpic_profile" src="{{ profile.getAvatar }}" alt="" />
-<h2>{{ user.username }} <span{% if profile.getRate > 0 %} class='plus_rate' {% endif %}{% if profile.getRate < 0 %} class='minus_rate' {% endif %}>{{ profile.getRate }}</span></h2>
+<img class="userpic_profile" src="{{ profile.get_avatar }}" alt="" />
+<h2>{{ user.username }} <span{% if profile.get_rate > 0 %} class='plus_rate' {% endif %}{% if profile.get_rate < 0 %} class='minus_rate' {% endif %}>{{ profile.getRate }}</span></h2>
     {% cache 500 user.username %}    
     {% for status in profile.get_status %}
         <p class="status">
@@ -32,18 +32,18 @@ About user:<br />
 {{ profile.about }}
 {% endif %}
 <br /><hr />
-{% if profile.getBlogs %}
-    Blogs: {% for blog in profile.getBlogs %}
+{% if profile.get_blogs %}
+    Blogs: {% for blog in profile.get_blogs %}
     <a href='/blog/{{ blog.id }}/'>{{ blog }}</a>
     {% endfor %}
 {% endif %}
-{% if profile.getFriends %}
-    Blogs: {% for friend in profile.getFriends %}
+{% if profile.get_friends %}
+    Blogs: {% for friend in profile.get_friends %}
     <a href='/user/{{ friend }}/'>{{ friend }}</a>
     {% endfor %}
 {% endif %}
 <br />
-Write {{ profile.postCount }} posts and {{ profile.commentCount }} comments.
+Write {{ profile.post_count }} posts and {{ profile.comment_count }} comments.
 {% if mine %}
     <br />
     <hr />
