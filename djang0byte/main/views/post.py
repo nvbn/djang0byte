@@ -28,7 +28,7 @@ from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
 from main.utils import Access
-
+from django.template import RequestContext
 
 
 @transaction.commit_on_success
@@ -80,7 +80,9 @@ def newpost(request, type = 'post'):
            for x in blogs:
                 d[x]=x
            blogs = d.values()
-           return render_to_response('newpost.html', {'form': form, 'blogs': blogs, 'type': type, 'extend': extend})
+           return render_to_response('newpost.html',
+                                     {'form': form, 'blogs': blogs, 'type': type, 'extend': extend},
+                                     context_instance=RequestContext(request))
     else:
       if request.method == 'POST':
         post = Post()
@@ -103,7 +105,8 @@ def newpost(request, type = 'post'):
       multi = False
       count = 2
       return render_to_response('newanswer.html', {'answers_count': range(count),
-      'count': count, 'blogs': profile.get_blogs(), 'multi': multi, 'extend': extend})
+      'count': count, 'blogs': profile.get_blogs(), 'multi': multi, 'extend': extend},
+                                context_instance=RequestContext(request))
 
 @cache_page(0)
 def post(request, id):
@@ -124,7 +127,7 @@ def post(request, id):
     post.is_answer(request.user)
     return render_to_response('post.html',
         {'post': post, 'author': author, 'comments': comments, 'comment_form': form,
-        'single': True}
+        'single': True}, context_instance=RequestContext(request)
         )
 
 @cache_page(0)
@@ -215,13 +218,16 @@ def new_comment(request, post = 0, comment = 0):
             comment.save()
             Notify.new_comment_notify(comment)
             if json:
-                return(render_to_response('comment.html', {'post': comment.post, 'comment': comment, 'extend': extend}))
+                return(render_to_response('comment.html',
+                                          {'post': comment.post, 'comment': comment, 'extend': extend},
+                                          context_instance=RequestContext(request)))
             else:
                 return HttpResponseRedirect('/post/%d/#cmnt%d' %
                             (comment.post.id, comment.id))
     else:
         form = CreateCommentForm({'post': post, 'comment': comment})
-    return render_to_response('new_comment.html', {'form': form, 'extend': extend, 'pid': post, 'cid': comment})
+    return render_to_response('new_comment.html', {'form': form, 'extend': extend, 'pid': post, 'cid': comment},
+                              context_instance=RequestContext(request))
 
 
 @login_required

@@ -24,6 +24,7 @@ from main.forms import LoginForm, RegisterForm, EditUserForm
 from main.models import *
 from django.db import transaction
 from urlparse import urlparse
+from django.template.context import RequestContext
 
 def register(request, next = None):
     """Register new user
@@ -55,7 +56,8 @@ def register(request, next = None):
             return HttpResponseRedirect('/login/' + next)
     else:
         form = RegisterForm()
-    return render_to_response('register.html', {'form': form, 'next': next})
+    return render_to_response('register.html', {'form': form, 'next': next},
+                              context_instance=RequestContext(request))
     
 def profile(request, name):
     """View user profile
@@ -74,7 +76,8 @@ def profile(request, name):
         parsed = urlparse(site['url'])
         site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'
     return render_to_response('user.html', {'profile': profile, 'user': user,
-                                            'mine': user == request.user, 'meon': meon})
+                                            'mine': user == request.user, 'meon': meon},
+                              context_instance=RequestContext(request))
 
     
 def login(request, next = None):
@@ -105,7 +108,7 @@ def login(request, next = None):
     else:
         form = LoginForm()
     return render_to_response('login.html', {'form': form,
-                              'next': next})
+                              'next': next}, context_instance=RequestContext(request))
 @login_required
 def friend(request, name):
     """Add or remove friends
@@ -197,7 +200,9 @@ def edit_user(request):
                 'site': profile.site,
         }
         form = EditUserForm(data)
-    return render_to_response('edit_user.html', {'form': form, 'user': request.user, 'profile': request.user.get_profile()})
+    return render_to_response('edit_user.html',
+                              {'form': form, 'user': request.user, 'profile': request.user.get_profile()},
+                              context_instance=RequestContext(request))
 
 @login_required
 @transaction.commit_on_success

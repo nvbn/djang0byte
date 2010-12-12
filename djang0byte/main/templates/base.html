@@ -37,7 +37,7 @@
         <div id='content'>
             {% block content %}{% endblock %}
         </div>
-    
+        {% cache 0 sidebar user %}
         <div id="sidebar">
             <div class="top">
                 <ul>
@@ -72,6 +72,7 @@
                 </ul>
             </div>
         </div>
+        {% endcache %}
         {% cache 0 bottom_menu %}
         <div class='menu' id="bottom">
             {% show_menu "bottom_menu" "ordered-list" %}
