@@ -31,33 +31,15 @@
     </div>
 </div>
 {% for comment in comments %}
-<div class='comment' id="cmnt{{ comment.id }}" style="margin-left:{{comment.get_margin}}px;">
-    <div class='comment_top'>
-        <a href="/user/{{ comment.author }}/" class="comment_author">{{ comment.author }}</a>
-        <span class="date">{{ comment.created }}</span>
-        <a href="/post/{{ post.id }}/#cmnt{{ comment.id }}">#</a>
-        <div class="post_rate">
-            <a class="minus_rate" href='/action/ratecom/{{ comment.id }}/0/'>-</a>
-                <span
-                {% if comment.rate > 0 %}
-                    class='plus_rate'
-                {% endif %}{% if post.rate < 0 %}
-                    class='minus_rate'
-                {% endif %}>
-                    {{ comment.rate }}
-                </span>
-            <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
-        </div>
-    </div>
-    <div class="comment_text">{{ comment }}</div>
-    <a class='comment_reply' href='/newcomment/{{ post.id }}/{{ comment.id}}/'><img src="/media/style/speech_bubble.gif" alt="" />Reply</a>
-</div>
+    {% include 'single_comment.html' %}
 {% endfor %}
-<form action="/newcomment/" method="POST" id='main_from' class="comment_form">
-    {{ comment_form.text }}
-    {{ comment_form.comment }}
-    {{ comment_form.post }}<br />
-    <input type="submit" />
-</form>
-<a href='main_form' id="main_form_hide">Reply</a>
+<div class="comment_reply_form" id='main_from'>
+    <form action="/newcomment/" method="POST">
+        {{ comment_form.text }}
+        {{ comment_form.comment }}
+        {{ comment_form.post }}<br />
+        <input type="submit" />
+    </form>
+</div>
+<a href='#main_form' id="main_form_hide">Reply</a>
 {% endblock %}

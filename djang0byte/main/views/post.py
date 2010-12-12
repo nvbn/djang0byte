@@ -46,7 +46,7 @@ def newpost(request, type = 'post'):
     profile = request.user.get_profile()
     type = request.GET.get('type') or 'post'
     extend = 'base.html'
-    if request.GET.get('json') or False:
+    if request.GET.get('json'):
         extend = 'json.html'
     if type != 'answer':
       if request.method == 'POST':
@@ -193,6 +193,11 @@ def new_comment(request, post = 0, comment = 0):
     Returns: HttpResponse
 
     """
+    extend = 'base.html'
+    json = False
+    if request.GET.get('json'):
+        extend = 'json.html'
+        json = True
     if request.method == 'POST':
         form = CreateCommentForm(request.POST)
         if form.is_valid():
@@ -212,7 +217,7 @@ def new_comment(request, post = 0, comment = 0):
                             (comment.post.id, comment.id))
     else:
         form = CreateCommentForm({'post': post, 'comment': comment})
-    return render_to_response('new_comment.html', {'form': form})
+    return render_to_response('new_comment.html', {'form': form, 'extend': extend, 'pid': post, 'cid': comment})
 
 
 @login_required

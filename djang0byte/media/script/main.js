@@ -124,6 +124,35 @@ function setPostType(type) {
     }});
 }
 
+function commentReplyForm(url) {
+    $('.comment_reply_form').each(function() {
+        $(this).css('display', 'none');
+    });
+    $('.comment_reply').each(function() {
+        $(this).css('display', 'inline');
+    });
+    if (url != -1) {
+        id = url.split('/')[3];
+        $('#main_form_hide').css("display", 'inline');
+        $('#cmnt' + id + '>a.comment_reply').css('display', 'none');
+        if ($('#comment_reply_form_' + id).length) {
+            $('#comment_reply_form_' + id).css('display', 'block');
+            document.location.hash = 'cmnt' + id;
+            return(0);
+        }
+        $.ajax({ url: url + "?json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+            data = eval('(' + data + ')');
+            id = url.split('/')[3];
+            form = $('<div>').attr('class', 'comment_reply_form').attr('id', 'comment_reply_form_' + id).append(data.content);
+            $('#cmnt' + id).append(form);
+            document.location.hash = 'cmnt' + id;
+        }});
+    } else {
+        $('#main_form_hide').css("display", 'none');
+        $('#main_form').css('display', 'block');
+    }
+}
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();
@@ -136,7 +165,16 @@ $(document).ready(function(){
           rmMeOn(parseInt($(this).attr('id'))); 
        });
     });
-
+    $(".comment_reply").each(function(){
+        lnk = $(this).attr('href')
+        $(this).attr('href', '#' + lnk);
+        $(this).click(function(){
+            commentReplyForm($(this).attr('href').split('#')[1]);
+        });
+    });
+    $('#main_form_hide').click(function(){
+        commentReplyForm(-1);
+    })
     initPostType();
     initAnswers();
 });

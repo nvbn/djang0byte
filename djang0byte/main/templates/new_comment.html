@@ -1,10 +1,12 @@
-{% extends "base.html" %}
+{% extends extend %}
 {% block title %}
-list
+Create comment
 {% endblock %}
 {% block content %}
-<form action="/newcomment/" method="POST">
-    {{ form.as_ul }}
+<form id="/newcomment/{{ pid }}/{{ cid }}/" action="/newcomment/" method="POST">
+    {{ form.text }}
+    {{ form.comment }}
+    {{ form.post }}<br />
     <input type="submit" />
 </form>
 {% endblock %}
