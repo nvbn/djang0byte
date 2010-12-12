@@ -3,13 +3,31 @@
 Post list
 {% endblock %}
 {% block content %}
+<div class='post_list'>
 {% for post in object_list %}
-
+<div class='post'>
     {% include 'post_item.html' %}
+    <div class="post_bottom">
+        {% if post.type < 3 and post.have_cut %}
+            <div class="post_full"><a href="/post/{{ post.id }}/">Show full.</a></div>
+        {% endif %}
 
-<br/>
-<a href="/post/{{ post.id }}/">Show full.</a>{{ post.type }}
+        <div class="post_rate">
+            <a class="minus_rate" href='/action/rate/{{ post.id }}/0/'>-</a>
+            <span
+            {% if post.rate > 0 %}
+                class='plus_rate'
+            {% endif %}{% if post.rate < 0 %}
+                class='minus_rate'
+            {% endif %}>
+                {{ post.rate }}
+            </span>
+        <a class="plus_rate" href='/action/rate/{{ post.id }}/1/'>+</a>
+        </div>
+    </div>
+</div>
 {% endfor %}
+</div>
 <div>
     {% include "paginator_digg.html" %}
 </div>

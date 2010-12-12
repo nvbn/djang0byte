@@ -11,19 +11,53 @@
 {% include 'post_item.html' %}
     <br />
 {% load tagging_tags %}
-{% for tag in post.get_tags %}
-<a href='/tag/{{ tag }}/'>{{ tag }}</a>
-{% endfor %}
-<br />
-<a href='/action/rate/{{ post.id }}/0/'>-</a>{{ post.rate }}<a href='/action/rate/{{ post.id }}/1/'>+</a>
+<div class="post_bottom">
+    <div class="post_full">
+        {% for tag in post.get_tags %}
+            <a href='/tag/{{ tag }}/'>{{ tag }}</a>
+        {% endfor %}
+    </div>
+    <div class="post_rate">
+        <a class="minus_rate" href='/action/rate/{{ post.id }}/0/'>-</a>
+            <span
+            {% if post.rate > 0 %}
+                class='plus_rate'
+            {% endif %}{% if post.rate < 0 %}
+                class='minus_rate'
+            {% endif %}>
+                {{ post.rate }}
+            </span>
+        <a class="plus_rate" href='/action/rate/{{ post.id }}/1/'>+</a>
+    </div>
+</div>
 {% for comment in comments %}
-<div style="margin-left:{{comment.get_margin}}px;">
-<b>{{ comment.author }}:</b> {{comment}}<br />
-<a href='/newcomment/{{ post.id }}/{{ comment.id}}/'>reply</a>
+<div class='comment' id="cmnt{{ comment.id }}" style="margin-left:{{comment.get_margin}}px;">
+    <div class='comment_top'>
+        <a href="/user/{{ comment.author }}/" class="comment_author">{{ comment.author }}</a>
+        <span class="date">{{ comment.created }}</span>
+        <a href="/post/{{ post.id }}/#cmnt{{ comment.id }}">#</a>
+        <div class="post_rate">
+            <a class="minus_rate" href='/action/ratecom/{{ comment.id }}/0/'>-</a>
+                <span
+                {% if comment.rate > 0 %}
+                    class='plus_rate'
+                {% endif %}{% if post.rate < 0 %}
+                    class='minus_rate'
+                {% endif %}>
+                    {{ comment.rate }}
+                </span>
+            <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
+        </div>
+    </div>
+    <div class="comment_text">{{ comment }}</div>
+    <a class='comment_reply' href='/newcomment/{{ post.id }}/{{ comment.id}}/'><img src="/media/style/speech_bubble.gif" alt="" />Reply</a>
 </div>
 {% endfor %}
-<form action="/newcomment/" method="POST">
-    {{ comment_form.as_ul }}
+<form action="/newcomment/" method="POST" id='main_from' class="comment_form">
+    {{ comment_form.text }}
+    {{ comment_form.comment }}
+    {{ comment_form.post }}<br />
     <input type="submit" />
 </form>
+<a href='main_form' id="main_form_hide">Reply</a>
 {% endblock %}

@@ -7,7 +7,7 @@ def djbyte(request):
     rate = None
     if request.user.is_authenticated():
         try:
-            rate = Profile.objects.get(user=request.user).getRate()
+            rate = Profile.objects.get(user=request.user).get_rate()
         except Profile.DoesNotExist:
             pass
     posts = Post.objects.order_by('-date').all()[0:][:10]

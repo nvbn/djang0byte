@@ -1,8 +1,8 @@
-body {
+html, body {
     font-size: 16px;
     padding: 0 !important;
     margin: 0 !important;
-    widht: 100%;
+    width: 100%;
 }
 
 .title {
@@ -91,12 +91,28 @@ a, a:hover, a:active {
     padding-right: 15px;
 }
 
-.plus_rate {
+a.plust_rate, a.minus_rate {
+    display: inline-block;
+    width: 14px;
+    text-align: center;
+}
+
+.plus_rate,  a.plus_rate {
     color: #73BF60 !important;
 }
 
-.minus_rate {
+.minus_rate,  a.minus_rate {
     color: #802021 !important;
+}
+
+a.minus_rate:hover {
+    color: #fff !important;
+    background: #802021 !important;
+}
+
+a.plus_rate:hover {
+    color: #fff !important;
+    background: #73BF60 !important;
 }
 
 .userpic_profile {
@@ -109,6 +125,7 @@ a, a:hover, a:active {
     float: left;
     width: 75%;
     padding: 20px;
+    position: relative;
 }
 
 #sidebar {
@@ -182,4 +199,47 @@ li.post {
     background: #D8DBDE;
     height: 12px;
     display: inline-block;
+}
+
+div.post {
+    border-bottom: #D8DBDE 1px solid;
+    margin-bottom: 15px !important;
+}
+
+div .post:last-child {
+    border-bottom: 0 !important;
+}
+
+.date {
+    color: #999;
+    font-size: 12px;
+}
+
+.post_rate {
+    float: right;
+}
+
+.post_full {
+    float: left;
+}
+
+.post_bottom {
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
+    border-bottom: 1px dashed;
+    font-size: 24px;
+    text-decoration: none;
+    display: none;
+}
+
+.comment_top {
+    margin-bottom: 6px;
+    margin-top: 12px;
+    overflow: hidden;
+    background: #D8DBDE;
+    padding: 2px;
 }

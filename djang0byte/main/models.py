@@ -326,6 +326,14 @@ class Post(models.Model):
         super(Post, self).save() # Call the "real" save() method
 
     def is_answer(self, user = None):
+        """Check post type is answer and return questions
+
+        Keyword arguments:
+        user -- request.user
+
+        Returns: Array/Boolean
+
+        """
         try:
             return(self._is_answer)
         except:
@@ -333,14 +341,18 @@ class Post(models.Model):
                 answer = Answer.objects.filter(post=self).all()
                 action = lambda count: count and (answer.order_by('-count')[0].count*200)/count or 0
                 self._is_answer = [{'count': answ.count, 'value': answ.value, 'width': action(answ.count)} for answ in answer]
-                if user != None: self.is_result = user.is_authenticated() and not Answer.check(self, user)
+                if user is not None:
+                    self.is_result = user.is_authenticated() and not Answer.check(self, user)
                 return(self._is_answer)
             except Answer.DoesNotExist:
                 self._is_answer = False
                 self.is_result = False
                 return(False)
 
-        
+    def have_cut(self):
+        """Check if 'cut' exsisted"""
+        return(self.text != self.preview)
+
     def __unicode__(self):
         """Return post title"""
         return(self.title)
@@ -768,7 +780,7 @@ class Notify(models.Model):
         Returns: None
         
         """
-        users = list(Profile.objects.get(user=post.author).getFriends())
+        users = list(Profile.objects.get(user=post.author).get_friends())
         users = [user.friend for user in users]
         if post.blog != None:
             users += [blog_user.user for blog_user in post.blog.get_users()]

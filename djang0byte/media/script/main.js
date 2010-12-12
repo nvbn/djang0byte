@@ -66,6 +66,20 @@ function initPostType() {
     });
 }
 
+function initAnswers() {
+    $(".rm_answ").each(function(){
+       $(this).click(function(){
+          rmAnsw(parseInt($(this).attr('id')));
+       });
+    });
+    $("#add_answ").click(function(){
+           addAnsw();
+    });
+    $("#rm_answ").click(function(){
+            rmAnsw(-1);
+    });
+}
+
 function _get(val, select) {
         try {
             if (select) {
@@ -100,6 +114,7 @@ function setPostType(type) {
         data = eval('(' + data + ')');
         $('#content').html(data.content);
         initPostType();
+        initAnswers();
         _set('blog', true);
         set('title');
         set('text');
@@ -121,16 +136,7 @@ $(document).ready(function(){
           rmMeOn(parseInt($(this).attr('id'))); 
        });
     });
-    $(".rm_answ").each(function(){
-       $(this).click(function(){
-          rmAnsw(parseInt($(this).attr('id'))); 
-       });
-    });
-    $("#add_answ").click(function(){
-           addAnsw();
-    });
-    $("#rm_answ").click(function(){
-            rmAnsw(-1);
-    });
+
     initPostType();
+    initAnswers();
 });
