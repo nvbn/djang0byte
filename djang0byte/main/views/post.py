@@ -29,6 +29,8 @@ from annoying.decorators import render_to
 from tagging.models import TaggedItem
 from main.utils import Access
 from django.template import RequestContext
+from settings import DEFAULT_CACHE_TIME
+from django.views.decorators.vary import vary_on_cookie
 
 
 @transaction.commit_on_success
@@ -108,7 +110,7 @@ def newpost(request, type = 'post'):
       'count': count, 'blogs': profile.get_blogs(), 'multi': multi, 'extend': extend},
                                 context_instance=RequestContext(request))
 
-@cache_page(0)
+@cache_page(DEFAULT_CACHE_TIME)
 def post(request, id):
     """Print single post
 
@@ -130,7 +132,7 @@ def post(request, id):
         'single': True}, context_instance=RequestContext(request)
         )
 
-@cache_page(0)
+@cache_page(DEFAULT_CACHE_TIME)
 @render_to('post_list.html')
 @paginate(style='digg', per_page=10)
 def post_list(request, type = None, param = None):
@@ -299,6 +301,9 @@ def action(request, type, id, action = None):
 
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 
+
+@cache_page(DEFAULT_CACHE_TIME)
+@vary_on_cookie
 @login_required
 @render_to('lenta.html')
 @paginate(style='digg', per_page=10)

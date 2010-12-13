@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}
-Post list
+{% trans "Post list" %}
 {% endblock %}
 {% block content %}
 <div class='post_list'>
@@ -9,7 +10,7 @@ Post list
     {% include 'post_item.html' %}
     <div class="post_bottom">
         {% if post.type < 3 and post.have_cut %}
-            <div class="post_full"><a href="/post/{{ post.id }}/">Show full.</a></div>
+            <div class="post_full"><a href="/post/{{ post.id }}/">{% trans "Show full." %}</a></div>
         {% endif %}
 
         <div class="post_rate">

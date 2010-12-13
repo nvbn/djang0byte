@@ -1,6 +1,7 @@
 {% extends extend %}
+{% load i18n %}
 {% block title %}
-Create comment
+{% trans "Create comment" %}
 {% endblock %}
 {% block content %}
 <form id="/newcomment/{{ pid }}/{{ cid }}/" action="/newcomment/?json=1" method="POST">

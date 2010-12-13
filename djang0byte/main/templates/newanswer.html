@@ -1,14 +1,15 @@
 {% extends extend %}
+{% load i18n %}
 {% block title %}
-New post
+{% trans "New post" %}
 {% endblock %}
 {% block content %}
 <div id="post_type">
-<a href="?">Post</a> <a href="?type=link">Link</a> <a href="?type=translate">Translate</a> <a href="?type=answer">Answer</a>
+<a href="?">{% trans "Post" %}</a> <a href="?type=link">{% trans "Link" %}</a> <a href="?type=translate">{% trans "Translate" %}</a> <a href="?type=answer">{% trans "Answer" %}</a>
 </div>
 <form action='/newpost/?type=answer' method='post'>
 <select name="blog">
-	<option value="0">Персональный</option>
+	<option value="0">{% trans "Not in blog" %}</option>
        {% for blog in blogs %}
         <option value="{{ blog.id }}">{{ blog }}</option>
        {% endfor %}
@@ -19,8 +20,8 @@ New post
 <p id="answp_{{ i }}"><input type='text' name='{{ i }}'/><a href="#" id="{{ i }}" class="rm_answ">X</a></p>
 {% endfor %}
 </div>
-<input type="button" id="add_answ" value="Add"/><input type="button" id="rm_answ" value="Remove"/><br/><br/><br/>
-<label><input type='checkbox' name='multi' />Allow multiple answer</label><br />
+<input type="button" id="add_answ" value="Add"/><input type="button" id="rm_answ" value="{% trans 'Remove' %}"/><br/><br/><br/>
+<label><input type='checkbox' name='multi' />{% trans "Allow multiple answer" %}</label><br />
 <input type='text' name='tags'/><br />
 <input type='hidden' name='count' value='{{ count }}' id='count' />
 <input type='submit'>

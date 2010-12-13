@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}
 {{ user.username }}
 {% endblock %}
 {% load cache %}
 {% block content %}
 <img class="userpic_profile" src="{{ profile.get_avatar }}" alt="" />
-<h2>{{ user.username }} <span{% if profile.get_rate > 0 %} class='plus_rate' {% endif %}{% if profile.get_rate < 0 %} class='minus_rate' {% endif %}>{{ profile.getRate }}</span></h2>
+<h2>{{ user.username }} <span{% if profile.get_rate > 0 %} class='plus_rate' {% endif %}{% if profile.get_rate < 0 %} class='minus_rate' {% endif %}>{{ profile.get_rate }}</span></h2>
     {% cache 500 user.username %}    
     {% for status in profile.get_status %}
         <p class="status">
@@ -28,25 +29,25 @@
 {% endif %}
 <br /><br />
 {% if profile.about %}
-About user:<br />
+{% trans "About user:" %}<br />
 {{ profile.about }}
 {% endif %}
 <br /><hr />
 {% if profile.get_blogs %}
-    Blogs: {% for blog in profile.get_blogs %}
+    {% trans "Blogs:" %} {% for blog in profile.get_blogs %}
     <a href='/blog/{{ blog.id }}/'>{{ blog }}</a>
     {% endfor %}
 {% endif %}
 {% if profile.get_friends %}
-    Blogs: {% for friend in profile.get_friends %}
+    {% trans "Friends:" %} {% for friend in profile.get_friends %}
     <a href='/user/{{ friend }}/'>{{ friend }}</a>
     {% endfor %}
 {% endif %}
 <br />
-Write {{ profile.post_count }} posts and {{ profile.comment_count }} comments.
+{% trans "Writed" %} {{ profile.post_count }} {% trans "posts and" %} {{ profile.comment_count }} {% trans "comments." %}
 {% if mine %}
     <br />
     <hr />
-    <a href='/action/edit_user/'><img src="/media/style/edit.png" /> Edit profile</a> <a href='/action/edit_user/'><img src="/media/style/edit.png" /> Change userpic</a>  <a href='/action/change_password/'><img src="/media/style/edit.png" /> Change password</a>
+    <a href='/action/edit_user/'><img src="/media/style/edit.png" /> {% trans "Edit profile" %}</a> <a href='/action/edit_user/'><img src="/media/style/edit.png" /> {% trans "Change userpic" %}</a>  <a href='/action/change_password/'><img src="/media/style/edit.png" /> {% trans "Change password" %}</a>
 {% endif %}
 {%  endblock %}

@@ -15,7 +15,6 @@
 #       MA 02110-1301, USA.
 
 
-
 from django import forms
 from timezones.forms import TimeZoneField
 from tagging_autocomplete.widgets import TagAutocomplete

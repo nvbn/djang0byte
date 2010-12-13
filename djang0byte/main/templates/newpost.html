@@ -1,14 +1,15 @@
 {% extends extend %}
+{% load i18n %}
 {% block title %}
-New post
+{% trans "New post" %}
 {% endblock %}
 {% block content %}
 <div id="post_type">
-<a href="?">Post</a> <a href="?type=link">Link</a> <a href="?type=translate">Translate</a> <a href="?type=answer">Answer</a>
+<a href="?">{% trans "Post" %}</a> <a href="?type=link">{% trans "Link" %}</a> <a href="?type=translate">{% trans "Translate" %}</a> <a href="?type=answer">{% trans "Answer" %}</a>
 </div>
 <form action='/newpost/?type={{ type }}' method='post'>
     <select name="blog">
-	<option value="0">Not in blog</option>
+	<option value="0">{% trans "Not in blog" %}</option>
        {% for blog in blogs %}
         <option value="{{ blog.id }}">{{ blog }}</option>
        {% endfor %}
@@ -16,12 +17,12 @@ New post
 {{ form.title }}<br />
 {{ form.text }}<br />
 {% if form.link %}
-<label>Link: {{ form.link }}<br /></label>
+<label>{% trans "Link:" %} {{ form.link }}<br /></label>
 {%  endif %}
 {% if form.source %}
-<label>Source: {{ form.source }}</label><br />
+<label>{% trans "Source:" %} {{ form.source }}</label><br />
 {%  endif %}
-<label>Tags: {{ form.tags }}</label><br />
+<label>{% trans "Tags:" %} {{ form.tags }}</label><br />
 <input type='submit'>
 </form>
 {%  endblock %}

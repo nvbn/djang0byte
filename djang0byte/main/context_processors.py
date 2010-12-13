@@ -1,5 +1,5 @@
 from main.models import *
-from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
+from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, MENU_CACHE_TIME, SIDEBAR_CACHE_TIME
 from django.core.exceptions import FieldError
 
 def djbyte(request):
@@ -35,4 +35,4 @@ def djbyte(request):
 
     return({'your_rate': rate, 'top_post_comment': objects, 'top_profiles': profiles, 'top_blogs': blogs,
             'blogs_count': Blog.objects.count(), 'profiles_count': Profile.objects.count(),
-            'city_count': City.objects.count()})
+            'city_count': City.objects.count(), 'MENU_CACHE_TIME': MENU_CACHE_TIME, 'SIDEBAR_CACHE_TIME': SIDEBAR_CACHE_TIME})

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}
-list
+{% trans "Registration" %}
 {% endblock %}
 {% block content %}
 <form action="/register/{{ next }}/" method="post">

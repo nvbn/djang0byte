@@ -24,6 +24,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from main.models import *
 from settings import DEFAULT_BLOG_TYPE
+from django.template.context import RequestContext
 
 @login_required
 def newblog(request):
@@ -54,7 +55,7 @@ def newblog(request):
             return HttpResponseRedirect('/newpost/')
     else:
         form = CreateBlogForm()
-    return render_to_response('newblog.html', {'form': form})
+    return render_to_response('newblog.html', {'form': form}, context_instance=RequestContext(request))
     
 @login_required
 def join(request, blog_id):

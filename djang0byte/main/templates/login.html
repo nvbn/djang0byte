@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}
-list
+{% trans "Login" %}
 {% endblock %}
 {% block content %}
 <form action='/login/{{ next }}/' method='post'>

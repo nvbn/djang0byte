@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}
-Lenta
+{% trans "Your feed" %}
 {% endblock %}
 {% block content %}
 {% for object in object_list %}
