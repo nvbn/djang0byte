@@ -15,18 +15,15 @@
 #       MA 02110-1301, USA.
 
 
-
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from main.forms import CreateBlogForm, CreatePostForm
-from django.contrib import auth
+from main.forms import CreateBlogForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from main.models import *
 from settings import DEFAULT_BLOG_TYPE
-from django.template.context import RequestContext
+from annoying.decorators import render_to
 
 @login_required
+@render_to('newblog.html')
 def newblog(request):
     """Create blog form and action
 
@@ -55,7 +52,7 @@ def newblog(request):
             return HttpResponseRedirect('/newpost/')
     else:
         form = CreateBlogForm()
-    return render_to_response('newblog.html', {'form': form}, context_instance=RequestContext(request))
+    return({'form': form})
     
 @login_required
 def join(request, blog_id):

@@ -153,6 +153,18 @@ li.post {
     list-style-image: url('/media/style/document.gif')
 }
 
+li.blog {
+    list-style-image: url('/media/style/figure.gif')
+}
+
+li.user {
+    list-style-image: url('/media/style/documents.gif')
+}
+
+li.blog, li.user, li.post, li.comment {
+    text-align: left;
+}
+
 .tag_1 {
     font-size: 8px;
 }

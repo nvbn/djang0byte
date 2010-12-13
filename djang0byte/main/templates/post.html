@@ -32,7 +32,7 @@
 {% for comment in comments %}
     {% include 'single_comment.html' %}
 {% endfor %}
-<div class="comment_reply_form" id='main_from'>
+<div class="comment_reply_form" id='main_form'>
     <form action="/newcomment/" method="POST">
         {{ comment_form.text }}
         {{ comment_form.comment }}

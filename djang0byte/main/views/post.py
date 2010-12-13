@@ -111,6 +111,7 @@ def newpost(request, type = 'post'):
                                 context_instance=RequestContext(request))
 
 @cache_page(DEFAULT_CACHE_TIME)
+@render_to('post.html')
 def post(request, id):
     """Print single post
 
@@ -127,10 +128,9 @@ def post(request, id):
     form = CreateCommentForm({'post': id, 'comment': 0})
     post.get_content = post.get_full_content
     post.is_answer(request.user)
-    return render_to_response('post.html',
-        {'post': post, 'author': author, 'comments': comments, 'comment_form': form,
-        'single': True}, context_instance=RequestContext(request)
-        )
+    return({'post': post, 'author': author, 'comments': comments, 'comment_form': form,
+        'single': True})
+
 
 @cache_page(DEFAULT_CACHE_TIME)
 @render_to('post_list.html')
@@ -157,7 +157,7 @@ def post_list(request, type = None, param = None):
         posts = Post.objects.filter(blog=None)
     elif type == 'blog':
         blog = Blog.objects.get(id=param)
-        posts = blog.getPosts()
+        posts = blog.get_posts()
     elif type == 'tag':
         posts = TaggedItem.objects.get_by_model(Post, param)
         #posts = [post.post for post in posts_with_tag]
@@ -245,6 +245,10 @@ def action(request, type, id, action = None):
     Returns: Array
 
     """
+    try:
+        post = Post.objects.select_related('author').get(id=id)
+    except Post.DoesNotExist:
+        post = Post()
     profile = Profile.objects.get(user=request.user)
     if type == 'inblog':
         blog = Blog.objects.get(id=id)

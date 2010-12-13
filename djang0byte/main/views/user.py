@@ -25,7 +25,9 @@ from main.models import *
 from django.db import transaction
 from urlparse import urlparse
 from django.template.context import RequestContext
+from annoying.decorators import render_to
 
+@render_to('register.html')
 def register(request, next = None):
     """Register new user
 
@@ -56,9 +58,9 @@ def register(request, next = None):
             return HttpResponseRedirect('/login/' + next)
     else:
         form = RegisterForm()
-    return render_to_response('register.html', {'form': form, 'next': next},
-                              context_instance=RequestContext(request))
+    return({'form': form, 'next': next})
     
+@render_to('user.html')
 def profile(request, name):
     """View user profile
 
@@ -75,11 +77,11 @@ def profile(request, name):
     for site in meon:
         parsed = urlparse(site['url'])
         site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'
-    return render_to_response('user.html', {'profile': profile, 'user': user,
-                                            'mine': user == request.user, 'meon': meon},
-                              context_instance=RequestContext(request))
+    return({'profile': profile, 'user': user,
+           'mine': user == request.user, 'meon': meon})
 
-    
+
+@render_to('login.html')
 def login(request, next = None):
     """Login user
 
@@ -107,8 +109,8 @@ def login(request, next = None):
                 return HttpResponseRedirect(next)
     else:
         form = LoginForm()
-    return render_to_response('login.html', {'form': form,
-                              'next': next}, context_instance=RequestContext(request))
+    return({'form': form, 'next': next})
+
 @login_required
 def friend(request, name):
     """Add or remove friends
@@ -143,6 +145,7 @@ def logout(request):
     return HttpResponseRedirect("/")
 
 @login_required
+@render_to('edit_user.html')
 @transaction.commit_on_success
 def edit_user(request):
     """Edit user data form
@@ -200,9 +203,7 @@ def edit_user(request):
                 'site': profile.site,
         }
         form = EditUserForm(data)
-    return render_to_response('edit_user.html',
-                              {'form': form, 'user': request.user, 'profile': request.user.get_profile()},
-                              context_instance=RequestContext(request))
+    return({'form': form, 'user': request.user, 'profile': request.user.get_profile()})
 
 @login_required
 @transaction.commit_on_success

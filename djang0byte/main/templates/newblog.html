@@ -5,7 +5,13 @@
 {% endblock %}
 {% block content %}
 <form action='/newblog/' method='post'>
-{{ form.as_ul }}
+<table>
+<tr>
+    <td>{% trans "Name:" %}</td><td>{{ form.name }}</td>
+</tr><tr>
+    <td>{% trans "Description:" %}</td><td>{{ form.description }}</td>
+</tr>
+</table>
 <input type='submit'>
 </form>
 {% endblock %}

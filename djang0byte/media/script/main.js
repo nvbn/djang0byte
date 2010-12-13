@@ -81,13 +81,25 @@ function initAnswers() {
     });
 }
 
-function initCommentSubmit() {
-    $(".comment_reply_form>form").submit(function(event){
+function initCommentSubmit(context) {
+    if (context == -1) {
+        context = ".comment_reply_form>form";
+    } else {
+        context = context + ">.comment_reply_form>form";
+    }
+    $(context).submit(function(event){
         event.preventDefault();
         $.ajax({ url: "/newcomment/?json=1", type: 'POST', data: $(this).serialize(),
             context: document.body, success: function(data, textStatus, XMLHttpRequest) {
             data = eval('(' + data + ')');
-            $(data.content).insertAfter('#cmnt'+current_reply);
+            if (current_reply == -1) {
+                $(data.content).insertBefore('#main_form');
+            } else {
+                $(data.content).insertAfter('#cmnt'+current_reply);
+            }
+            $(data.content).each(function() {
+                initCommentReply('#' + $(this).attr('id'));
+            });
             commentReplyForm(-1);
         }});
         return false;
@@ -161,13 +173,28 @@ function commentReplyForm(url) {
             form = $('<div>').attr('class', 'comment_reply_form').attr('id', 'comment_reply_form_' + id).append(data.content);
             $('#cmnt' + id).append(form);
             document.location.hash = 'cmnt' + id;
-            initCommentSubmit();
+            initCommentSubmit('#cmnt' + id);
         }});
     } else {
         $('#main_form_hide').css("display", 'none');
         $('#main_form').css('display', 'block');
         current_reply = -1;
     }
+}
+
+function initCommentReply(context) {
+    if (context == -1) {
+        context = ".comment_reply";
+    } else {
+        context = context + ">.comment_reply";   
+    }
+    $(context).each(function(){
+        lnk = $(this).attr('href')
+        $(this).attr('href', '#' + lnk);
+        $(this).click(function(){
+            commentReplyForm($(this).attr('href').split('#')[1]);
+        });
+    });
 }
 
 $(document).ready(function(){
@@ -182,17 +209,11 @@ $(document).ready(function(){
           rmMeOn(parseInt($(this).attr('id'))); 
        });
     });
-    $(".comment_reply").each(function(){
-        lnk = $(this).attr('href')
-        $(this).attr('href', '#' + lnk);
-        $(this).click(function(){
-            commentReplyForm($(this).attr('href').split('#')[1]);
-        });
-    });
     $('#main_form_hide').click(function(){
         commentReplyForm(-1);
     })
     initPostType();
     initAnswers();
-    initCommentSubmit();
+    initCommentSubmit(-1);
+    initCommentReply(-1);
 });

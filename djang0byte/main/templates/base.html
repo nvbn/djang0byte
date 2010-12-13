@@ -14,6 +14,7 @@
 
         {% load cache %}
         {% load i18n %}
+        {% load pytils_numeral %}
         {% cache MENU_CACHE_TIME menu %}
         <div class='menu'>
             {% load tree_menu_tags %}
@@ -59,13 +60,29 @@
                 {% endfor %}
             </div>
             <div class="top">
-                <span><a href='/list/users/'>{{ profiles_count }} {% trans "users</a> from" %} <a href='/list/city/'>{{ city_count  }} {% trans "cities." %}</a></span>
+                <span><a href='/list/users/'>{{ profiles_count }}
+                {% if LANGUAGE_CODE == 'ru-ru' %}
+                    {{ profiles_count|choose_plural:"пользователь,пользователя,пользователей" }}</a> из
+                {% else %}
+                    {% trans "users</a> from" %}
+                {% endif %}
+                    <a href='/list/city/'>{{ city_count  }}
+                    {% if LANGUAGE_CODE == 'ru-ru' %}
+                        {{ city_count|choose_plural:"город,города,городов" }}.
+                    {% else %}
+                        {% trans "cities." %}
+                    {% endif %}
+                </a></span>
                 <ul>
                     {% for profile in top_profiles %}
                         <li class="user"><a href="/user/{{ profile.name }}/">{{ profile.name }} ({{ profile.rate }})</a></li>
                     {% endfor %}
                 </ul>
-                <span><a href='/list/blogs/'>{{ blogs_count }} {% trans "blogs" %}</a>.</a></span>
+                <span><a href='/list/blogs/'>{% if LANGUAGE_CODE == 'ru-ru' %}
+                    Из {{ blogs_count }} блог{{ blogs_count|choose_plural:",а,ов" }}.
+                {% else %}
+                    {{ blogs_count }} {% trans "blogs" %}.
+                {% endif %}</a></span>
                 <ul>
                     {% for blog in top_blogs %}
                         <li class="user"><a href="/blog/{{ blog.id }}/">{{ blog.name }} ({{ blog.rate }})</a></li>
