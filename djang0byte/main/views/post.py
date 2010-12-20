@@ -147,6 +147,8 @@ def post_list(request, type = None, param = None):
 
     """
     posts = None
+    subject = None
+    option = None
     if type == None:
         blog_types = BlogType.objects.filter(display_default=False)
         blogs = Blog.objects.filter(type__in=blog_types)
@@ -158,20 +160,23 @@ def post_list(request, type = None, param = None):
     elif type == 'blog':
         blog = Blog.objects.get(id=param)
         posts = blog.get_posts()
+        subject = blog
+        option = blog.check_user(request.user)
     elif type == 'tag':
         posts = TaggedItem.objects.get_by_model(Post, param)
+        subject = param
         #posts = [post.post for post in posts_with_tag]
     elif type == 'auth':
         user = User.objects.get(username=param)
         profile = user.get_profile()
         posts = profile.get_posts()
+        subject = profile
+        option = profile.is_my_friend(request.user)
     elif type == 'favourite':
         favourites = Favourite.objects.filter(user=request.user)
         posts = [post.post for post in favourites]
     posts = posts.order_by('-id')
-    for post in posts:
-        print post.is_answer(request.user)
-    return {'object_list': posts, 'single': False}
+    return {'object_list': posts, 'single': False, 'type': type, 'subject': subject, 'option': option}
 
 def post_list_with_param(request, type, param = None):
     """Wrapper for post_list

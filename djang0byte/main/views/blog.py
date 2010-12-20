@@ -68,7 +68,7 @@ def join(request, blog_id):
     blog = Blog.objects.get(id=blog_id)
     if blog.owner == request.user:
         pass
-    if blog.checkUser(request.user):
+    if blog.check_user(request.user):
         userInBlog = UserInBlog.objects.get(user=request.user, blog=blog)
         userInBlog.delete()
     else:

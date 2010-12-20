@@ -255,3 +255,17 @@ a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
     background: #D8DBDE;
     padding: 2px;
 }
+
+.post_list_head {
+    overflow: hidden;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}

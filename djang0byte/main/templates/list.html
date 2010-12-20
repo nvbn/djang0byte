@@ -4,13 +4,12 @@
 {% trans "List" %}
 {% endblock %}
 {% block content %}
-
 {% for item in object_list %}
     {% if type == 'users' %}
         <a href='/user/{{ item.user.username }}/'>{{ item.user.username }}</a><br />
     {% else %}
         {% if type == 'blogs' %}
-             <a href='/blog/{{ item.name }}/'>{{ item.name }}</a><br />
+             <a href='/blog/{{ item.id }}/'>{{ item.name }}</a><br />
         {% else %}
             <a href='/user/city/{{ item.name }}/'>{{ item.name }}</a><br/>
         {% endif %}

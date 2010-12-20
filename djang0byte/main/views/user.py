@@ -77,15 +77,7 @@ def profile(request, name):
     for site in meon:
         parsed = urlparse(site['url'])
         site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'
-    if request.user.is_authenticated():
-        try:
-            Friends.objects.get(user=request.user,friend=user.id)
-            is_my_friend = 1
-        except Friends.DoesNotExist:
-            is_my_friend = 0
-    else:
-        is_my_friend = -1
-    return({'profile_user': profile, 'user_user': user, 'is_my_friend': is_my_friend,
+    return({'profile_user': profile, 'user_user': user, 'is_my_friend': profile.is_my_friend(request.user),
            'mine': user == request.user, 'meon': meon})
 
 

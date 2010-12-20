@@ -581,6 +581,17 @@ class Profile(models.Model):
             self._status = [{'obj': service , 'text': service.get_status()} for service in Statused.objects.filter(user=self.user, show=True)]
             return(self._status)
 
+    def is_my_friend(self, user):
+        if user.is_authenticated():
+            try:
+                Friends.objects.get(user=user,friend=self.user)
+                is_my_friend = 1
+            except Friends.DoesNotExist:
+                is_my_friend = 0
+        else:
+            is_my_friend = -1
+        return(is_my_friend)
+
     def __unicode__(self):
         """Return username"""
         return self.user.username
