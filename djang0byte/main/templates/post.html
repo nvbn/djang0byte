@@ -16,8 +16,8 @@
             <a href='/tag/{{ tag }}/'>{{ tag }}</a>
         {% endfor %}
     </div>
-    <div class="post_rate">
-        <a class="minus_rate" href='/action/rate/{{ post.id }}/0/'>-</a>
+    <div class="post_rate" id="prate{{ post.id }}">
+        <a class="minus_rate" href='/action/ratepost/{{ post.id }}/0/'>-</a>
             <span
             {% if post.rate > 0 %}
                 class='plus_rate'
@@ -26,7 +26,7 @@
             {% endif %}>
                 {{ post.rate }}
             </span>
-        <a class="plus_rate" href='/action/rate/{{ post.id }}/1/'>+</a>
+        <a class="plus_rate" href='/action/ratepost/{{ post.id }}/1/'>+</a>
     </div>
 </div>
 {% for comment in comments %}

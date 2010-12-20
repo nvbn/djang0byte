@@ -312,11 +312,22 @@ def action(request, type, id, action = None):
             spy.post = post
             spy.user = request.user
             spy.save()
-    elif type == 'ratepost' and request.user != post.author and profile.checkAccess(Access.ratePost):
-        if action == '1':
-          post.ratePost(request.user, +1)
-        elif action == '0':
-          post.ratePost(request.user, -1)
+    elif type == 'ratepost':
+        if request.user != post.author:
+            if profile.check_access(Access.ratePost):
+                if action == '1':
+                  rate = post.rate_post(request.user, +1)
+                elif action == '0':
+                  rate = post.rate_post(request.user, -1)
+                error = ''
+                if not rate:
+                    error = _('Second vote is forbidden!')
+                if json:
+                    return jsend({'error': error, 'rate': post.rate, 'id': post.id })
+            elif json:
+                return jsend({'error': _('Not allow this action!')})
+        elif json:
+            return jsend({'error': _('For their post can not vote!')})
     elif type == 'answer':
         answers = Answer.objects.filter(post=post)
         if post.type == 3:

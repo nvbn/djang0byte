@@ -289,7 +289,7 @@ class Post(models.Model):
         
         """
         try:
-            pr = PostRate.objects.get(post=self, user=user)
+            PostRate.objects.get(post=self, user=user)
             return(False)
         except PostRate.DoesNotExist:
             self.rate = self.rate + value

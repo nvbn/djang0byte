@@ -197,7 +197,7 @@ function initCommentReply(context) {
     });
 }
 
-function rate(url) {
+function rate(url, type) {
     $.ajax({ url: url + "?json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
             //data = eval('(' + data + ')');
             //alert(data.error);
@@ -211,7 +211,12 @@ function rate(url) {
                 } else {
                     class = '';
                 }
-                $('#cmnt' + data.id + '>div.comment_top>div.comment_rate>span').html(data.rate).attr('class', class);
+                if (type == 'comment') {
+                    hash = '#cmnt' + data.id + '>div.comment_top>div.comment_rate>span';
+                } else if (type == 'post') {
+                    hash = '#prate' + data.id + '>span';
+                }
+                $(hash).html(data.rate).attr('class', class);
             }
     }});
 }
@@ -225,7 +230,21 @@ function initCommentRates(context) {
     $(context + ">a").each(function(){
         $(this).attr('href', '#' + $(this).attr('href'));
         $(this).click(function(){
-            rate($(this).attr('href').split('#')[1]);
+            rate($(this).attr('href').split('#')[1], 'comment');
+        });
+    });
+}
+
+function initPostRates(context) {
+    if (context == -1) {
+        context = ".post_rate";
+    } else {
+        context = context + ">.post_rate";
+    }
+    $(context + ">a").each(function(){
+        $(this).attr('href', '#' + $(this).attr('href'));
+        $(this).click(function(){
+            rate($(this).attr('href').split('#')[1], 'post');
         });
     });
 }
@@ -250,4 +269,5 @@ $(document).ready(function(){
     initCommentSubmit(-1);
     initCommentReply(-1);
     initCommentRates(-1);
+    initPostRates(-1);
 });
