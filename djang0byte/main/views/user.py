@@ -77,7 +77,15 @@ def profile(request, name):
     for site in meon:
         parsed = urlparse(site['url'])
         site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'
-    return({'profile': profile, 'user': user,
+    if request.user.is_authenticated():
+        try:
+            Friends.objects.get(user=request.user,friend=user.id)
+            is_my_friend = 1
+        except Friends.DoesNotExist:
+            is_my_friend = 0
+    else:
+        is_my_friend = -1
+    return({'profile_user': profile, 'user_user': user, 'is_my_friend': is_my_friend,
            'mine': user == request.user, 'meon': meon})
 
 
@@ -122,15 +130,17 @@ def friend(request, name):
     Returns: HttpResponse
 
     """
-    user = User.objects.get(name=name)
+    print name
+    user = User.objects.get(username=name)
     try:
-        friend = Friends.objects.get(user=request.user,friend=user.id)
+        friend = Friends.objects.get(user=request.user.get_profile(),friend=user)
         friend.delete()
     except Friends.DoesNotExist:
         friend = Friends()
-        friend.user = request.user
-        friend.friend = user.id
+        friend.user = request.user.get_profile()
+        friend.friend = user
         friend.save()
+    return(HttpResponseRedirect('/user/%s/' % (name)))
     
 def logout(request):
     """Getting out from here!

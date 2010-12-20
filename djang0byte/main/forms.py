@@ -29,6 +29,7 @@ class LoginForm(forms.Form):
     """Login form"""
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+    save = forms.CheckboxInput()
 
 class CreateBlogForm(forms.Form):
     """Create new blog form"""
@@ -39,7 +40,7 @@ class CreatePostForm(forms.Form):
     """Create new post form"""
     title = forms.CharField()
     text = forms.CharField(widget=forms.Textarea())
-    tags = forms.CharField(widget=TagAutocomplete())
+    tags = forms.CharField(widget=TagAutocomplete(), required=False)
 
 class CreatePostLinkForm(CreatePostForm):
     """Create post link form"""

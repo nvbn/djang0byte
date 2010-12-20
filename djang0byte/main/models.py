@@ -23,7 +23,7 @@ import tagging
 from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
-from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE
+from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR
 from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
 from utils import file_upload_path, Access, get_status
 from parser import utils
@@ -204,7 +204,7 @@ class Post(models.Model):
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
     type = models.IntegerField(choices=POST_TYPE, default=0, verbose_name=_('Type of post'))
     adittion = models.CharField(max_length=300, blank=True, verbose_name=_('Adittion field'))
-    tags = TagField(verbose_name=_('Tags'))
+    tags = TagField(verbose_name=_('Tags'), blank=True, null=True)
 
     class Meta:
         ordering = ('-id', )
@@ -543,7 +543,10 @@ class Profile(models.Model):
 
     def get_avatar(self):
         """Get url of user avatar"""
-        return(self.avatar.url)
+        try:
+            return(self.avatar.url)
+        except ValueError:
+            return(DEFAULT_AVATAR)
 
     def get_me_on(self):
         """Return array of sites, where user is registered"""
@@ -591,6 +594,10 @@ class Friends(models.Model):
     """Friends table"""
     friend = models.ForeignKey(User, verbose_name=_('Friend'))
     user = models.ForeignKey(Profile, verbose_name=_('User'))
+
+    def __unicode__(self):
+        """Return friend name"""
+        return(self.friend.username)
 
     class Meta:
         verbose_name = _("Friend")
