@@ -227,7 +227,7 @@ div .post:last-child {
     font-size: 12px;
 }
 
-.post_rate {
+.post_rate, .comment_rate {
     float: right;
 }
 

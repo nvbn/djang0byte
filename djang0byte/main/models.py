@@ -404,18 +404,20 @@ class Comment(NS_Node):
         
         """
         try:
-            cr = CommentRate.objects.get(comment=self, user=user)
+            CommentRate.objects.get(comment=self, user=user)
             return(False)
         except CommentRate.DoesNotExist:
+            print value
             self.rate += value
             self.rate_count += 1
-            rate = ComentRate()
+            rate = CommentRate()
             rate.comment = self
             rate.user = user
             rate.save()
-            user = Profile.objects.get(user=self.user)
+            user = Profile.objects.get(user=self.author)
             user.comments_rate += 1
             user.save()
+            self.save()
             return(True)
 
     class Meta:

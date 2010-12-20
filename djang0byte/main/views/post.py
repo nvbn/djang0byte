@@ -19,7 +19,7 @@
 from django.db import transaction
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from main.forms import *
 from main.models import *
@@ -31,6 +31,8 @@ from main.utils import Access
 from django.template import RequestContext
 from settings import DEFAULT_CACHE_TIME
 from django.views.decorators.vary import vary_on_cookie
+from django.utils import simplejson
+from django.utils.translation import gettext as _
 
 
 @transaction.commit_on_success
@@ -250,6 +252,11 @@ def action(request, type, id, action = None):
     Returns: Array
 
     """
+    json = False
+    if request.GET.get('json', 0):
+        extend = 'json.html'
+        json = True
+    jsend = lambda data: HttpResponse(simplejson.dumps(data), mimetype='application/json')
     try:
         post = Post.objects.select_related('author').get(id=id)
     except Post.DoesNotExist:
@@ -259,13 +266,25 @@ def action(request, type, id, action = None):
         blog = Blog.objects.get(id=id)
         blog.addOrRemoveUser(request.user)
         return HttpResponseRedirect('/blog/%d/' % (int(id)))
-    elif type == 'ratecom' and request.user != post.author and profile.checkAccess(Access.rateComment):
+    elif type == 'ratecom':
         comment = Comment.objects.select_related('post').get(id=id)
-        if action == '1':
-          comment.rate_comment(request.user, +1)
-        elif action == '0':
-          comment.rate_comment(request.user, -1)
-        return HttpResponseRedirect('/post/%d/#cmnt%d' % (comment.post.id, int(id)))
+        if request.user != comment.author:
+            if profile.check_access(Access.rateComment):
+                if action == '1':
+                  rate = comment.rate_comment(request.user, +1)
+                elif action == '0':
+                  rate = comment.rate_comment(request.user, -1)
+                error = ''
+                if not rate:
+                    error = _('Second vote is forbidden!')
+                if json:
+                    return jsend({'error': error, 'rate': comment.rate, 'id': comment.id })
+                else:
+                    return HttpResponseRedirect('/post/%d/#cmnt%d' % (comment.post.id, int(id)))
+            else:
+                return jsend({'error': _('Not allow this action!')})
+        elif json:
+            return jsend({'error': _('For their comments can not vote!')})
     elif type == 'rateblog' and request.user != post.author and profile.checkAccess(Access.rateBlog):
         blog = Blog.objects.get(id=id)
         if action == '1':

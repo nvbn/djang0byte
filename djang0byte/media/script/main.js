@@ -197,6 +197,39 @@ function initCommentReply(context) {
     });
 }
 
+function rate(url) {
+    $.ajax({ url: url + "?json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+            //data = eval('(' + data + ')');
+            //alert(data.error);
+            if (data.error != '') {
+                $.jGrowl(data.error);
+            } else {
+                if (parseInt(data.rate) > 0) {
+                    class = 'plus_rate';
+                } else if (parseInt(data.rate) < 0) {
+                    class = 'minus_rate';
+                } else {
+                    class = '';
+                }
+                $('#cmnt' + data.id + '>div.comment_top>div.comment_rate>span').html(data.rate).attr('class', class);
+            }
+    }});
+}
+
+function initCommentRates(context) {
+    if (context == -1) {
+        context = ".comment_rate";
+    } else {
+        context = context + ">.comment_rate";
+    }
+    $(context + ">a").each(function(){
+        $(this).attr('href', '#' + $(this).attr('href'));
+        $(this).click(function(){
+            rate($(this).attr('href').split('#')[1]);
+        });
+    });
+}
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();
@@ -216,4 +249,5 @@ $(document).ready(function(){
     initAnswers();
     initCommentSubmit(-1);
     initCommentReply(-1);
+    initCommentRates(-1);
 });
