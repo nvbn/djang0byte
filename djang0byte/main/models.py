@@ -258,18 +258,15 @@ class Post(Draft):
     @classmethod
     def from_draft(cls, draft):
         cls = cls()
-        for attr in ('author', 'blog', 'title', 'type', 'text', 'adittion',):
+        for attr in ('author', 'blog', 'title', 'type', 'text', 'adittion', 'raw_tags'):
             setattr(cls, attr, getattr(draft, attr))
         cls.save()
-        cls.set_tags(draft.raw_tags)
         draft.delete()
         return(cls)
 
     def set_data(self, data):
         Draft.set_data(self, data)
         self.save()
-        self.set_tags(data)
-        self.raw_tags = ''
 
 
     def get_comment(self):
@@ -371,9 +368,9 @@ class Post(Draft):
             self.preview, self.text = utils.cut(self.text)
             utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
             utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
-            if not edit:
-                self.create_comment_root()
-                Notify.new_post_notify(self)
+        if not edit:
+            self.create_comment_root()
+            Notify.new_post_notify(self)
         super(Post, self).save() # Call the "real" save() method
 
     def is_answer(self, user = None):

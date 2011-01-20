@@ -68,15 +68,18 @@ def newpost(request, type = 'post'):
                   else:
                       post = Post()
                   post.author = request.user
-                  post.set_data(data)
+
+
                   if type == 'post':
                       post.type = 0
                   elif type == 'link':
                       post.type = 1
                   else:
                       post.type = 2
+                  post.set_data(data)
                   post.save(edit=False)
                   if not request.POST.get('draft'):
+                      post.set_tags(data['tags'])
                       return HttpResponseRedirect('/post/%d/' % (post.id))
                   else:
                       return HttpResponseRedirect('/draft/')
@@ -85,7 +88,12 @@ def newpost(request, type = 'post'):
                       draft = Draft()
                       draft.author = request.user
                       draft.set_data(form.data)
-                      draft.type = type=='post' and 0 or type=='link' and 1 or 2
+                      if type == 'post':
+                          draft.type = 0
+                      elif type == 'link':
+                          draft.type = 1
+                      else:
+                          draft.type = 2
                       draft.save(edit=False)
                       return HttpResponseRedirect('/draft/')
                   return render_to_response('newpost.html',
@@ -138,6 +146,7 @@ def post(request, id):
     form = CreateCommentForm({'post': id, 'comment': 0})
     post.get_content = post.get_full_content
     post.is_answer(request.user)
+    print post.get_tags()
     return({'post': post, 'author': author, 'comments': comments, 'comment_form': form,
         'single': True})
 

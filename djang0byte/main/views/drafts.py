@@ -35,7 +35,8 @@ def edit_draft(request, id):
                     post = Post.from_draft(draft)
                 post.save(edit=False)
                 if not request.POST.get('draft'):
-                  return HttpResponseRedirect('/post/%d/' % (post.id))
+                    post.set_tags(data['tags'])
+                    return HttpResponseRedirect('/post/%d/' % (post.id))
             else:
                 draft.set_data(form.cleaned_data)
                 return render_to_response('newpost.html',
