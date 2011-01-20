@@ -5,3 +5,4 @@ from post import *
 from install import *
 from list import *
 from page import *
+from drafts import *

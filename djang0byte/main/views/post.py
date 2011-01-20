@@ -53,43 +53,48 @@ def newpost(request, type = 'post'):
     if request.GET.get('json'):
         extend = 'json.html'
     if type != 'answer':
-      if request.method == 'POST':
-          form = CreatePostForm(request.POST)
-          if form.is_valid():
-              data = form.cleaned_data
-              if request.POST.get('draft'):
-                  post = Draft()
+        if type == 'post':
+              form = CreatePostForm
+        elif type == 'link':
+              form = CreatePostLinkForm
+        elif type == 'translate':
+              form = CreatePostTranslateForm
+        if request.method == 'POST':
+              form = form(request.POST)
+              if form.is_valid():
+                  data = form.cleaned_data
+                  if request.POST.get('draft'):
+                      post = Draft()
+                  else:
+                      post = Post()
+                  post.author = request.user
+                  post.set_data(data)
+                  if type == 'post':
+                      post.type = 0
+                  elif type == 'link':
+                      post.type = 1
+                  else:
+                      post.type = 2
+                  post.save(edit=False)
+                  if not request.POST.get('draft'):
+                      return HttpResponseRedirect('/post/%d/' % (post.id))
+                  else:
+                      return HttpResponseRedirect('/draft/')
               else:
-                  post = Post()
-              post.author = request.user
-              post.set_blog(request.POST.get('blog'))
-              post.title = data['title']
-              post.text = data['text']
-              post.owner = request.user
-              post.type = 0#'Post'
-              post.save()
-              post.set_tags(data['tags'])
-              post.create_comment_root()
-              Notify.new_post_notify(post)
-              #comment_root = Comment.add_root(post=post, created=datetime.datetime.now())
-              #comment_root.save()
-              return HttpResponseRedirect('/post/%d/' % (post.id))
-      else:
-           if type == 'post':
-             form = CreatePostForm()
-           elif type == 'link':
-             form = CreatePostLinkForm()
-           elif type == 'translate':
-             form = CreatePostTranslateForm()
-           blogs = [uib.blog for uib in profile.get_blogs()]
-           blogs += Blog.objects.filter(default=True)
-           d = {}
-           for x in blogs:
-                d[x]=x
-           blogs = d.values()
-           return render_to_response('newpost.html',
-                                     {'form': form, 'blogs': blogs, 'type': type, 'extend': extend},
-                                     context_instance=RequestContext(request))
+                  if request.POST.get('draft'):
+                      draft = Draft()
+                      draft.author = request.user
+                      draft.set_data(form.data)
+                      draft.type = type=='post' and 0 or type=='link' and 1 or 2
+                      draft.save(edit=False)
+                      return HttpResponseRedirect('/draft/')
+                  return render_to_response('newpost.html',
+                                      {'form': form, 'blogs': Blog.create_list(profile), 'type': type, 'extend': extend},
+                                       context_instance=RequestContext(request))
+        else:
+            return render_to_response('newpost.html',
+                                  {'form': form(), 'blogs': Blog.create_list(profile), 'type': type, 'extend': extend},
+                                   context_instance=RequestContext(request))
     else:
       if request.method == 'POST':
         post = Post()
@@ -361,9 +366,3 @@ def lenta(request):
     notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user)
     return {'object_list': notifs}
 
-@login_required
-@render_to('draft.html')
-@paginate(style='digg', per_page=100)
-def draft(request):
-    drafts = Draft.objects.filter(author=request.user, is_draft=True)
-    return({'drafts': drafts})

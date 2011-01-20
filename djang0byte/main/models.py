@@ -141,6 +141,16 @@ class Blog(models.Model):
             uib.blog = self
             uib.user = user
             uib.save()
+
+    @staticmethod
+    def create_list(profile):
+        blogs = [uib.blog for uib in profile.get_blogs()]
+        blogs += Blog.objects.filter(default=True)
+        d = {}
+        for x in blogs:
+            d[x]=x
+        blogs = d.values()
+        return(blogs)
                 
     def __unicode__(self):
         """Return blog name"""
@@ -193,40 +203,21 @@ class Draft(models.Model):
                  )
     author = models.ForeignKey(User, verbose_name=_('Author'))
     blog = models.ForeignKey(Blog, blank=True, null=True, verbose_name=_('Blog'))
-    title = models.CharField(max_length=300, verbose_name=_('Post title'))
-    preview = models.TextField(blank=True, verbose_name=_('Preview text'))
+    title = models.CharField(max_length=300, verbose_name=_('Post title'), default=_('No name'))
     text = models.TextField(blank=True, verbose_name=_('Main text'))
     type = models.IntegerField(choices=POST_TYPE, default=0, verbose_name=_('Type of post'))
     adittion = models.CharField(max_length=300, blank=True, verbose_name=_('Adittion field'))
-    tags = TagField(verbose_name=_('Tags'), blank=True, null=True)
+    raw_tags = models.CharField(max_length=500, blank=True, null=True, default='')
     is_draft = models.BooleanField(default=True)
-
-class Post(Draft):
-    """Posts table"""
-    date = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('Date'))
-    rate = models.IntegerField(default=0, verbose_name=_('Post rate'))
-    rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
-
-
-    class Meta:
-        ordering = ('-id', )
-
-    def get_comment(self):
-        """Return first level comments in post"""
-        try:
-            comments = Comment.objects.filter(post=self, depth=1)[0]
-            return comments.get_descendants()
-        except IndexError:
-            return(None)
 
     def set_blog(self, blog):
         """Set blog to post
-        
+
         Keyword arguments:
         blog -- Blog
-        
+
         Returns: Blog
-        
+
         """
         if int(blog) == 0:
             self.blog = None
@@ -236,6 +227,60 @@ class Post(Draft):
                  self.blog = None
 
         return(self.blog)
+
+    def set_data(self, data):
+        for attr in data:
+            if attr not in ('blog', 'tags'):
+                setattr(self, attr, data[attr])
+        try:
+            self.set_blog(data['blog'])
+        except KeyError:
+            self.set_blog(0)
+        self.raw_tags = data['tags']
+
+    def save(self, edit=False):
+        if not self.title:
+            self.title = _('No name')
+        self.is_draft = True
+        super(Draft, self).save()
+
+class Post(Draft):
+    """Posts table"""
+    date = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('Date'))
+    rate = models.IntegerField(default=0, verbose_name=_('Post rate'))
+    rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
+    preview = models.TextField(blank=True, verbose_name=_('Preview text'))
+    tags = TagField(verbose_name=_('Tags'), blank=True, null=True)
+
+    class Meta:
+        ordering = ('-id', )
+
+    @classmethod
+    def from_draft(cls, draft):
+        cls = cls()
+        for attr in ('author', 'blog', 'title', 'type', 'text', 'adittion',):
+            setattr(cls, attr, getattr(draft, attr))
+        cls.save()
+        cls.set_tags(draft.raw_tags)
+        draft.delete()
+        return(cls)
+
+    def set_data(self, data):
+        Draft.set_data(self, data)
+        self.save()
+        self.set_tags(data)
+        self.raw_tags = ''
+
+
+    def get_comment(self):
+        """Return first level comments in post"""
+        try:
+            comments = Comment.objects.filter(post=self, depth=1)[0]
+            return comments.get_descendants()
+        except IndexError:
+            return(None)
+
+
 	  
     def create_comment_root(self):
         """Create comment root for post"""
@@ -319,13 +364,16 @@ class Post(Draft):
         Tag.objects.update_tags(self, tag_list)
         
         
-    def save(self):
+    def save(self, edit=True):
         """Parse html and save"""
         self.is_draft = False
         if self.type < 3:
             self.preview, self.text = utils.cut(self.text)
             utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
             utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
+            if not edit:
+                self.create_comment_root()
+                Notify.new_post_notify(self)
         super(Post, self).save() # Call the "real" save() method
 
     def is_answer(self, user = None):
@@ -385,7 +433,7 @@ class Comment(NS_Node):
     
     def save(self):
         """Parse html and save"""
-        #utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
+        utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         super(Comment, self).save() # Call the "real" save() method
     
     @models.permalink
