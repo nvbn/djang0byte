@@ -13,5 +13,7 @@
 {% if post.is_answer %}
     {% include 'answer.html' %}
 {% else %}
-    {{ post.get_content }}
+    {% autoescape off %}
+        {{ post.get_content }}
+    {% endautoescape %}
 {% endif %}

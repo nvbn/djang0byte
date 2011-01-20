@@ -31,7 +31,7 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^tagging_autocomplete/', include('tagging_autocomplete.urls')),
     (r'^rss/', PostFeed()),
-    (r'pm/', include('messages.urls')),
+    (r'^pm/', include('messages.urls')),
     (r'^', include('main.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -182,10 +182,8 @@ class City(models.Model):
         verbose_name = _("City")
         verbose_name_plural = _("Cities")
 
-    
-class Post(models.Model):
-    """Posts table"""
 
+class Draft(models.Model):
     POST_TYPE = (
                  (0, 'Post'),
                  (1, 'Link'),
@@ -193,18 +191,22 @@ class Post(models.Model):
                  (3, 'Answer'),
                  (4, 'Multiple Answer')
                  )
-
     author = models.ForeignKey(User, verbose_name=_('Author'))
-    date = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('Date'))
     blog = models.ForeignKey(Blog, blank=True, null=True, verbose_name=_('Blog'))
     title = models.CharField(max_length=300, verbose_name=_('Post title'))
     preview = models.TextField(blank=True, verbose_name=_('Preview text'))
     text = models.TextField(blank=True, verbose_name=_('Main text'))
-    rate = models.IntegerField(default=0, verbose_name=_('Post rate'))
-    rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
     type = models.IntegerField(choices=POST_TYPE, default=0, verbose_name=_('Type of post'))
     adittion = models.CharField(max_length=300, blank=True, verbose_name=_('Adittion field'))
     tags = TagField(verbose_name=_('Tags'), blank=True, null=True)
+    is_draft = models.BooleanField(default=True)
+
+class Post(Draft):
+    """Posts table"""
+    date = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('Date'))
+    rate = models.IntegerField(default=0, verbose_name=_('Post rate'))
+    rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
+
 
     class Meta:
         ordering = ('-id', )
@@ -319,6 +321,7 @@ class Post(models.Model):
         
     def save(self):
         """Parse html and save"""
+        self.is_draft = False
         if self.type < 3:
             self.preview, self.text = utils.cut(self.text)
             utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
@@ -382,7 +385,7 @@ class Comment(NS_Node):
     
     def save(self):
         """Parse html and save"""
-        utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
+        #utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         super(Comment, self).save() # Call the "real" save() method
     
     @models.permalink
@@ -939,5 +942,3 @@ class Statused(MeOn):
             return(get_status('http://twitter.com/statuses/user_timeline/%s.rss' % (self.name)))
         else:
             return(get_status('http://rss.juick.com/%s/blog' % (self.name)))
-
-

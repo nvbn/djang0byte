@@ -30,7 +30,9 @@
 <br /><br />
 {% if profile_user.about %}
 {% trans "About user:" %}<br />
+{% autoescape off %}
 {{ profile_user.about }}
+{% endautoescape %}
 {% endif %}
 <br /><hr />
 {% if profile_user.get_blogs %}

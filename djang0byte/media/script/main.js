@@ -99,6 +99,7 @@ function initCommentSubmit(context) {
             }
             $(data.content).each(function() {
                 initCommentReply('#' + $(this).attr('id'));
+                initCommentRates('#' + $(this).attr('id'));
             });
             commentReplyForm(-1);
         }});

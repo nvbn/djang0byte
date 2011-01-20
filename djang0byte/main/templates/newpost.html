@@ -23,6 +23,6 @@
 <label>{% trans "Source:" %} {{ form.source }}</label><br />
 {%  endif %}
 <label>{% trans "Tags:" %} {{ form.tags }}</label><br />
-<input type='submit'>
+<input type='submit'> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">
 </form>
 {%  endblock %}

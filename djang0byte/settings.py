@@ -12,7 +12,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_ENGINE = 'mysql'#'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'dbyte'             # Or path to database file if using sqlite3.
 DATABASE_USER = 'root'             # Not used with sqlite3.
 DATABASE_PASSWORD = 'qazwsx'         # Not used with sqlite3.
@@ -78,7 +78,6 @@ ROOT_URLCONF = 'djang0byte.urls'
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates'),
     "/usr/lib/pymodules/python2.6/django/contrib/admin/templates/",
-    '/usr/lib/pymodules/python2.6/debug_toolbar/templates/',
 )
 
 TAGGING_AUTOCOMPLETE_JS_BASE_URL = '/media/script/jquery-autocomplete/'
@@ -103,7 +102,10 @@ INSTALLED_APPS = (
     'south',
 'tagging_autocomplete',
 'pytils',
+
 )
+
+
 AUTH_PROFILE_MODULE = "main.profile"
 VALID_TAGS = 'p i strong b u a h1 h2 h3 pre br img code'
 VALID_ATTRS = 'href src lang alt'

@@ -56,7 +56,7 @@
             </div>
             <div id="tag">
                 {% load tagging_tags %}
-                {% tag_cloud_for_model main.Post as tags with steps=9 distribution=log %}
+                {% tag_cloud_for_model main.Post as tags with steps=9 distribution=log min_count=20 %}
                 {% for tag in tags %}
                    <a class='tag_{{tag.font_size }}' href='/tag/{{ tag|urlencode }}/'>{{ tag }}</a>
                 {% endfor %}

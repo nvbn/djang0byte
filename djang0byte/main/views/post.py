@@ -57,7 +57,10 @@ def newpost(request, type = 'post'):
           form = CreatePostForm(request.POST)
           if form.is_valid():
               data = form.cleaned_data
-              post = Post()
+              if request.POST.get('draft'):
+                  post = Draft()
+              else:
+                  post = Post()
               post.author = request.user
               post.set_blog(request.POST.get('blog'))
               post.title = data['title']
@@ -358,3 +361,9 @@ def lenta(request):
     notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user)
     return {'object_list': notifs}
 
+@login_required
+@render_to('draft.html')
+@paginate(style='digg', per_page=100)
+def draft(request):
+    drafts = Draft.objects.filter(author=request.user, is_draft=True)
+    return({'drafts': drafts})
