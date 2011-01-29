@@ -54,79 +54,73 @@ def newpost(request, type = 'post'):
         extend = 'json.html'
     if type != 'answer':
         if type == 'post':
-              form = CreatePostForm
+            type = 0
         elif type == 'link':
-              form = CreatePostLinkForm
+            type = 1
+        else:
+            type = 2
+        if type == 'post':
+            form = CreatePostForm
+        elif type == 'link':
+            form = CreatePostLinkForm
         elif type == 'translate':
-              form = CreatePostTranslateForm
+            form = CreatePostTranslateForm
         if request.method == 'POST':
-              form = form(request.POST)
-              if form.is_valid():
-                  data = form.cleaned_data
-                  if request.POST.get('draft'):
-                      post = Draft()
-                  else:
-                      post = Post()
-                  post.author = request.user
-
-
-                  if type == 'post':
-                      post.type = 0
-                  elif type == 'link':
-                      post.type = 1
-                  else:
-                      post.type = 2
-                  post.set_data(data)
-                  post.save(edit=False)
-                  if not request.POST.get('draft'):
-                      post.set_tags(data['tags'])
-                      return HttpResponseRedirect('/post/%d/' % (post.id))
-                  else:
-                      return HttpResponseRedirect('/draft/')
-              else:
-                  if request.POST.get('draft'):
-                      draft = Draft()
-                      draft.author = request.user
-                      draft.set_data(form.data)
-                      if type == 'post':
-                          draft.type = 0
-                      elif type == 'link':
-                          draft.type = 1
-                      else:
-                          draft.type = 2
-                      draft.save(edit=False)
-                      return HttpResponseRedirect('/draft/')
-                  return render_to_response('newpost.html',
-                                      {'form': form, 'blogs': Blog.create_list(profile), 'type': type, 'extend': extend},
-                                       context_instance=RequestContext(request))
+            form = form(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                if request.POST.get('draft'):
+                    post = Draft()
+                else:
+                    post = Post()
+                post.author = request.user
+                post.type = type
+                post.set_data(data)
+                post.save(edit=False)
+                if not request.POST.get('draft'):
+                    post.set_tags(data['tags'])
+                    return HttpResponseRedirect('/post/%d/' % (post.id))
+                else:
+                    return HttpResponseRedirect('/draft/')
+            else:
+                if request.POST.get('draft'):
+                    draft = Draft()
+                    draft.author = request.user
+                    draft.set_data(form.data)
+                    draft.type = type
+                    draft.save(edit=False)
+                    return HttpResponseRedirect('/draft/')
+                return render_to_response('newpost.html',
+                                    {'form': form, 'blogs': Blog.create_list(profile), 'type': type, 'extend': extend},
+                                     context_instance=RequestContext(request))
         else:
             return render_to_response('newpost.html',
                                   {'form': form(), 'blogs': Blog.create_list(profile), 'type': type, 'extend': extend},
                                    context_instance=RequestContext(request))
     else:
-      if request.method == 'POST':
-        post = Post()
-        post.title = request.POST.get('title')
-        post.author = request.user
-        post.set_blog(request.POST.get('blog'))
-        if request.POST.get('multi', 0):
-          post.type = 4#'Multiple Answer'
-        else:
-          post.type = 3#post.type = 'Answer'
-        post.save()
-        post.set_tags(request.POST.get('tags'))
-        post.create_comment_root()
-        for answer_item in range(int(request.POST.get('count'))):
-          answer = Answer()
-          answer.value = request.POST.get(str(answer_item))
-          answer.post = post
-          answer.save()
-        return HttpResponseRedirect('/post/%d/' % (post.id))
-      multi = False
-      count = 2
-      return render_to_response('newanswer.html', {'answers_count': range(count),
-      'count': count, 'blogs': profile.get_blogs(), 'multi': multi, 'extend': extend},
-                                context_instance=RequestContext(request))
+        if request.method == 'POST':
+            post = Post()
+            post.title = request.POST.get('title')
+            post.author = request.user
+            post.set_blog(request.POST.get('blog'))
+            if request.POST.get('multi', 0):
+                post.type = 4#'Multiple Answer'
+            else:
+                post.type = 3#post.type = 'Answer'
+            post.save()
+            post.set_tags(request.POST.get('tags'))
+            post.create_comment_root()
+            for answer_item in range(int(request.POST.get('count'))):
+                answer = Answer()
+                answer.value = request.POST.get(str(answer_item))
+                answer.post = post
+                answer.save()
+            return HttpResponseRedirect('/post/%d/' % (post.id))
+        multi = False
+        count = 2
+        return render_to_response('newanswer.html', {'answers_count': range(count),
+        'count': count, 'blogs': profile.get_blogs(), 'multi': multi, 'extend': extend},
+                                    context_instance=RequestContext(request))
 
 @cache_page(DEFAULT_CACHE_TIME)
 @render_to('post.html')

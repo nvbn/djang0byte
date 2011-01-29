@@ -44,7 +44,7 @@ class CreatePostForm(forms.Form):
 
 class CreatePostLinkForm(CreatePostForm):
     """Create post link form"""
-    link = forms.URLField()
+    source = forms.URLField()
 
 class CreatePostTranslateForm(CreatePostForm):
     """Create post link form"""

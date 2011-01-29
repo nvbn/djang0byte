@@ -22,6 +22,6 @@ from main.models import Post, Blog, Profile, Comment, Answer, AnswerVote, UserIn
 
 
 for stuff in ('Post', 'UserInBlog', 'Notify', 'TextPage', 'MeOn', 'Statused', 'Blog',
-              'Profile', 'Comment', 'Answer', 'AnswerVote', 'BlogType'):
+              'Profile', 'Comment', 'Answer', 'AnswerVote', 'BlogType', 'Draft'):
     admin.site.register(getattr(models, stuff))
 

@@ -73,7 +73,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
 )
 
-ROOT_URLCONF = 'djang0byte.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates'),
@@ -91,13 +91,12 @@ INSTALLED_APPS = (
      'django.contrib.sessions',
      'django.contrib.sites',
      'treebeard',
-     'djang0byte.main',
-     'djang0byte.parser',
+     'main',
+     'parser',
      'treemenus',
      'feed',
     'annoying',
     'simplepagination',
-    'djang0byte.parser',
     'messages',
     'south',
 'tagging_autocomplete',
