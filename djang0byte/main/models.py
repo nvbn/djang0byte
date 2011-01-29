@@ -241,7 +241,6 @@ class Draft(models.Model):
     def save(self, edit=False):
         if not self.title:
             self.title = _('No name')
-        self.is_draft = True
         super(Draft, self).save()
 
 class Post(Draft):

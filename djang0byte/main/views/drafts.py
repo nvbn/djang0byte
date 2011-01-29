@@ -16,7 +16,7 @@ def draft(request):
 
 @login_required
 def edit_draft(request, id):
-    draft = Draft.objects.get(id=id, author=request.user)
+    draft = Draft.objects.get(id=id, author=request.user, is_draft=True)
     if draft.type < 3:
         if draft.type == 0:
             form = CreatePostForm
@@ -43,7 +43,7 @@ def edit_draft(request, id):
                         {'form': form, 'blogs': Blog.create_list(request.user.get_profile()), 'type': draft.type, 'extend': 'base.html'},
                          context_instance=RequestContext(request))
         else:
-            data = {'tags': draft.raw_tags, 'title': draft.title, 'text': draft.text, 'source':draft.adittion, 'link': draft.adittion}
+            data = {'tags': draft.raw_tags, 'title': draft.title, 'text': draft.text, 'addition':draft.addition}
             form = form(data)
             return render_to_response('newpost.html',
                         {'form': form, 'blogs': Blog.create_list(request.user.get_profile()),
