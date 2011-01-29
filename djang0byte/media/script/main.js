@@ -135,9 +135,9 @@ function setPostType(type) {
     get('text');
     get('tags');
     get('link');
-    get('source');
+    get('addition');
     if (type == '?') type = 'post';
-    $.ajax({ url: "newpost/?type=" + type + "&json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest){
+    $.ajax({ url: "/newpost/?type=" + type + "&json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest){
         data = eval('(' + data + ')');
         $('#content').html(data.content);
         initPostType();
@@ -147,7 +147,7 @@ function setPostType(type) {
         set('text');
         set('tags');
         set('link');
-        set('source');
+        set('addition');
     }});
 }
 

@@ -53,17 +53,16 @@ def newpost(request, type = 'post'):
     if request.GET.get('json'):
         extend = 'json.html'
     if type != 'answer':
+        _type = type
+        print type
         if type == 'post':
             type = 0
-        elif type == 'link':
-            type = 1
-        else:
-            type = 2
-        if type == 'post':
             form = CreatePostForm
         elif type == 'link':
+            type = 1
             form = CreatePostLinkForm
-        elif type == 'translate':
+        else:
+            type = 2
             form = CreatePostTranslateForm
         if request.method == 'POST':
             form = form(request.POST)
@@ -91,11 +90,12 @@ def newpost(request, type = 'post'):
                     draft.save(edit=False)
                     return HttpResponseRedirect('/draft/')
                 return render_to_response('newpost.html',
-                                    {'form': form, 'blogs': Blog.create_list(profile), 'type': type, 'extend': extend},
+                                    {'form': form, 'blogs': Blog.create_list(profile), 'type': _type, 'extend': extend},
                                      context_instance=RequestContext(request))
         else:
+            print form
             return render_to_response('newpost.html',
-                                  {'form': form(), 'blogs': Blog.create_list(profile), 'type': type, 'extend': extend},
+                                  {'form': form(), 'blogs': Blog.create_list(profile), 'type': _type, 'extend': extend},
                                    context_instance=RequestContext(request))
     else:
         if request.method == 'POST':

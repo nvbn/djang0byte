@@ -44,11 +44,11 @@ class CreatePostForm(forms.Form):
 
 class CreatePostLinkForm(CreatePostForm):
     """Create post link form"""
-    source = forms.URLField()
+    addition = forms.URLField()
 
 class CreatePostTranslateForm(CreatePostForm):
     """Create post link form"""
-    source = forms.URLField()
+    addition = forms.URLField()
 
 class CreateCommentForm(forms.Form):
     """Create new comment form"""

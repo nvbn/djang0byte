@@ -18,12 +18,14 @@
     </select>
 {{ form.title }}<br />
 {{ form.text }}<br />
-{% if form.link %}
-<label>{% trans "Link:" %} {{ form.link }}<br /></label>
-{%  endif %}
-{% if form.source %}
-<label>{% trans "Source:" %} {{ form.source }}</label><br />
-{%  endif %}
+ <label>
+    {% if type == 'link' %}
+        {% trans "Link:" %}
+    {%  endif %}
+    {% if type == 'translate' %}
+        {% trans "Source:" %}
+    {%  endif %}
+{{ form.addition }}<br /></label>
 <label>{% trans "Tags:" %} {{ form.tags }}</label><br />
 <input type='submit'> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">
 </form>

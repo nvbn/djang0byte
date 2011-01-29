@@ -206,7 +206,7 @@ class Draft(models.Model):
     title = models.CharField(max_length=300, verbose_name=_('Post title'), default=_('No name'))
     text = models.TextField(blank=True, verbose_name=_('Main text'))
     type = models.IntegerField(choices=POST_TYPE, default=0, verbose_name=_('Type of post'))
-    adittion = models.CharField(max_length=300, blank=True, verbose_name=_('Adittion field'))
+    addition = models.CharField(max_length=300, blank=True, verbose_name=_('Addition field'))
     raw_tags = models.CharField(max_length=500, blank=True, null=True, default='')
     is_draft = models.BooleanField(default=True)
 
@@ -258,7 +258,7 @@ class Post(Draft):
     @classmethod
     def from_draft(cls, draft):
         cls = cls()
-        for attr in ('author', 'blog', 'title', 'type', 'text', 'adittion', 'raw_tags'):
+        for attr in ('author', 'blog', 'title', 'type', 'text', 'addition', 'raw_tags'):
             setattr(cls, attr, getattr(draft, attr))
         cls.save()
         draft.delete()
@@ -515,7 +515,7 @@ class Profile(models.Model):
     reply_comment = models.BooleanField(default=True, verbose_name=_('Send notify about reply to comment?'))
     reply_pm = models.BooleanField(default=True, verbose_name=_('Send notify about PM?'))
     about = models.TextField(blank=True, verbose_name=_('About'))
-    other = models.TextField(blank=True, verbose_name=_('Field for adittion'))
+    other = models.TextField(blank=True, verbose_name=_('Field for addition'))
     
     def get_posts(self):
         """Get posts by user"""
