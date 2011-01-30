@@ -6,3 +6,4 @@ from install import *
 from list import *
 from page import *
 from drafts import *
+from actions import *

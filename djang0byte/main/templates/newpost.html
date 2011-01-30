@@ -27,6 +27,7 @@
     {%  endif %}
 {{ form.addition }}<br /></label>
 <label>{% trans "Tags:" %} {{ form.tags }}</label><br />
-<input type='submit'> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">
+<input type='hidden' name='draft_id' value='{% if daft_id %}{{ draft_id }}{% else %}-1{% endif %}'
+<input type='submit'> <input type='button' value='{% trans "Preview" %}' id='preview_btn'> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">
 </form>
 {%  endblock %}
