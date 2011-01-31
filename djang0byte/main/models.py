@@ -277,7 +277,6 @@ class Post(Draft):
             return(None)
 
 
-	  
     def create_comment_root(self):
         """Create comment root for post"""
         comment_root = Comment.add_root(post=self, created=datetime.datetime.now())
@@ -365,8 +364,8 @@ class Post(Draft):
         self.is_draft = False
         if self.type < 3:
             self.preview, self.text = utils.cut(self.text)
-            utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
-            utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
+            self.preview = utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
+            self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         if not edit:
             self.create_comment_root()
             Notify.new_post_notify(self)
