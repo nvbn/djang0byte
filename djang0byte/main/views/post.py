@@ -49,6 +49,13 @@ def newpost(request, type = 'post'):
     """
     profile = request.user.get_profile()
     type = request.GET.get('type') or 'post'
+    preview = False
+    is_draft = False
+    if request.POST.get('draft'):
+        is_draft = True
+    if request.POST.get('preview'):
+        preview = True
+        is_draft = True
     extend = 'base.html'
     if request.GET.get('json'):
         extend = 'json.html'
@@ -66,9 +73,9 @@ def newpost(request, type = 'post'):
             form = CreatePostTranslateForm
         if request.method == 'POST':
             form = form(request.POST)
-            if form.is_valid():
+            if form.is_valid() and not preview:
                 data = form.cleaned_data
-                if request.POST.get('draft'):
+                if is_draft:
                     post = Draft()
                 else:
                     post = Post()
@@ -76,24 +83,29 @@ def newpost(request, type = 'post'):
                 post.type = type
                 post.set_data(data)
                 post.save(edit=False)
-                if not request.POST.get('draft'):
+                if not is_draft:
                     post.set_tags(data['tags'])
                     return HttpResponseRedirect('/post/%d/' % (post.id))
                 else:
-                    return HttpResponseRedirect('/draft/')
+                    if preview:
+                        return HttpResponseRedirect('/draft/%d/' % (draft.id))
+                    else:
+                        return HttpResponseRedirect('/draft/')
             else:
-                if request.POST.get('draft'):
+                if is_draft:
                     draft = Draft()
                     draft.author = request.user
                     draft.set_data(form.data)
                     draft.type = type
                     draft.save(edit=False)
-                    return HttpResponseRedirect('/draft/')
+                    if preview:
+                        return HttpResponseRedirect('/draft/%d/' % (draft.id))
+                    else:
+                        return HttpResponseRedirect('/draft/')
                 return render_to_response('newpost.html',
                                     {'form': form, 'blogs': Blog.create_list(profile), 'type': _type, 'extend': extend},
                                      context_instance=RequestContext(request))
         else:
-            print form
             return render_to_response('newpost.html',
                                   {'form': form(), 'blogs': Blog.create_list(profile), 'type': _type, 'extend': extend},
                                    context_instance=RequestContext(request))

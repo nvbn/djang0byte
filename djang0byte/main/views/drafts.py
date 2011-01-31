@@ -16,7 +16,14 @@ def draft(request):
 
 @login_required
 def edit_draft(request, id):
-    draft = Draft.objects.get(id=id, author=request.user, is_draft=True)
+    draft = Draft.objects.get(author=request.user, id=id)
+    preview = False
+    is_draft = False
+    if request.POST.get('draft'):
+        is_draft = True
+    if request.POST.get('preview'):
+        preview = True
+        is_draft = True
     if draft.type < 3:
         if draft.type == 0:
             form = CreatePostForm
@@ -29,12 +36,12 @@ def edit_draft(request, id):
             if form.is_valid():
                 data = form.cleaned_data
                 draft.set_data(data)
-                if request.POST.get('draft'):
+                if is_draft:
                     post = draft
                 else:
                     post = Post.from_draft(draft)
                 post.save(edit=False)
-                if not request.POST.get('draft'):
+                if not is_draft:
                     post.set_tags(data['tags'])
                     return HttpResponseRedirect('/post/%d/' % (post.id))
             else:
@@ -47,6 +54,10 @@ def edit_draft(request, id):
             form = form(data)
             return render_to_response('newpost.html',
                         {'form': form, 'blogs': Blog.create_list(request.user.get_profile()),
+                         'preview': utils.parse(draft.text, VALID_TAGS, VALID_ATTRS),
                          'type': draft.type, 'extend': 'base.html', 'draft': True, 'id': draft.id},
                          context_instance=RequestContext(request))
-    return HttpResponseRedirect('/draft/')
+    if preview:
+        return HttpResponseRedirect('/draft/%d/' %(draft.id))
+    else:
+        return HttpResponseRedirect('/draft/')

@@ -8,6 +8,13 @@
     <div id="post_type">
     <a href="?">{% trans "Post" %}</a> <a href="?type=link">{% trans "Link" %}</a> <a href="?type=translate">{% trans "Translate" %}</a> <a href="?type=answer">{% trans "Answer" %}</a>
     </div>
+{% else %}
+    <h2>{% trans "Preview of the text:" %}</h2>
+    <div class='preview'>
+        {% autoescape off %}
+            {{ preview }}
+        {% endautoescape %}
+    </div>
 {% endif %}
 <form action='{% if draft %}/draft/{{ id }}/{% else %}/newpost/?type={{ type }}{% endif %}' method='post'>
     <select name="blog">
@@ -27,7 +34,6 @@
     {%  endif %}
 {{ form.addition }}<br /></label>
 <label>{% trans "Tags:" %} {{ form.tags }}</label><br />
-<input type='hidden' name='draft_id' value='{% if daft_id %}{{ draft_id }}{% else %}-1{% endif %}' />
-<input type='submit' /> <input type='button' value='{% trans "Preview" %}' id='preview_btn' /> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">
+<input type='submit' /> <input type='submit' value='{% trans "Preview" %}' name='preview' /> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">
 </form>
 {%  endblock %}

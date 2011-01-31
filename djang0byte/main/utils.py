@@ -13,10 +13,16 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+from django.http import HttpResponse
 from pytils.translit import slugify, translify
 from time import strftime
 import urllib
 import xml.dom.minidom
+import simplejson
+
+def jsend(data):
+    """Alias for sending 'jsoned' data"""
+    return(HttpResponse(simplejson.dumps(data), mimetype='application/json'))
 
 
 def file_upload_path(instance, filename):
