@@ -1,22 +1,32 @@
 {% extends extend %}
 {% load i18n %}
 {% block title %}
-{% trans "New post" %}
+    {% if draft %}
+        {% trans "Edit draft" %}
+    {% else %}
+        {% if edit %}
+            {% trans "Edit post" %}
+        {% else %}
+            {% trans "New post" %}
+        {% endif %}
+    {% endif %}
 {% endblock %}
 {% block content %}
-{% if not draft %}
+{% if not draft and not edit %}
     <div id="post_type">
     <a href="?">{% trans "Post" %}</a> <a href="?type=link">{% trans "Link" %}</a> <a href="?type=translate">{% trans "Translate" %}</a> <a href="?type=answer">{% trans "Answer" %}</a>
     </div>
 {% else %}
-    <h2>{% trans "Preview of the text:" %}</h2>
-    <div class='preview'>
-        {% autoescape off %}
-            {{ preview }}
-        {% endautoescape %}
-    </div>
+    {% if draft %}
+        <h2>{% trans "Preview of the text:" %}</h2>
+        <div class='preview'>
+            {% autoescape off %}
+                {{ preview }}
+            {% endautoescape %}
+        </div>
+    {% endif %}
 {% endif %}
-<form action='{% if draft %}/draft/{{ id }}/{% else %}/newpost/?type={{ type }}{% endif %}' method='post'>
+<form action='{% if draft %}/draft/{{ id }}/{% else%}{% if edit %}/action/edit_post/{{ id }}/{% else %}/newpost/?type={{ type }}{% endif %}{% endif %}' method='post'>
     <select name="blog">
 	<option value="0">{% trans "Not in blog" %}</option>
        {% for blog in blogs %}
@@ -34,6 +44,6 @@
     {%  endif %}
 {{ form.addition }}<br /></label>
 <label>{% trans "Tags:" %} {{ form.tags }}</label><br />
-<input type='submit' /> <input type='submit' value='{% trans "Preview" %}' name='preview' /> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">
+<input type='submit' /> {% if not edit %}<input type='submit' value='{% trans "Preview" %}' name='preview' /> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">{% endif %}
 </form>
 {%  endblock %}
