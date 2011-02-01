@@ -153,7 +153,7 @@ def post(request, id):
     post.get_content = post.get_full_content
     post.is_answer(request.user)
     return({'post': post, 'author': author, 'comments': comments, 'comment_form': form,
-        'single': True, 'PERM_EDIT_POST': request.user.has_perm('main.change_post') or request.user == post.author})
+        'single': True, 'PERM_EDIT_POST': post.type < 3 and (request.user.has_perm('main.change_post') or request.user == post.author)})
 
 
 @cache_page(DEFAULT_CACHE_TIME)
