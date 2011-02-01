@@ -183,7 +183,7 @@ def action(request, type, id, action = None):
             for answer in answers:
                 if request.POST.get('answ_' + str(answer.id), 0):
                     answer.vote(request.user, True)
-            answer.fix(request.user)
+                answer.fix(request.user)
 
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 

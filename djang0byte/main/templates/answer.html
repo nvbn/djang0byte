@@ -17,7 +17,7 @@
 {% endif %}
 {% if post.type == 4 %}
     {% for answ in post.is_answer %}
-    <label><input type='checkbox' name='answ_{{ answ.id }}' />{{ answ.value }}</label><br />
+    <label><input type='checkbox' name='answ_{{ answ.id }}' value='{{ answ.id }}' />{{ answ.value }}</label><br />
     {% endfor %}
 {% endif %}
 <input type='submit' />
