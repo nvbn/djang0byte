@@ -44,8 +44,10 @@ def list_users(request, order = None, param = None, param_value = None):
     """
     if param == 'city':
         items = Profile.objects.select_related('user').filter(city=City.objects.get(name=param_value))
+        url = '/list/users/city/%s/' % (param_value, )
     else:
         items = Profile.objects.select_related('user')
+        url = '/list/users/'
 
     if order == 'rate':
         items = items.extra(select={'fullrate':
@@ -62,7 +64,8 @@ def list_users(request, order = None, param = None, param_value = None):
     else:
         items = items.order_by('user')
 
-    return({'object_list': items, 'type': 'users', 'param': param, 'param_value': param_value, 'order': order})
+    return({'object_list': items, 'type': 'users', 'param': param,
+            'param_value': param_value, 'order': order, 'url': url})
 
 @cache_page(0)
 @render_to('list.html')
@@ -90,7 +93,11 @@ def list_blogs(request, order = None, param = None, param_value = None):
     blogs = Blog.objects.order_by(order_query)
     if param == 'my':
         blogs = blogs.filter(owner=request.user)
-    return({'object_list': blogs, 'type': 'blogs', 'param': param, 'param_value': param_value, 'order': order})
+        url = '/myblogs/'
+    else:
+        url = '/list/blogs/'
+    return({'object_list': blogs, 'type': 'blogs', 'param': param,
+            'param_value': param_value, 'order': order, 'url': url})
 
 @cache_page(0)
 @render_to('list.html')
@@ -105,12 +112,17 @@ def list_city(request, order = None):
     Returns: Array
 
     """
-    if order == 'name_desc':
+    if order == 'rate_desc':
+        order_query = '-count'
+    elif order == 'rate':
+        order_query = 'count'
+    elif order == 'name_desc':
         order_query = '-name'
     else:
         order_query = 'name'
     cities = City.objects.order_by(order_query)
-    return({'object_list': cities, 'type': 'cities', 'param': None, 'param_value': None, 'order': order})
+    return({'object_list': cities, 'type': 'cities', 'param': None,
+            'param_value': None, 'order': order, 'url': '/list/city/'})
 
 @login_required
 def myblogs(request, order = None):

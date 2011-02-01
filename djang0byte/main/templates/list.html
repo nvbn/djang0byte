@@ -4,17 +4,56 @@
 {% trans "List" %}
 {% endblock %}
 {% block content %}
-{% for item in object_list %}
-    {% if type == 'users' %}
-        <a href='/user/{{ item.user.username }}/'>{{ item.user.username }}</a><br />
-    {% else %}
-        {% if type == 'blogs' %}
-             <a href='/blog/{{ item.id }}/'>{{ item.name }}</a><br />
+<table style="width: 100%">
+<tr>
+    <td><a href='{{ url }}name_desc/'>&#8595;</a>{% trans 'Name' %}<a href='{{ url }}name/'>&#8593;</a></td>
+    <td><a href='{{ url }}rate_desc/'>&#8595;</a>{% if type != 'cities' %}{% trans 'Rate' %}{% else %}{% trans 'Count' %}{% endif %}<a href='{{ url }}rate/'>&#8593;</a></td>
+</tr>
+<tr>
+    {% for item in object_list %}
+        {% if type == 'users' %}
+            <td class='left'>
+                <img src='{{ item.get_avatar }}' alt='' /> <a href='/user/{{ item.user.username }}/'>{{ item.user.username }}</a>
+            </td>
+            <td class='right'>
+                {% if item.get_rate > 0 %}
+                    <span class='plus_rate'>{{ item.get_rate }}</span>
+                {% else %}
+                    {% if item.get_rate < 0 %}
+                        <span class='minus_rate'>{{ item.get_rate }}</span>
+                    {% else %}
+                        {{ item.get_rate }}
+                    {% endif %}
+                {% endif %}
+            </td>
         {% else %}
-            <a href='/user/city/{{ item.name }}/'>{{ item.name }}</a><br/>
+            {% if type == 'blogs' %}
+                <td class='left'>
+                    <img src='{{ item.get_avatar }}' alt='' /> <a href='/blog/{{ item.id }}/'>{{ item.name }}</a>
+                </td>
+                <td class='right'>
+                    {% if item.rate > 0 %}
+                        <span class='plus_rate'>{{ item.rate }}</span>
+                    {% else %}
+                        {% if item.rate < 0 %}
+                            <span class='minus_rate'>{{ item.rate }}</span>
+                        {% else %}
+                            {{ item.rate }}
+                        {% endif %}
+                    {% endif %}
+                </td>
+            {% else %}
+                <td class='left'>
+                    <img src='/media/style/city.png' alt='' /> <a href='/list/users/city/{{ item.name }}/'>{{ item.name }}</a>
+                </td>
+                <td class='right'>
+                    <span class='plus_rate'>{{ item.count }}</span>
+                </td>
+            {% endif %}
         {% endif %}
-    {% endif %}
-{% endfor %}
+    {% endfor %}
+</tr>
+</table>
 <div>
     {% include "paginator_digg.html" %}
 </div>

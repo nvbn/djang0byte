@@ -142,6 +142,9 @@ class Blog(models.Model):
             uib.user = user
             uib.save()
 
+    def get_avatar(self):
+        pass
+
     @staticmethod
     def create_list(profile):
         blogs = [uib.blog for uib in profile.get_blogs()]
@@ -164,6 +167,7 @@ class Blog(models.Model):
 class City(models.Model):
     """All of cities"""
     name = models.CharField(max_length=60, verbose_name=_('Name of city'))
+    count = models.IntegerField(verbose_name=_('Users from this city'), default=0)
 
     @staticmethod
     def get_city(name):
@@ -177,13 +181,15 @@ class City(models.Model):
         """
         try:
             self = City.objects.get(name=name)
+            self.count = Profile.objects.filter(city=self).count()
+            self.save()
         except City.DoesNotExist:
             self = City()
             self.name = name
+            self.count = Profile.objects.filter(city=self).count()
             self.save()
-
         return(self)
-
+    
     def __unicode__(self):
         """Return name"""
         return self.name
