@@ -200,6 +200,8 @@ def post_list(request, type = None, param = None):
         favourites = Favourite.objects.filter(user=request.user)
         posts = [post.post for post in favourites]
     posts = posts.order_by('-id')
+    for post in posts:
+        post.is_answer(request.user)
     return {'object_list': posts, 'single': False, 'type': type, 'subject': subject, 'option': option}
 
 def post_list_with_param(request, type, param = None):
