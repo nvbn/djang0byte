@@ -56,10 +56,10 @@ def get_status(url):
         return(False)
 
 class Access:
-    newPost = 0
-    newBlog = 1
-    newComment = 2
-    ratePost = 3
-    rateComment = 4
-    rateUser = 5
-    rateBlog = 6
+    new_post = 0
+    new_blog = 1
+    new_comment = 2
+    rate_post = 3
+    rate_comment = 4
+    rate_user = 5
+    rate_blog = 6

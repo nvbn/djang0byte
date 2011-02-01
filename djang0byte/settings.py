@@ -55,6 +55,7 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'main.context_processors.djbyte',
+    'main.context_processors.permission',
     'django.core.context_processors.auth',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',

@@ -564,19 +564,19 @@ class Profile(models.Model):
 
         """
         rate = self.get_rate()
-        if type == Access.newBlog and rate >= NEWBLOG_RATE:
+        if type == Access.new_blog and rate >= NEWBLOG_RATE:
             return(True)
-        elif type == Access.newComment and rate >= NEWCOMMENT_RATE:
+        elif type == Access.new_comment and rate >= NEWCOMMENT_RATE:
             return(True)
-        elif type == Access.newPost and rate >= NEWPOST_RATE:
+        elif type == Access.new_post and rate >= NEWPOST_RATE:
             return(True)
-        elif type == Access.rateComment and rate >= RATECOM_RATE:
+        elif type == Access.rate_comment and rate >= RATECOM_RATE:
             return(True)
-        elif type == Access.rateBlog and rate >= RATEBLOG_RATE:
+        elif type == Access.rate_blog and rate >= RATEBLOG_RATE:
             return(True)
-        elif type == Access.ratePost and rate >= RATEPOST_RATE:
+        elif type == Access.rate_post and rate >= RATEPOST_RATE:
             return(True)
-        elif type == Access.rateUser and rate >= RATEUSER_RATE:
+        elif type == Access.rate_user and rate >= RATEUSER_RATE:
             return(True)
         else:
             return(False)

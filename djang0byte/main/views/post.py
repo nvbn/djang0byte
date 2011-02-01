@@ -152,9 +152,8 @@ def post(request, id):
     form = CreateCommentForm({'post': id, 'comment': 0})
     post.get_content = post.get_full_content
     post.is_answer(request.user)
-    print post.get_tags()
     return({'post': post, 'author': author, 'comments': comments, 'comment_form': form,
-        'single': True})
+        'single': True, 'PERM_EDIT_POST': request.user.has_perm('main.change_post') or request.user == post.author})
 
 
 @cache_page(DEFAULT_CACHE_TIME)

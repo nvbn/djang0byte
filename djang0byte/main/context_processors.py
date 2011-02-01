@@ -1,6 +1,8 @@
 from main.models import *
+from main.utils import Access
 from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, MENU_CACHE_TIME, SIDEBAR_CACHE_TIME, LANGUAGE_CODE
 import random, time
+from django.contrib.auth.decorators import login_required
 
 def djbyte(request):
     """Get special variables into template"""
@@ -41,3 +43,18 @@ def djbyte(request):
             'blogs_count': Blog.objects.count(), 'profiles_count': Profile.objects.count(),
             'city_count': City.objects.count(), 'MENU_CACHE_TIME': MENU_CACHE_TIME, 'SIDEBAR_CACHE_TIME': SIDEBAR_CACHE_TIME,
             'LANGUAGE_CODE': LANGUAGE_CODE})
+
+@login_required
+def permission(request):
+    profile = request.user.get_profile()
+    return {
+        'PERM_DELETE_POST': request.user.has_perm('main.delete_post'),
+        'PERM_EDIT_POST': request.user.has_perm('main.change_post'),
+        'PERM_CREATE_POST': profile.check_access(Access.new_post),
+        'PERM_DELETE_COMMENT': request.user.has_perm('main.delete_comment'),
+        'PERM_EDIT_COMMENT': request.user.has_perm('main.edit_comment'),
+        'PERM_CREATE_COMMENT': profile.check_access(Access.new_comment),
+        'PERM_DELETE_BLOG': request.user.has_perm('main.delete_blog'),
+        'PERM_EDIT_BLOG': request.user.has_perm('main.change_blog'),
+        'PERM_CREATE_BLOG': profile.check_access(Access.new_blog),
+    }
