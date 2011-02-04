@@ -1,6 +1,17 @@
 var meons = Array();
 var post_type = Array();
 var current_reply = -1;
+var comment_text = '';
+
+function clearCommentForms(store) {
+    if (!store) comment_text = '';
+    $(".comment_reply_form>form").each(function(){
+        if (store && $(this).find('textarea').val()) {
+            comment_text = $(this).find('textarea').val();
+        }
+        $(this).find('textarea').val('')
+    });
+}
 
 function addMeOn() {
     //Add meon input to edit user page
@@ -101,7 +112,9 @@ function initCommentSubmit(context) {
                 initCommentReply('#' + $(this).attr('id'));
                 initCommentRates('#' + $(this).attr('id'));
             });
+            clearCommentForms(false);
             commentReplyForm(-1);
+
         }});
         return false;
     });
@@ -152,6 +165,7 @@ function setPostType(type) {
 }
 
 function commentReplyForm(url) {
+    clearCommentForms(true);
     $('.comment_reply_form').each(function() {
         $(this).css('display', 'none');
     });
@@ -165,6 +179,7 @@ function commentReplyForm(url) {
         $('#cmnt' + id + '>a.comment_reply').css('display', 'none');
         if ($('#comment_reply_form_' + id).length) {
             $('#comment_reply_form_' + id).css('display', 'block');
+            $('#comment_reply_form_' + id).find('textarea').val(comment_text);
             document.location.hash = 'cmnt' + id;
             return(0);
         }
@@ -172,6 +187,7 @@ function commentReplyForm(url) {
             data = eval('(' + data + ')');
             id = url.split('/')[3];
             form = $('<div>').attr('class', 'comment_reply_form').attr('id', 'comment_reply_form_' + id).append(data.content);
+            form.find('textarea').val(comment_text);
             $('#cmnt' + id).append(form);
             document.location.hash = 'cmnt' + id;
             initCommentSubmit('#cmnt' + id);
@@ -179,6 +195,7 @@ function commentReplyForm(url) {
     } else {
         $('#main_form_hide').css("display", 'none');
         $('#main_form').css('display', 'block');
+        $('#main_form').find('textarea').val(comment_text);
         current_reply = -1;
     }
 }

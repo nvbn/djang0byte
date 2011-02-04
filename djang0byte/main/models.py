@@ -167,7 +167,7 @@ class Blog(models.Model):
 class City(models.Model):
     """All of cities"""
     name = models.CharField(max_length=60, verbose_name=_('Name of city'))
-    count = models.IntegerField(verbose_name=_('Users from this city'), default=0)
+    count = models.IntegerField(verbose_name=_('Users from this city'), null=True)
 
     @staticmethod
     def get_city(name):
@@ -235,6 +235,14 @@ class Draft(models.Model):
         return(self.blog)
 
     def set_data(self, data):
+        """Set data to drfat
+
+        Keyword arguments:
+        data -- Array
+
+        Returns: None
+
+        """
         for attr in data:
             if attr not in ('blog', 'tags'):
                 setattr(self, attr, data[attr])
@@ -245,6 +253,14 @@ class Draft(models.Model):
         self.raw_tags = data['tags']
 
     def save(self, edit=False):
+        """Save function wrapper
+
+        Keyword arguments:
+        edit -- Boolean
+
+        Returns: None
+
+        """
         if not self.title:
             self.title = _('No name')
         super(Draft, self).save()
@@ -262,6 +278,14 @@ class Post(Draft):
 
     @classmethod
     def from_draft(cls, draft):
+        """Create post from draft
+
+        Keyword arguments:
+        draft -- Draft
+
+        Returns: Post
+
+        """
         cls = cls()
         for attr in ('author', 'blog', 'title', 'type', 'text', 'addition', 'raw_tags'):
             setattr(cls, attr, getattr(draft, attr))
@@ -270,6 +294,14 @@ class Post(Draft):
         return(cls)
 
     def set_data(self, data):
+        """Set data to post
+
+        Keyword arguments:
+        data -- Array
+
+        Returns: None
+
+        """
         Draft.set_data(self, data)
         self.save()
 
