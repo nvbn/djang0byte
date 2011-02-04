@@ -246,7 +246,7 @@ def new_comment(request, post = 0, comment = 0):
                 root = Comment.objects.get(id=data['comment'])
 
             comment = root.add_child(post=post,
-            author=request.user, text=data['text'],
+            author=request.user, text=utils.parse(data['text']),
             created=datetime.datetime.now())
             comment.save()
             Notify.new_comment_notify(comment)
