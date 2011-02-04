@@ -269,3 +269,7 @@ a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
 .right {
     float: right;
 }
+
+#comment_preview {
+    border: 1px #D8DBDE solid;
+}

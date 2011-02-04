@@ -4,12 +4,25 @@ var current_reply = -1;
 var comment_text = '';
 
 function clearCommentForms(store) {
+    if ($("#comment_preview")) {
+        $("#comment_preview").remove();
+    }
     if (!store) comment_text = '';
     $(".comment_reply_form>form").each(function(){
         if (store && $(this).find('textarea').val()) {
             comment_text = $(this).find('textarea').val();
         }
-        $(this).find('textarea').val('')
+        $(this).find('textarea').val('');
+    });
+}
+
+function initCommentPreview(where) {
+    where.find('.preview_comment_button').click(function(){
+        $("#comment_preview").remove();
+        $('<div id="comment_preview"></div>').insertBefore($(this).parent().find('textarea'));
+        $.ajax({ url: "/action/preview_comment/", type: 'POST', data: {'text':  $(this).parent().find('textarea').val()}, context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+                $('#comment_preview').html(data.text);
+        }});
     });
 }
 
@@ -188,6 +201,7 @@ function commentReplyForm(url) {
             id = url.split('/')[3];
             form = $('<div>').attr('class', 'comment_reply_form').attr('id', 'comment_reply_form_' + id).append(data.content);
             form.find('textarea').val(comment_text);
+            initCommentPreview(form);
             $('#cmnt' + id).append(form);
             document.location.hash = 'cmnt' + id;
             initCommentSubmit('#cmnt' + id);
@@ -282,6 +296,9 @@ $(document).ready(function(){
     $('#main_form_hide').click(function(){
         commentReplyForm(-1);
     })
+    $('.comment_reply_form').each(function(){
+       initCommentPreview($(this));
+    });
     initPostType();
     initAnswers();
     initCommentSubmit(-1);

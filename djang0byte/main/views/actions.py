@@ -124,6 +124,9 @@ def rate_blog(request, profile, blog_id, json):
     elif json:
         return jsend({'error': _('For their blog can not vote!')})
 
+@login_required
+def preview_comment(request):
+    return jsend({'text':utils.parse(request.POST.get('text'))})
 
 @login_required
 def action(request, type, id, action = None):
