@@ -2,6 +2,41 @@ var meons = Array();
 var post_type = Array();
 var current_reply = -1;
 var comment_text = '';
+var fast_panel_type = 'all';
+var fast_panel_cache = Array();
+
+function createFast(type, where) {
+    $('#fast_' + type).click(function(){
+       if (fast_panel_type == type) {
+           fast_panel_type = 'all';
+           $(where).html(fast_panel_cache[fast_panel_type]);
+       } else {
+           fast_panel_type = type;
+           if (fast_panel_cache[fast_panel_type]) {
+
+               $(where).html(fast_panel_cache[fast_panel_type]);
+           } else {
+                $.ajax({ url: "/action/get_val/" + type + "/", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+                    result = '<ul>';
+
+                    for (i in data) {
+                        element = data[i];
+                        result = result + '<li class="' + element.type + '"><a href="' + element.url + '">' + element.title + '</a></li>'
+                    }
+                    result += '</ul>';
+                    fast_panel_cache[fast_panel_type] = result;
+                    $(where).html(fast_panel_cache[fast_panel_type]);
+                }});
+           }
+       }
+    });
+}
+
+function initFastPanel() {
+    fast_panel_cache[fast_panel_type] = $('#fast_panel_area').html();
+    createFast('posts', '#fast_panel_area');
+    createFast('comments', '#fast_panel_area');
+}
 
 function clearCommentForms(store) {
     if ($("#comment_preview")) {
@@ -305,4 +340,5 @@ $(document).ready(function(){
     initCommentReply(-1);
     initCommentRates(-1);
     initPostRates(-1);
+    initFastPanel();
 });

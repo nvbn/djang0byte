@@ -43,7 +43,8 @@
         </div>
         {% cache SIDEBAR_CACHE_TIME sidebar user %}
         <div id="sidebar">
-            <div class="top">
+            <table class="top">
+                <tr><td id='fast_panel_area'>
                 <ul>
                     {% for object in top_post_comment %}
                         {% if object.type == 'post' %}
@@ -52,8 +53,13 @@
                             <li class="comment"><a href="/post/{{ object.object.post.id }}/#cmnt{{ object.object.id }}">{{ object.object.author }} — {{ object.object.post.title }}</a></li>
                         {% endif %}
                     {% endfor %}
-                </ul>
-            </div>
+                </ul></td>
+                <td  id='fast_panel_selector'>
+                    <a href='#fast_post' id='fast_posts' class='fast_panel'></a>
+                    <a href='#fast_comment' id='fast_comments' class='fast_panel'></a>
+                </td>
+                </tr>
+            </table>
             <div id="tag">
                 {% load tagging_tags %}
                 {% tag_cloud_for_model main.Post as tags with steps=9 distribution=log min_count=20 %}
