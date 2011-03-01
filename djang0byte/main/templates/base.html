@@ -67,7 +67,8 @@
                    <a class='tag_{{tag.font_size }}' href='/tag/{{ tag|urlencode }}/'>{{ tag }}</a>
                 {% endfor %}
             </div>
-            <div class="top">
+            <table class="top">
+                <tr><td id='fast_list_area'>
                 <span><a href='/list/users/'>{{ profiles_count }}
                 {% if LANGUAGE_CODE == 'ru-ru' %}
                     {{ profiles_count|choose_plural:"пользователь,пользователя,пользователей" }}</a> из
@@ -96,7 +97,13 @@
                         <li class="user"><a href="/blog/{{ blog.id }}/">{{ blog.name }} ({{ blog.rate }})</a></li>
                     {% endfor %}
                 </ul>
-            </div>
+            </td>
+                <td  id='fast_list_selector'>
+                    <a href='#fast_users' id='fast_users' class='fast_panel'></a>
+                    <a href='#fast_blogs' id='fast_blogs' class='fast_panel'></a>
+                </td>
+                </tr>
+            </table>
         </div>
         {% endcache %}
         {% cache 0 bottom_menu %}

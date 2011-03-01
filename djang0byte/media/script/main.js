@@ -4,16 +4,19 @@ var current_reply = -1;
 var comment_text = '';
 var fast_panel_type = 'all';
 var fast_panel_cache = Array();
+var fast_list_type = 'list';
 
 function createFast(type, where) {
     $('#fast_' + type).click(function(){
        if (fast_panel_type == type) {
-           fast_panel_type = 'all';
+           if (where == "#fast_list_area")
+            fast_panel_type = 'list'
+           else
+            fast_panel_type = 'all';
            $(where).html(fast_panel_cache[fast_panel_type]);
        } else {
            fast_panel_type = type;
            if (fast_panel_cache[fast_panel_type]) {
-
                $(where).html(fast_panel_cache[fast_panel_type]);
            } else {
                 $.ajax({ url: "/action/get_val/" + type + "/", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
@@ -34,8 +37,11 @@ function createFast(type, where) {
 
 function initFastPanel() {
     fast_panel_cache[fast_panel_type] = $('#fast_panel_area').html();
+    fast_panel_cache[fast_list_type] = $('#fast_list_area').html();
     createFast('posts', '#fast_panel_area');
     createFast('comments', '#fast_panel_area');
+    createFast('users', '#fast_list_area');
+    createFast('blogs', '#fast_list_area');
 }
 
 function clearCommentForms(store) {
