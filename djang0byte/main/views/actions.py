@@ -289,6 +289,45 @@ def get_val(request, type, count=20):
                 'rate': blog.rate,
                 'type': 'blog',
             })
+    elif type == 'favourites':
+        favourites = Favourite.objects.select_related('post').filter(user=request.user).order_by('-id')[:count]
+        for favourite in favourites:
+           out.append({
+                'title': favourite.post.title,
+                'url': "/post/%d/" % (favourite.post.id,),
+                'rate': favourite.post.rate,
+                'type': 'favourite',
+            })
+        out.append({
+                'title': _("Show all!"),
+                'url': "/favourite/",
+                'rate': 0,
+                'type': 'title',
+            })
+    elif type == 'spies':
+        favourites = Spy.objects.select_related('post').filter(user=request.user).order_by('-id')[:count]
+        for favourite in favourites:
+           out.append({
+                'title': favourite.post.title,
+                'url': "/post/%d/" % (favourite.post.id,),
+                'rate': favourite.post.rate,
+                'type': 'spy',
+            })
+    elif type == 'drafts':
+        drafts = Draft.objects.filter(author=request.user, is_draft=True).order_by('-id')[:count]
+        for draft in drafts:
+           out.append({
+                'title': draft.title,
+                'url': "/draft/%d/" % (draft.id,),
+                'rate': 0,
+                'type': 'draft',
+            })
+        out.append({
+                'title': _("Show all!"),
+                'url': "/draft/",
+                'rate': 0,
+                'type': 'title',
+            })
     return jsend(out)
 
 

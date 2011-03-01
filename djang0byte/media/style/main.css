@@ -310,3 +310,15 @@ a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
 #fast_blogs {
     background: url('/media/style/documents.gif');
 }
+
+#fast_drafts {
+    background: url('/media/style/draft.png');
+}
+
+#fast_favourites {
+    background: url('/media/style/fav.gif');
+}
+
+#fast_spies {
+    background: url('/media/style/eye.gif');
+}

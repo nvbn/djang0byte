@@ -40,6 +40,9 @@ function initFastPanel() {
     fast_panel_cache[fast_list_type] = $('#fast_list_area').html();
     createFast('posts', '#fast_panel_area');
     createFast('comments', '#fast_panel_area');
+    createFast('spies', '#fast_panel_area');
+    createFast('favourites', '#fast_panel_area');
+    createFast('drafts', '#fast_panel_area');
     createFast('users', '#fast_list_area');
     createFast('blogs', '#fast_list_area');
 }
