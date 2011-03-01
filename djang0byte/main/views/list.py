@@ -42,6 +42,10 @@ def list_users(request, order = None, param = None, param_value = None):
     Returns: Array
 
     """
+    if order not in ('rate', 'rate_desc', 'name', 'mane_desc'):
+        param_value = param
+        param = order
+        
     if param == 'city':
         items = Profile.objects.select_related('user').filter(city=City.objects.get(name=param_value))
         url = '/list/users/city/%s/' % (param_value, )
@@ -66,6 +70,7 @@ def list_users(request, order = None, param = None, param_value = None):
 
     return({'object_list': items, 'type': 'users', 'param': param,
             'param_value': param_value, 'order': order, 'url': url})
+
 
 @cache_page(0)
 @render_to('list.html')
