@@ -36,7 +36,7 @@ from django.views.decorators.vary import vary_on_cookie
 from django.utils import simplejson
 from django.utils.translation import gettext as _
 
-def rate_comment(request, profile, comment_id, json):
+def rate_comment(request, profile, comment_id, json, action):
     """Rate post
 
     Keyword arguments:
@@ -67,7 +67,7 @@ def rate_comment(request, profile, comment_id, json):
     elif json:
         return jsend({'error': _('For their comments can not vote!')})
 
-def rate_post(request, profile, post, json):
+def rate_post(request, profile, post, json, action):
     """Rate post
 
     Keyword arguments:
@@ -95,7 +95,7 @@ def rate_post(request, profile, post, json):
     elif json:
         return jsend({'error': _('For their post can not vote!')})
 
-def rate_blog(request, profile, blog_id, json):
+def rate_blog(request, profile, blog_id, json, action):
     """Rate post
 
     Keyword arguments:
@@ -155,9 +155,9 @@ def action(request, type, id, action = None):
         blog.addOrRemoveUser(request.user)
         return HttpResponseRedirect('/blog/%d/' % (int(id)))
     elif type == 'ratecom':
-        return(rate_comment(request, profile, id, json))
+        return(rate_comment(request, profile, id, json, action))
     elif type == 'rateblog' and request.user != post.author and profile.checkAccess(Access.rate_blog):
-        return(rate_blog(request, profile, id, json))
+        return(rate_blog(request, profile, id, json, action))
     post = Post.objects.get(id=id)
     if type == 'favourite':
         try:
@@ -169,15 +169,15 @@ def action(request, type, id, action = None):
             favourite.user = request.user
             favourite.save()
     elif type == 'spy':
-        spy = Spy.object.get(post=post, user=request.user)
-        if spy:
+        try:
+            spy = Spy.object.get(post=post, user=request.user)
             spy.delete()
-        else:
+        except Spy.DoesNotExist:
             spy.post = post
             spy.user = request.user
             spy.save()
     elif type == 'ratepost':
-        return(rate_post(request, profile, post, json))
+        return(rate_post(request, profile, post, json, action))
     elif type == 'answer':
         answers = Answer.objects.filter(post=post)
         if post.type == 3:

@@ -152,7 +152,17 @@ def post(request, id):
     form = CreateCommentForm({'post': id, 'comment': 0})
     post.get_content = post.get_full_content
     post.is_answer(request.user)
-    return({'post': post, 'author': author, 'comments': comments, 'comment_form': form,
+    options = {}
+    if request.user.is_authenticated():
+        try:
+            options['favourite'] = Favourite.objects.get(post=post, user=request.user)
+        except Favourite.DoesNotExist:
+            options['favourite'] = False
+        try:
+            options['spy'] = Spy.objects.get(post=post, user=request.user)
+        except Spy.DoesNotExist:
+            options['spy'] = False
+    return({'post': post, 'author': author, 'comments': comments, 'comment_form': form, "options": options,
         'single': True, 'PERM_EDIT_POST': post.type < 3 and (request.user.has_perm('main.change_post') or request.user == post.author)})
 
 
@@ -197,11 +207,13 @@ def post_list(request, type = None, param = None):
         subject = profile
         option = profile.is_my_friend(request.user)
     elif type == 'favourite':
-        favourites = Favourite.objects.filter(user=request.user)
-        posts = [post.post for post in favourites]
-    posts = posts.order_by('-id')
-    for post in posts:
-        post.is_answer(request.user)
+        #TODO: rewrite favorite to ManyToMany
+        posts = [f.post for f in Favourite.objects.select_related('post').filter(user=request.user)]
+    try:
+        posts = posts.order_by('-id')
+    except AttributeError:
+        pass
+    #TODO: fix answer result in post list
     return {'object_list': posts, 'single': False, 'type': type, 'subject': subject, 'option': option}
 
 def post_list_with_param(request, type, param = None):
@@ -242,14 +254,17 @@ def new_comment(request, post = 0, comment = 0):
             post = Post.objects.get(id=data['post'])
             if data['comment'] == 0:
                 root = Comment.objects.get(post=post, depth=1)
+                no_notify = post.author == request.user
             else:
                 root = Comment.objects.get(id=data['comment'])
+                no_notify = root.author == request.user
 
             comment = root.add_child(post=post,
             author=request.user, text=utils.parse(data['text']),
             created=datetime.datetime.now())
             comment.save()
-            Notify.new_comment_notify(comment)
+            if not no_notify:
+                Notify.new_comment_notify(comment)
             if json:
                 return(render_to_response('comment.html',
                                           {'post': comment.post, 'comment': comment, 'extend': extend},
@@ -279,6 +294,6 @@ def lenta(request):
     Returns: Array
 
     """
-    notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user)
+    notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user).order_by("-id")
     return {'object_list': notifs}
 

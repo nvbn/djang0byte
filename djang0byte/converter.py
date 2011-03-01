@@ -1,5 +1,6 @@
 #!/usr/bin/python
-
+from HTMLParser import HTMLParseError
+from htmllib import HTMLParser
 
 import sys, os, MySQLdb
 sys.path.append('/home/nvbn/work/djang0byte/')
@@ -8,6 +9,16 @@ import main.models as ndb
 import settings
 from datetime import datetime
 from django.db.utils import IntegrityError, DatabaseError
+try:
+    usr = ndb.User.objects.get(username='nvbn')
+    pr = ndb.Profile()
+    pr.user = usr
+    pr.save()
+    bt = ndb.BlogType()
+    bt.name = 'main'
+    bt.save()
+except:
+    pass
 db= MySQLdb.connect(host='127.0.0.1', user='root', passwd='qazwsx',
                     db='welinux', charset = "utf8", use_unicode = True)
 cursor = db.cursor()
@@ -66,8 +77,8 @@ for post in cursor.fetchall():
         except ndb.User.DoesNotExist:
             author =  ndb.User.objects.get(username='nvbn')
         try:
-            blog = ndb.Blog.objects.get(name=post[8])
-        except ndb.Blog.DoesNotExist:
+            blog = ndb.Blog.objects.filter(name=post[8])[0]
+        except IndexError:
             blog = False
 
         new_post = ndb.Post(author=author, title=post[2], preview=post[3],
@@ -98,6 +109,6 @@ for comment in cursor.fetchall():
                                      rate_count=int(comment[5])+int(comment[6]),
                                      text=comment[2], created=datetime.fromtimestamp(float(comment[1])))
         comment_tmp[int(comment[0])] = new_comment.id
-    except (IntegrityError, KeyError, IndexError, ndb.User.DoesNotExist):
+    except (IntegrityError, KeyError, IndexError, ndb.User.DoesNotExist, HTMLParseError, AttributeError):
         pass
 

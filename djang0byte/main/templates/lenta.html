@@ -5,7 +5,44 @@
 {% endblock %}
 {% block content %}
 {% for object in object_list %}
-{{ object.get_type }}<br />
+    {% if object.get_type == 'post' %}
+       {% for post in object.get_post %}
+            {% include 'post_item.html' %}
+           <div class="post_bottom">
+        {% if post.type < 3 and post.have_cut %}
+            <div class="post_full"><a href="/post/{{ post.id }}/">{% trans "Show full." %}</a></div>
+        {% endif %}
+           {% include "post_rate.html" %}
+           </div>
+       {% endfor %}
+    {% else %}
+        {% for comment in object.get_comment %}
+                    <div class='comment' id="cmnt{{ comment.id }}">
+                <div class='comment_top'>
+                    <a href="/user/{{ comment.author }}/" class="comment_author">{{ comment.author }}</a>
+                    <span class="date">{{ comment.created }}</span>
+                    <a href="/post/{{ comment.post.id }}/#cmnt{{ comment.id }}">#</a>
+                    <div class="comment_rate">
+
+                            <span
+                            {% if comment.rate > 0 %}
+                                class='plus_rate'
+                            {% endif %}{% if post.rate < 0 %}
+                                class='minus_rate'
+                            {% endif %}>
+                                {{ comment.rate }}
+                            </span>
+
+                    </div>
+                </div>
+                <div class="comment_text">
+                    {% autoescape off %}
+                        {{ comment }}
+                    {% endautoescape %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endfor %}
 <div>
     {% include "paginator_digg.html" %}

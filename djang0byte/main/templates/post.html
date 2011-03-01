@@ -17,27 +17,30 @@
             <a href='/tag/{{ tag }}/'>{{ tag }}</a>
         {% endfor %}
     </div>
-    <div class="post_rate" id="prate{{ post.id }}">
-        <a class="minus_rate" href='/action/ratepost/{{ post.id }}/0/'>-</a>
-            <span
-            {% if post.rate > 0 %}
-                class='plus_rate'
-            {% endif %}{% if post.rate < 0 %}
-                class='minus_rate'
-            {% endif %}>
-                {{ post.rate }}
-            </span>
-        <a class="plus_rate" href='/action/ratepost/{{ post.id }}/1/'>+</a>
+{% include "post_rate.html" %}
+</div>
+{% if request.user.is_authenticated %}
+    <div class='post_actions'>
+        {% if PERM_EDIT_POST %}
+            <a href='/action/edit_post/{{ post.id }}/'>{% trans "Edit post!" %}</a>
+        {% endif %}
+        {% if PERM_DELETE_POST %}
+            <a href='/action/delete_post/{{ post.id }}/'>{% trans "Delete post!" %}</a>
+        {% endif %}
+        {% if options.favourite %}
+            <a href='/action/favourite/{{ post.id }}/'>{% trans "Remove from favourite!" %}</a>
+        {% else %}
+            <a href='/action/favourite/{{ post.id }}/'>{% trans "Add to favourite!" %}</a>
+        {% endif %}
+        {% if post.author != request.user %}
+            {% if options.spy %}
+                <a href='/action/spy/{{ post.id }}/'>{% trans "Remove from spy!" %}</a>
+            {% else %}
+                <a href='/action/spy/{{ post.id }}/'>{% trans "Add to spy!" %}</a>
+            {% endif %}
+        {% endif %}
     </div>
-</div>
-<div class='post_actions'>
-    {% if PERM_EDIT_POST %}
-        <a href='/action/edit_post/{{ post.id }}/'>{% trans "Edit post!" %}</a>
-    {% endif %}
-    {% if PERM_DELETE_POST %}
-        <a href='/action/delete_post/{{ post.id }}/'>{% trans "Delete post!" %}</a>
-    {% endif %}
-</div>
+{% endif %}
 {% for comment in comments %}
     {% include 'single_comment.html' %}
 {% endfor %}

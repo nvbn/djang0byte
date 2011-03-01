@@ -263,6 +263,7 @@ class Draft(models.Model):
         """
         if not self.title:
             self.title = _('No name')
+        self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         super(Draft, self).save()
 
 class Post(Draft):
@@ -433,6 +434,7 @@ class Post(Draft):
                 self.is_result = False
                 return(False)
 
+
     def have_cut(self):
         """Check if 'cut' exsisted"""
         return(self.text != self.preview)
@@ -557,8 +559,10 @@ class Profile(models.Model):
         """Get posts by user"""
         return Post.objects.filter(author=self.user)
         
-    def get_friends(self):
+    def get_friends(self, friend_with_me = False):
         """Get user friends"""
+        if friend_with_me:
+            return Friends.objects.select_related('user').filter(friend=self.user)
         return Friends.objects.select_related('friend').filter(user=self)
 
     def get_blogs(self):
@@ -884,12 +888,14 @@ class Notify(models.Model):
         Returns: None
         
         """
-        users = list(Profile.objects.get(user=post.author).get_friends())
-        users = [user.friend for user in users]
+        users = list(Profile.objects.get(user=post.author).get_friends(True))
+        #TODO: rewrite this shit
+        users = [user.user.user for user in users]
         if post.blog != None:
             users += [blog_user.user for blog_user in post.blog.get_users()]
         d = {}
         for x in users:
+            print x
             if x != post.author: 
                 d[x]=x
         users = d.values()
@@ -910,7 +916,7 @@ class Notify(models.Model):
             Notify.new_notify(False, comment, comment.post.author)
             spy = Spy.objects.select_related('user').filter(post=comment.post)
             try:
-                for spy_elem in Spy:
+                for spy_elem in spy:
                     Notify.new_notify(False, comment, spy_elem.user)
             except TypeError:
                 pass
@@ -923,6 +929,12 @@ class Notify(models.Model):
             return('post')
         else:
             return('comment')
+
+    def get_post(self):
+        yield (self.post)
+
+    def get_comment(self):
+        yield (self.comment)
 
     def __unicode__(self):
         """Return notify description"""

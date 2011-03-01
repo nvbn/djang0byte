@@ -39,18 +39,7 @@
             <div class="post_full"><a href="/post/{{ post.id }}/">{% trans "Show full." %}</a></div>
         {% endif %}
 
-        <div class="post_rate"  id="prate{{ post.id }}">
-            <a class="minus_rate" href='/action/ratepost/{{ post.id }}/0/'>-</a>
-            <span
-            {% if post.rate > 0 %}
-                class='plus_rate'
-            {% endif %}{% if post.rate < 0 %}
-                class='minus_rate'
-            {% endif %}>
-                {{ post.rate }}
-            </span>
-        <a class="plus_rate" href='/action/ratepost/{{ post.id }}/1/'>+</a>
-        </div>
+       {% include "post_rate.html" %}
     </div>
 </div>
 {% endfor %}

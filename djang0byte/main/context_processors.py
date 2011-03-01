@@ -38,7 +38,6 @@ def djbyte(request):
     except Profile.DoesNotExist:
         profiles = []
     blogs = Blog.objects.order_by('-rate')[0:][:10]
-
     return({'your_rate': rate, 'top_post_comment': objects, 'top_profiles': profiles, 'top_blogs': blogs,
             'blogs_count': Blog.objects.count(), 'profiles_count': Profile.objects.count(),
             'city_count': City.objects.count(), 'MENU_CACHE_TIME': MENU_CACHE_TIME, 'SIDEBAR_CACHE_TIME': SIDEBAR_CACHE_TIME,
