@@ -35,6 +35,7 @@ from settings import DEFAULT_CACHE_TIME
 from django.views.decorators.vary import vary_on_cookie
 from django.utils import simplejson
 from django.utils.translation import gettext as _
+from annoying.decorators import ajax_request
 
 def rate_comment(request, profile, comment_id, json, action):
     """Rate post
@@ -289,3 +290,6 @@ def get_val(request, type, count=20):
                 'type': 'blog',
             })
     return jsend(out)
+
+
+

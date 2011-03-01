@@ -11,7 +11,8 @@
 {% endif %}
  — <a href="/post/{{ post.id }}/">{{ post.title }}</a></h2>
 {% if post.is_answer %}
-    {% include 'answer.html' %}
+    {% load answer %}
+    {% print_answer %}
 {% else %}
     {% autoescape off %}
         {{ post.get_content }}

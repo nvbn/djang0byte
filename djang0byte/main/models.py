@@ -410,7 +410,7 @@ class Post(Draft):
             Notify.new_post_notify(self)
         super(Post, self).save() # Call the "real" save() method
 
-    def is_answer(self, user = None):
+    def is_answer(self, user = None, force = False):
         """Check post type is answer and return questions
 
         Keyword arguments:
@@ -420,6 +420,8 @@ class Post(Draft):
 
         """
         try:
+            if force:
+                raise
             return(self._is_answer)
         except:
             try:
