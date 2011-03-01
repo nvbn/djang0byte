@@ -188,7 +188,7 @@ def post_list(request, type = None, param = None):
         blogs = Blog.objects.filter(type__in=blog_types)
         posts = Post.objects.exclude(blog__in=blogs)
     elif BlogType.check(type):
-        posts = Post.objects.filter(blog__in=BlogType.objects.get(name=type).getBlogs())
+        posts = Post.objects.filter(blog__in=BlogType.objects.get(name=type).get_blogs())
     elif type == 'pers':
         posts = Post.objects.filter(blog=None)
     elif type == 'blog':
