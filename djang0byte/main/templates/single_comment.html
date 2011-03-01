@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class='comment' id="cmnt{{ comment.id }}" style="margin-left:{{comment.get_margin}}px;">
+    <div class='comment_top'>
+        <a href="/user/{{ comment.author }}/" class="comment_author">{{ comment.author }}</a>
+        <span class="date">{{ comment.created }}</span>
+        <a href="/post/{{ post.id }}/#cmnt{{ comment.id }}">#</a>
+        <div class="comment_rate">
+            <a class="minus_rate" href='/action/ratecom/{{ comment.id }}/0/'>-</a>
+                <span
+                {% if comment.rate > 0 %}
+                    class='plus_rate'
+                {% endif %}{% if post.rate < 0 %}
+                    class='minus_rate'
+                {% endif %}>
+                    {{ comment.rate }}
+                </span>
+            <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
+        </div>
+    </div>
+    <div class="comment_text">
+        {% autoescape off %}
+            {{ comment }}
+        {% endautoescape %}
+    </div>
+    <a class='comment_reply' href='/newcomment/{{ post.id }}/{{ comment.id}}/'><img src="/media/style/speech_bubble.gif" alt="" />{% trans "Reply" %}</a>
+</div>

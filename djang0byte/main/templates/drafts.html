@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+{% trans "Drafts" %}
+{% endblock %}
+{% block content %}
+{% for draft in object_list %}
+    <div class='post'>
+        <h2><a href="/draft/{{ draft.id }}/">{{ draft.title }}</a></h2>
+        {% autoescape off %}
+            {{ draft.text }}
+        {% endautoescape %}
+    </div>
+{% endfor %}
+<div>
+    {% include "paginator_digg.html" %}
+</div>
+{% endblock %}
