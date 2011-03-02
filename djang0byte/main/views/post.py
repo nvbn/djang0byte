@@ -195,7 +195,7 @@ def post_list(request, type = None, param = None):
         blog = Blog.objects.get(id=param)
         posts = blog.get_posts()
         subject = blog
-        option = blog.check_user(request.user)
+        option = request.user.is_authenticated() and blog.check_user(request.user)
     elif type == 'tag':
         posts = TaggedItem.objects.get_by_model(Post, param)
         subject = param
@@ -205,7 +205,7 @@ def post_list(request, type = None, param = None):
         profile = user.get_profile()
         posts = profile.get_posts()
         subject = profile
-        option = profile.is_my_friend(request.user)
+        option = request.user.is_authenticated() and profile.is_my_friend(request.user)
     elif type == 'favourite':
         #TODO: rewrite favorite to ManyToMany
         posts = [f.post for f in Favourite.objects.select_related('post').filter(user=request.user)]
