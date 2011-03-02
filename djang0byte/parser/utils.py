@@ -36,6 +36,7 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img cut fcut  ta
     """
     valid_tags = valid_tags.split()
     valid_attrs = valid_attrs.split()
+    value = value.replace('\n', '<br />')
     soup = BeautifulSoup(value)
     for tag in soup.findAll(True):
         if tag.name not in valid_tags:
@@ -49,14 +50,14 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img cut fcut  ta
                 except ClassNotFound:
                     lexer = get_lexer_by_name('text')
                 formatter = HtmlFormatter(encoding='utf-8', style='colorful', linenos='table', cssclass='highlight', lineanchors="line")
-                code = soup.__unicode__()
+                code = tag.__unicode__().replace('<br />', '')
                 code_model = Code()
                 code_model.code = code
                 code_model.lang = val
                 code_model.save()
                 code = highlight(code, lexer, formatter)
                 code = code.replace('<table class="highlighttable">', '<table class="highlighttable" id="%d">' % (code_model.id,))
-                tag.replaceWith(code.replace('<br />', ''))
+                tag.replaceWith(code)
 
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
