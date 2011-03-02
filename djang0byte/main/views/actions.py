@@ -175,6 +175,7 @@ def action(request, type, id, action = None):
             spy = Spy.objects.get(post=post, user=request.user)
             spy.delete()
         except Spy.DoesNotExist:
+            spy = Spy()
             spy.post = post
             spy.user = request.user
             spy.save()
