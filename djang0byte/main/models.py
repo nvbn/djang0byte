@@ -146,11 +146,13 @@ class Blog(models.Model):
         pass
 
     @staticmethod
-    def create_list(profile):
+    def create_list(profile, selected = None):
         blogs = [uib.blog for uib in profile.get_blogs()]
         blogs += Blog.objects.filter(default=True)
         d = {}
         for x in blogs:
+            if selected == x.id:
+                x.selected = True
             d[x]=x
         blogs = d.values()
         return(blogs)

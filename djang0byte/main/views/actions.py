@@ -229,14 +229,15 @@ def edit_post(request, id):
             return HttpResponseRedirect('/post/%d/' % (post.id))
         else:
             return render_to_response('newpost.html',
-                    {'form': form, 'blogs': Blog.create_list(request.user.get_profile()),
+                    {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), True),
                      'type': post.type, 'extend': 'base.html', 'edit': True},
                     context_instance=RequestContext(request))
     else:
-        data = {'tags': post.tags, 'title': post.title, 'text': unparse(post.text), 'addition': post.addition}
+        data = {'tags': ', '.join(map(lambda x: x.__unicode__(), post.get_tags())), #ejebaka
+                'title': post.title, 'text': unparse(post.text), 'addition': post.addition}
         form = form(data)
         return render_to_response('newpost.html',
-                    {'form': form, 'blogs': Blog.create_list(request.user.get_profile()),
+                    {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), post.blog.id),
                      'type': post.type, 'extend': 'base.html', 'edit': True, 'id': post.id},
                      context_instance=RequestContext(request))
 

@@ -23,7 +23,7 @@ from BeautifulSoup import BeautifulSoup
 from parser.models import Code
 
 def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img cut fcut  table tr td div pre span',
-    valid_attrs = 'href src lang class name id'):
+    valid_attrs = 'href src lang class name id style'):
     """Cleans non-allowed HTML from the input.
     
     Keyword arguments:

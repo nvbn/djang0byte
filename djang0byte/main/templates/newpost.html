@@ -30,7 +30,7 @@
     <select name="blog">
 	<option value="0">{% trans "Not in blog" %}</option>
        {% for blog in blogs %}
-        <option value="{{ blog.id }}">{{ blog }}</option>
+        <option {% if blog.selected %}selected{% endif %} value="{{ blog.id }}">{{ blog }}</option>
        {% endfor %}
     </select>
 {{ form.title }}<br />
