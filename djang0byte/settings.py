@@ -91,6 +91,7 @@ INSTALLED_APPS = (
      'django.contrib.contenttypes',
      'django.contrib.sessions',
      'django.contrib.sites',
+     'registration',
      'treebeard',
      'main',
      'parser',
@@ -104,8 +105,9 @@ INSTALLED_APPS = (
 'pytils',
 
 )
-
-
+EMAIL_HOST = 'localhost'
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = "main.profile"
 VALID_TAGS = 'p i strong b u a h1 h2 h3 pre br img table tr td div pre span'
 VALID_ATTRS = 'href src lang alt class name id style'
@@ -124,3 +126,4 @@ DEFAULT_CACHE_TIME = 0
 MENU_CACHE_TIME = DEFAULT_CACHE_TIME
 SIDEBAR_CACHE_TIME = DEFAULT_CACHE_TIME
 DEFAULT_AVATAR = ''
+LOGIN_REDIRECT_URL = '/'

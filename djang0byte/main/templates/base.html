@@ -29,10 +29,10 @@
                         {% if messages_inbox_count %}
                             {{ messages_inbox_count }}
                         {% endif %}</span>
-                    <span class="right"><a href='/logout/'>{% trans "Log out" %}</a></span>
+                    <span class="right"><a href='/accounts/logout/'>{% trans "Log out" %}</a></span>
                 {% else %}
-                    <span class="left"><a href='/register/'>{% trans "Register" %}</a></span>
-                    <span class="right"><a href='/login/'>{% trans "Log in" %}</a></span>
+                    <span class="left"><a href='/accounts/register/'>{% trans "Register" %}</a></span>
+                    <span class="right"><a href='/accounts/login/'>{% trans "Log in" %}</a></span>
                 {% endif %}
             </div>
         </div>

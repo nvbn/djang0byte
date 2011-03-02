@@ -29,6 +29,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/nvbn/work/djang0byte/djang0byte/media/'}),
     (r'^admin/', include(admin.site.urls)),
+    (r'^accounts/', include('registration.urls')),
     (r'^tagging_autocomplete/', include('tagging_autocomplete.urls')),
     (r'^rss/', PostFeed()),
     (r'^pm/', include('messages.urls')),

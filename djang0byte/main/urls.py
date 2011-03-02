@@ -18,6 +18,7 @@
 
 from django.conf.urls.defaults import *
 from djang0byte.main.views import *
+from django.contrib.auth.views import *
 #from django.contrib import admin
 #admin.autodiscover()
 
@@ -26,12 +27,7 @@ from djang0byte.main.views import *
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-  ('^register/$', register),
-  ('^register/(.*)/$', register),
   ('^user/(\w*)/$', profile),
-  ('^login/$', login),
-  ('^logout/$', logout),
-  ('^login/(.*)/$', login),
   ('^newblog/$', newblog),
   ('^newpost/$', newpost),
   ('^newpost/(.*)/$', newpost),
@@ -43,6 +39,7 @@ urlpatterns = patterns('',
   ('^action/edit_user/$', edit_user),
   ('^action/edit_post/(\d*)/$', edit_post),
   ('^action/change_userpic/$', change_userpic),
+  ('^action/change_password/$', password_change),
   ('^action/get_val/(.*)/(.*)/$', get_val),
   ('^action/get_val/(.*)/$', get_val),
   ('^action/delete_post/(\d*)/$', delete_post),
