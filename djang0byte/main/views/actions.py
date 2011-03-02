@@ -238,7 +238,7 @@ def edit_post(request, id):
                 'title': post.title, 'text': unparse(post.text), 'addition': post.addition}
         form = form(data)
         return render_to_response('newpost.html',
-                    {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), post.blog.id),
+                    {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), post.blog == None or post.blog.id),
                      'type': post.type, 'extend': 'base.html', 'edit': True, 'id': post.id},
                      context_instance=RequestContext(request))
 
