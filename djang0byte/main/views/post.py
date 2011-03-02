@@ -131,7 +131,7 @@ def newpost(request, type = 'post'):
         multi = False
         count = 2
         return render_to_response('newanswer.html', {'answers_count': range(count),
-        'count': count, 'blogs': profile.get_blogs(), 'multi': multi, 'extend': extend},
+        'count': count, 'blogs': Blog.create_list(profile), 'multi': multi, 'extend': extend},
                                     context_instance=RequestContext(request))
 
 @cache_page(DEFAULT_CACHE_TIME)

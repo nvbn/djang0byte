@@ -227,6 +227,7 @@ class Draft(models.Model):
         Returns: Blog
 
         """
+        print blog
         if int(blog) == 0:
             self.blog = None
         else:
