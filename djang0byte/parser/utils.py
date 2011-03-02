@@ -13,12 +13,17 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+import code
 import re
-
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name, PhpLexer
+from pygments.formatters import HtmlFormatter
+from pygments.util import ClassNotFound
 from BeautifulSoup import BeautifulSoup
+from parser.models import Code
 
-def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code',
-    valid_attrs = 'href src lang'):
+def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code cut fcut  table tr td div pre span',
+    valid_attrs = 'href src lang class name id'):
     """Cleans non-allowed HTML from the input.
     
     Keyword arguments:
@@ -29,7 +34,6 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code',
     Returns: String
         
     """
-    value = value.replace('\n','<br />')
     valid_tags = valid_tags.split()
     valid_attrs = valid_attrs.split()
     soup = BeautifulSoup(value)
@@ -39,11 +43,32 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code',
         for attr, val in tag.attrs:
             if re.match('javascript:', val, re.I) is not None:
                 tag.hidden = True
+            if tag.name == 'code' and attr == 'lang':
+                try:
+                    lexer = get_lexer_by_name(val, encoding='utf-8', stripall=True, startinline=True)
+                except ClassNotFound:
+                    lexer = get_lexer_by_name('text')
+                formatter = HtmlFormatter(encoding='utf-8', style='colorful', linenos='table', cssclass='highlight', lineanchors="line")
+                code = tag.__unicode__()
+                code_model = Code()
+                code_model.code = code
+                code_model.lang = val
+                code_model.save()
+                code = highlight(code, lexer, formatter)
+                code = code.replace('<table class="highlighttable">', '<table class="highlighttable" id="%d">' % (code_model.id,))
+                tag.replaceWith(code.replace('<br />', ''))
+
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
 
 def unparse(value):
-    return value.replace('<br />','\n')
+    value = value.replace('<br />','\n')
+    soup = BeautifulSoup(value)
+
+    for code in soup.findAll({'table': True, 'class=highlighttable': True}):
+        new_code = Code.objects.get(id=int(code['id']))
+        code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
+    return soup.renderContents().decode('utf8')
 
 def cut(text):
     """Cut text.
@@ -54,11 +79,11 @@ def cut(text):
     Returns: String
         
     """
-    cutted = text.split('[cut]')
+    cutted = text.split('<cut>')
     if len(cutted) == 2:
         return cutted[0], text
-    cutted = text.split('[fcut]')
+    cutted = text.split('<fcut>')
     if len(cutted) == 2:
-        return cutted[0], '[fcut]' + cutted[1]
+        return cutted[0], '<fcut>' + cutted[1]
     else:
         return text, text
