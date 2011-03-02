@@ -397,6 +397,8 @@ class Post(Draft):
         Returns: None
         
         """
+        if not ',' in tag_list:
+            tag_list += ','
         Tag.objects.update_tags(self, tag_list)
         
         
