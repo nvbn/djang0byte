@@ -26,7 +26,7 @@
         </div>
     {% endif %}
 {% endif %}
-<form action='{% if draft %}/draft/{{ id }}/{% else%}{% if edit %}/action/edit_post/{{ id }}/{% else %}/newpost/?type={{ type }}{% endif %}{% endif %}' method='post'>
+<form id='new_post_form' action='{% if draft %}/draft/{{ id }}/{% else%}{% if edit %}/action/edit_post/{{ id }}/{% else %}/newpost/?type={{ type }}{% endif %}{% endif %}' method='post'>
     <select name="blog">
 	<option value="0">{% trans "Not in blog" %}</option>
        {% for blog in blogs %}

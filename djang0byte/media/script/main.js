@@ -344,6 +344,9 @@ $(document).ready(function(){
     $('.comment_reply_form').each(function(){
        initCommentPreview($(this));
     });
+    $('#new_post_form').submit(function(){
+        $('input[type=submit]', this).attr('disabled', 'disabled');
+    });
     initPostType();
     initAnswers();
     initCommentSubmit(-1);
