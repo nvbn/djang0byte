@@ -20,7 +20,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from main.forms import LoginForm, RegisterForm, EditUserForm
+from main.forms import LoginForm, RegisterForm, EditUserForm, EditUserPick, EditUserPick
 from main.models import *
 from django.db import transaction
 from urlparse import urlparse
@@ -208,6 +208,17 @@ def edit_user(request):
     return({'form': form, 'user': request.user, 'profile': request.user.get_profile()})
 
 @login_required
+@render_to('change_userpic.html')
 @transaction.commit_on_success
-def change_userpic(self):
-    pass
+def change_userpic(request):
+    profile = request.user.get_profile()
+    if request.method == 'POST':
+        form = EditUserPick(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.cleaned_data
+            profile.avatar = data['userpic']
+            profile.save()
+            return HttpResponseRedirect('/user/%s/' % (request.user))
+    else:
+        form = EditUserPick()
+    return {'form': form, 'profile': profile}

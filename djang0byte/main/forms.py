@@ -70,7 +70,10 @@ class EditUserForm(forms.Form):
     notify_post_reply = forms.BooleanField(required=False)
     notify_comment_reply = forms.BooleanField(required=False)
     notify_pm = forms.BooleanField(required=False)
-    #userpic = forms.ImageField()
+
+
+class EditUserPick(forms.Form):
+    userpic = forms.ImageField()
 
 class EditPostForm(CreatePostForm):
     pass
