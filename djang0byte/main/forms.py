@@ -39,6 +39,7 @@ class CreateBlogForm(forms.Form):
 class CreatePostForm(forms.Form):
     """Create new post form"""
     title = forms.CharField()
+    blog = forms.CharField()
     text = forms.CharField(widget=forms.Textarea())
     tags = forms.CharField(widget=TagAutocomplete(), required=False)
 

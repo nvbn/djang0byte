@@ -229,9 +229,8 @@ class Draft(models.Model):
             self.blog = None
         else:
             self.blog = Blog.objects.get(id=blog)
-            if self.blog.default or not self.blog.check_user(self.author):
+            if not (self.blog.default or self.blog.check_user(self.author)):
                  self.blog = None
-
         return(self.blog)
 
     def set_data(self, data):

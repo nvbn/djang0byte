@@ -246,7 +246,6 @@ def new_comment(request, post = 0, comment = 0):
     if request.GET.get('json', 0):
         extend = 'json.html'
         json = True
-    print request.GET.get('json')
     if request.method == 'POST':
         form = CreateCommentForm(request.POST)
         if form.is_valid():
