@@ -156,6 +156,7 @@ function initCommentSubmit(context) {
         context = context + ">.comment_reply_form>form";
     }
     $(context).submit(function(event){
+        $('input[type=submit]', this).attr('disabled', 'disabled');
         event.preventDefault();
         $.ajax({ url: "/newcomment/?json=1", type: 'POST', data: $(this).serialize(),
             context: document.body, success: function(data, textStatus, XMLHttpRequest) {
@@ -171,7 +172,7 @@ function initCommentSubmit(context) {
             });
             clearCommentForms(false);
             commentReplyForm(-1);
-
+            $('input[type=submit]', this).attr('disabled', '');
         }});
         return false;
     });
