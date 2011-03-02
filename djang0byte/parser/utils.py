@@ -29,7 +29,7 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code',
     Returns: String
         
     """
-    value = value.replace('\n','<br />\n')
+    value = value.replace('\n','<br />')
     valid_tags = valid_tags.split()
     valid_attrs = valid_attrs.split()
     soup = BeautifulSoup(value)
@@ -41,6 +41,9 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code',
                 tag.hidden = True
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
+
+def unparse(value):
+    return value.replace('<br />','\n')
 
 def cut(text):
     """Cut text.

@@ -23,6 +23,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from main.forms import *
 from main.models import *
+from parser.utils import unparse, unparse
 from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
 from django.views.decorators.cache import cache_page
 from simplepagination import paginate
@@ -232,7 +233,7 @@ def edit_post(request, id):
                      'type': post.type, 'extend': 'base.html', 'edit': True},
                     context_instance=RequestContext(request))
     else:
-        data = {'tags': post.tags, 'title': post.title, 'text': post.text, 'addition': post.addition}
+        data = {'tags': post.tags, 'title': post.title, 'text': unparse(post.text), 'addition': post.addition}
         form = form(data)
         return render_to_response('newpost.html',
                     {'form': form, 'blogs': Blog.create_list(request.user.get_profile()),
