@@ -26,6 +26,7 @@ from django.db import transaction
 from urlparse import urlparse
 from django.template.context import RequestContext
 from annoying.decorators import render_to
+from simplepagination import paginate
 
 @render_to('register.html')
 def register(request, next = None):
@@ -211,6 +212,14 @@ def edit_user(request):
 @render_to('change_userpic.html')
 @transaction.commit_on_success
 def change_userpic(request):
+    """Chage user picture
+
+    Keyword arguments:
+    request -- request object
+
+    Returns: HttpResponse
+
+    """
     profile = request.user.get_profile()
     if request.method == 'POST':
         form = EditUserPick(request.POST, request.FILES)
@@ -222,3 +231,19 @@ def change_userpic(request):
     else:
         form = EditUserPick()
     return {'form': form, 'profile': profile}
+
+@render_to("user_comments.html")
+@paginate(style='digg', per_page=50)
+def comments(request, user):
+    """Show user comments
+
+    Keyword arguments:
+    request -- request object
+    user -- Unicode
+
+    Returns: HttpResponse
+
+    """
+    user = User.objects.get(username=user)
+    comments = Comment.objects.filter(author=user).order_by('-created')
+    return {'user': user, 'object_list': comments, 'profile': user.get_profile()}

@@ -47,7 +47,7 @@
     {% endfor %}
     <br />
 {% endif %}
-{% trans "Writed" %} {{ profile_user.post_count }} {% trans "posts and" %} {{ profile_user.comment_count }} {% trans "comments." %}
+{% trans "Writed" %} <a href="/auth/{{ profile_user }}/">{{ profile_user.post_count }} {% trans "posts</a> and" %} <a href="/comments/{{ profile_user }}/">{{ profile_user.comment_count }} {% trans "comments</a>." %}
 {% if mine %}
     <br />
     <hr />
