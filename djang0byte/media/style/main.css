@@ -322,3 +322,7 @@ a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
 #fast_spies {
     background: url('/media/style/eye.gif');
 }
+
+.left img {
+    width: 20px;
+}
