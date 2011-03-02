@@ -13,6 +13,7 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+import re
 
 from BeautifulSoup import BeautifulSoup
 
@@ -35,8 +36,10 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code',
     for tag in soup.findAll(True):
         if tag.name not in valid_tags:
             tag.hidden = True
-        tag.attrs = [(attr, val) for attr, val in tag.attrs
-                     if attr in valid_attrs]
+        for attr, val in tag.attrs:
+            if re.match('javascript:', val, re.I) is not None:
+                tag.hidden = True
+        tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
 
 def cut(text):
