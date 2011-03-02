@@ -107,7 +107,7 @@ INSTALLED_APPS = (
 
 
 AUTH_PROFILE_MODULE = "main.profile"
-VALID_TAGS = 'p i strong b u a h1 h2 h3 pre br img code table tr td div pre span'
+VALID_TAGS = 'p i strong b u a h1 h2 h3 pre br img table tr td div pre span'
 VALID_ATTRS = 'href src lang alt class name id'
 DEFAULT_BLOG_TYPE = 'main'
 NEWPOST_RATE = 0

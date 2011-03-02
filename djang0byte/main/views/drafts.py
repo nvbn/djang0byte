@@ -6,6 +6,7 @@ from django.template.context import RequestContext
 from simplepagination import paginate
 from main.forms import CreatePostTranslateForm, CreatePostLinkForm, CreatePostForm
 from main.models import *
+from parser.utils import unparse
 
 @login_required
 @render_to('drafts.html')
@@ -50,7 +51,7 @@ def edit_draft(request, id):
                         {'form': form, 'blogs': Blog.create_list(request.user.get_profile()), 'type': draft.type, 'extend': 'base.html'},
                          context_instance=RequestContext(request))
         else:
-            data = {'tags': draft.raw_tags, 'title': draft.title, 'text': draft.text, 'addition':draft.addition}
+            data = {'tags': draft.raw_tags, 'title': draft.title, 'text': unparse(draft.text), 'addition':draft.addition}
             form = form(data)
             return render_to_response('newpost.html',
                         {'form': form, 'blogs': Blog.create_list(request.user.get_profile()),

@@ -22,7 +22,7 @@ from pygments.util import ClassNotFound
 from BeautifulSoup import BeautifulSoup
 from parser.models import Code
 
-def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code cut fcut  table tr td div pre span',
+def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img cut fcut  table tr td div pre span',
     valid_attrs = 'href src lang class name id'):
     """Cleans non-allowed HTML from the input.
     
@@ -49,7 +49,7 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img code cut fcu
                 except ClassNotFound:
                     lexer = get_lexer_by_name('text')
                 formatter = HtmlFormatter(encoding='utf-8', style='colorful', linenos='table', cssclass='highlight', lineanchors="line")
-                code = tag.__unicode__()
+                code = soup.__unicode__()
                 code_model = Code()
                 code_model.code = code
                 code_model.lang = val
