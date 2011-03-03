@@ -326,3 +326,12 @@ a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
 .left img {
     width: 20px;
 }
+
+img {
+    max-width: 500px;
+    max-height: 500px;
+}
+
+.post_container {
+    overflow: hidden;
+}

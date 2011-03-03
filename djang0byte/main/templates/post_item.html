@@ -1,3 +1,4 @@
+<div class='post_container'>
 <div class="title">
 {% if post.blog %}
     <a href="/user/{{ post.author }}/">{{ post.author }}</a>
@@ -18,3 +19,4 @@
         {{ post.get_content }}
     {% endautoescape %}
 {% endif %}
+</div>

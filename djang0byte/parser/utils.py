@@ -15,11 +15,12 @@
 #       MA 02110-1301, USA.
 import code
 import re
+from BeautifulSoup import BeautifulSoup
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, PhpLexer
 from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
-from BeautifulSoup import BeautifulSoup
+
 from parser.models import Code
 
 def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img cut fcut  table tr td div pre span',
@@ -61,6 +62,7 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img cut fcut  ta
 
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
+
 
 def unparse(value):
     value = value.replace('<br />','\n')

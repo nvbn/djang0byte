@@ -75,6 +75,7 @@ class Blog(models.Model):
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
     type = models.ForeignKey(BlogType, verbose_name=_('Blog type'))
     default = models.BooleanField(default=False, verbose_name=_('Does not need join?'))
+    avatar = models.ImageField(upload_to=file_upload_path, blank=True, null=True, verbose_name=_('Blog picture'))
 
     
     def get_users(self):
@@ -227,7 +228,6 @@ class Draft(models.Model):
         Returns: Blog
 
         """
-        print blog
         if int(blog) == 0:
             self.blog = None
         else:
@@ -402,16 +402,17 @@ class Post(Draft):
         Tag.objects.update_tags(self, tag_list)
         
         
-    def save(self, edit=True):
+    def save(self, edit=True, convert=False):
         """Parse html and save"""
         self.is_draft = False
-        if self.type < 3:
+        if self.type < 3 and not convert:
             self.preview, self.text = utils.cut(self.text)
             self.preview = utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
             self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         if not edit:
             self.create_comment_root()
-            Notify.new_post_notify(self)
+            if not convert:
+                Notify.new_post_notify(self)
         super(Post, self).save() # Call the "real" save() method
 
     def is_answer(self, user = None, force = False):
@@ -499,7 +500,6 @@ class Comment(NS_Node):
             CommentRate.objects.get(comment=self, user=user)
             return(False)
         except CommentRate.DoesNotExist:
-            print value
             self.rate += value
             self.rate_count += 1
             rate = CommentRate()
@@ -901,7 +901,6 @@ class Notify(models.Model):
             users += [blog_user.user for blog_user in post.blog.get_users()]
         d = {}
         for x in users:
-            print x
             if x != post.author: 
                 d[x]=x
         users = d.values()

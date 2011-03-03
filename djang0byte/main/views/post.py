@@ -119,9 +119,8 @@ def newpost(request, type = 'post'):
                 post.type = 4#'Multiple Answer'
             else:
                 post.type = 3#post.type = 'Answer'
-            post.save()
+            post.save(edit=False)
             post.set_tags(request.POST.get('tags'))
-            post.create_comment_root()
             for answer_item in range(int(request.POST.get('count'))):
                 answer = Answer()
                 answer.value = request.POST.get(str(answer_item))
@@ -257,7 +256,6 @@ def new_comment(request, post = 0, comment = 0):
             else:
                 root = Comment.objects.get(id=data['comment'])
                 no_notify = root.author == request.user
-
             comment = root.add_child(post=post,
             author=request.user, text=utils.parse(data['text']),
             created=datetime.datetime.now())
