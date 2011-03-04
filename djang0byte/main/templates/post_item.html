@@ -16,7 +16,7 @@
     <img src='{{ post.author.get_profile.get_avatar }}' class='post_av' />
     {{ post.author }}</a>
 {% endif %}
- — <a href="/post/{{ post.id }}/">{{ post.title }}</a></h2>
+ — <a {% if post.type == 1 %}class='post_link'{% endif %} href="{% if post.type == 1 %}{{ post.addition }}{% else %}/post/{{ post.id }}/{% endif %}">{{ post.title }}</a></h2>
 {% if post.is_answer %}
     {% load answer %}
     {% print_answer %}
