@@ -15,7 +15,7 @@
 #       MA 02110-1301, USA.
 
 
-
+from django.template.loader import render_to_string
 from django.db import transaction
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -27,7 +27,7 @@ from django.views.decorators.cache import cache_page
 from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
-from main.utils import Access
+from main.utils import Access, jsend
 from django.template import RequestContext
 from settings import DEFAULT_CACHE_TIME
 from django.views.decorators.vary import vary_on_cookie
@@ -262,9 +262,14 @@ def new_comment(request, post = 0, comment = 0):
             post = Post.objects.get(id=data['post'])
             if data['comment'] == 0:
                 root = Comment.objects.get(post=post, depth=1)
+                last = 0
                 no_notify = post.author == request.user
             else:
                 root = Comment.objects.get(id=data['comment'])
+                try:
+                    last = root.get_last_child().id
+                except:
+                    last = root.id
                 no_notify = root.author == request.user
             comment = root.add_child(post=post,
             author=request.user, text=utils.parse(data['text']),
@@ -273,9 +278,14 @@ def new_comment(request, post = 0, comment = 0):
             if not no_notify:
                 Notify.new_comment_notify(comment)
             if json:
-                return(render_to_response('comment.html',
-                                          {'post': comment.post, 'comment': comment, 'extend': extend},
-                                          context_instance=RequestContext(request)))
+                return jsend({
+                      'content': render_to_string('single_comment.html', {'post': comment.post, 'comment': comment}),
+                      'placeholder': last,
+                      })
+                
+                """return(render_to_response('comment.html',
+                                          ,
+                                          context_instance=RequestContext(request)))"""
             else:
                 return HttpResponseRedirect('/post/%d/#cmnt%d' %
                             (comment.post.id, comment.id))

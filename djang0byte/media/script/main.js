@@ -160,11 +160,12 @@ function initCommentSubmit(context) {
         event.preventDefault();
         $.ajax({ url: "/newcomment/?json=1", type: 'POST', data: $(this).serialize(),
             context: document.body, success: function(data, textStatus, XMLHttpRequest) {
-            data = eval('(' + data + ')');
+ 
+       
             if (current_reply == -1) {
                 $(data.content).insertBefore('#main_form');
             } else {
-                $(data.content).insertAfter('#cmnt'+current_reply);
+                $(data.content).insertAfter('#cmnt'+data.placeholder);
             }
             $(data.content).each(function() {
                 initCommentReply('#' + $(this).attr('id'));
