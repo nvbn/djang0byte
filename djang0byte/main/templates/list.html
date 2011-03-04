@@ -30,7 +30,7 @@
         {% else %}
             {% if type == 'blogs' %}
                 <td class='left'>
-                    <img src='{{ item.get_avatar }}' alt='' /> <a href='/blog/{{ item.id }}/'>{{ item.name }}</a>
+                    {% if item.get_avatar %}<img src='{{ item.get_avatar }}' alt='' />{% endif %} <a href='/blog/{{ item.id }}/'>{{ item.name }}</a>
                 </td>
                 <td class='right'>
                     {% if item.rate > 0 %}
