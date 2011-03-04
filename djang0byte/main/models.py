@@ -1043,3 +1043,12 @@ class Statused(MeOn):
             return(get_status('http://twitter.com/statuses/user_timeline/%s.rss' % (self.name)))
         else:
             return(get_status('http://rss.juick.com/%s/blog' % (self.name)))
+
+class LastView(models.Model):
+    date = models.DateTimeField(auto_now=True)
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
+
+    def update(self):
+        self.date = datetime.datetime.now()
+        self.save()

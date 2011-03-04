@@ -152,6 +152,7 @@ def post(request, id):
     post.get_content = post.get_full_content
     post.is_answer(request.user)
     options = {}
+    last_view_date = None
     if request.user.is_authenticated():
         try:
             options['favourite'] = Favourite.objects.get(post=post, user=request.user)
@@ -161,8 +162,17 @@ def post(request, id):
             options['spy'] = Spy.objects.get(post=post, user=request.user)
         except Spy.DoesNotExist:
             options['spy'] = False
+        try:
+            last_view = LastView.objects.get(post=post, user=request.user)
+            last_view_date = last_view.date
+            last_view.update()
+        except:
+            last_view = LastView(post=post, user=request.user)
+            last_view_date = 1
+            last_view.save()
     return({'post': post, 'author': author, 'comments': comments, 'comment_form': form, "options": options,
-        'single': True, 'PERM_EDIT_POST': post.type < 3 and (request.user.has_perm('main.change_post') or request.user == post.author)})
+        'single': True, 'PERM_EDIT_POST': post.type < 3 and (request.user.has_perm('main.change_post') or request.user == post.author),
+           'last_view': last_view_date})
 
 
 @cache_page(DEFAULT_CACHE_TIME)

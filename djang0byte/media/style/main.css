@@ -347,3 +347,7 @@ img {
     border: none;
     margin-right: 5px;
 }
+
+.new_comment {
+    background: #99CC88 !important;
+}
