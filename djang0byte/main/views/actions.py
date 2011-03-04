@@ -68,6 +68,7 @@ def rate_comment(request, profile, comment_id, json, action):
             return jsend({'error': _('Not allow this action!')})
     elif json:
         return jsend({'error': _('For their comments can not vote!')})
+    return HttpResponseRedirect('/post/%d/#cmnt%d' % (int(comment.post.id), comment.id))
 
 def rate_post(request, profile, post, json, action):
     """Rate post
@@ -96,6 +97,7 @@ def rate_post(request, profile, post, json, action):
             return jsend({'error': _('Not allow this action!')})
     elif json:
         return jsend({'error': _('For their post can not vote!')})
+    return HttpResponseRedirect('/post/%d/' % (int(post.id)))
 
 def rate_blog(request, profile, blog_id, json, action):
     """Rate post
@@ -125,6 +127,7 @@ def rate_blog(request, profile, blog_id, json, action):
             return jsend({'error': _('Not allow this action!')})
     elif json:
         return jsend({'error': _('For their blog can not vote!')})
+    return HttpResponseRedirect('/blog/%d/' % (int(blog_id)))
 
 @login_required
 def preview_comment(request):
