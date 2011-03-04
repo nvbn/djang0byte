@@ -48,13 +48,13 @@ def edit_draft(request, id):
             else:
                 draft.set_data(form.cleaned_data)
                 return render_to_response('newpost.html',
-                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile()), 'type': draft.type, 'extend': 'base.html'},
+                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), draft.blog.id), 'type': draft.type, 'extend': 'base.html'},
                          context_instance=RequestContext(request))
         else:
             data = {'tags': draft.raw_tags, 'title': draft.title, 'text': unparse(draft.text), 'addition':draft.addition}
             form = form(data)
             return render_to_response('newpost.html',
-                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile()),
+                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), draft.blog.id),
                          'preview': utils.parse(draft.text, VALID_TAGS, VALID_ATTRS),
                          'type': draft.type, 'extend': 'base.html', 'draft': True, 'id': draft.id},
                          context_instance=RequestContext(request))
