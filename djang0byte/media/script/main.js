@@ -90,7 +90,7 @@ function rmMeOn(number) {
     //Remove meon input from edit user page
     //number -- element number, if -1 -- delete last
     count = $('#meon_count').val();
-    if (number = -1) {
+    if (number > 0) {
         number = count - 1;
     }
     if (number < 0) return(-1);

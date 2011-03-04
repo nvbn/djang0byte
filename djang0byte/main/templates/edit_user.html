@@ -30,11 +30,7 @@
                 {% endfor %}
                 <input type='hidden' name='count' id="meon_count" value='{{  profile.get_me_on|length }}'/>
             {% else %}
-                <p id="meonp_0"><input class='meon' type="text" name="meon[0]" value="Title"/>
-                    <input class='meon_url' type="text" name="meon_url[0]" value="Url"/>
-                    <input type='checkbox' name="meon_status[0]" style='display: none'/><a href="#" id="0"
-                                                                                           class="rm_meon">X</a></p>
-                <input type='hidden' name='count' id="meon_count" value='1'/>
+                <input type='hidden' name='count' id="meon_count" value='0'/>
             {% endif %}
         </div>
         <input type="button" id="add" value="Add"/><input type="button" id="rm" value="Remove"/><br/><br/><br/>
