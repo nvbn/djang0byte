@@ -21,6 +21,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
+from django.template.loader import render_to_string
 from main.forms import *
 from main.models import *
 from parser.utils import unparse, unparse
@@ -341,4 +342,27 @@ def get_val(request, type, count=20):
     return jsend(out)
 
 
-
+@login_required
+def get_last_comments(request, post):
+    post = Post.objects.get(id=post)
+    try:
+        last_view = LastView.objects.get(post=post, user=request.user)
+        last_view_date = last_view.date
+        last_view.update()
+    except:
+        last_view = LastView(post=post, user=request.user)
+        last_view_date = 1
+        last_view.save()
+    comments = Comment.objects.filter(created__gt=last_view_date).order_by('created')
+    return jsend({
+              'comments': [{
+                           'content': render_to_string('single_comment.html', {
+                               'post': post,
+                               'comment': comment,
+                               'last_view': last_view_date
+                               }),
+                           'placeholder': comment.get_placceholder().id,
+                           'id': comment.id,
+                           } for comment in comments],
+              'count': comments.count(),
+         })

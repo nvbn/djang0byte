@@ -488,6 +488,13 @@ class Comment(NS_Node):
     def get_margin(self):
         """Get margin from comment tree"""
         return (self.depth - 2) * 20
+
+    def get_placceholder(self):
+        try:
+            return self.get_parent().get_children().filter(created__lt=self.created).order_by('-created')[0]
+        except IndexError:
+            return self.get_parent()
+
         
     def rate_comment(self, user, value):
         """Rate Comment

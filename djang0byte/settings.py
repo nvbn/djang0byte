@@ -111,6 +111,7 @@ INSTALLED_APPS = (
 'pytils',
 
 )
+
 EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 ACCOUNT_ACTIVATION_DAYS = 7

@@ -29,6 +29,7 @@ from annoying.decorators import render_to
 from tagging.models import TaggedItem
 from main.utils import Access, jsend
 from django.template import RequestContext
+from actions import  get_last_comments
 from settings import DEFAULT_CACHE_TIME
 from django.views.decorators.vary import vary_on_cookie
 from django.utils import simplejson
@@ -278,10 +279,7 @@ def new_comment(request, post = 0, comment = 0):
             if not no_notify:
                 Notify.new_comment_notify(comment)
             if json:
-                return jsend({
-                      'content': render_to_string('single_comment.html', {'post': comment.post, 'comment': comment}),
-                      'placeholder': last,
-                      })
+                return get_last_comments(request, post.id)
                 
                 """return(render_to_response('comment.html',
                                           ,

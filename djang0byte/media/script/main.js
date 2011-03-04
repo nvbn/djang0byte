@@ -162,21 +162,51 @@ function initCommentSubmit(context) {
             context: document.body, success: function(data, textStatus, XMLHttpRequest) {
  
        
-            if (current_reply == -1) {
-                $(data.content).insertBefore('#main_form');
-            } else {
-                $(data.content).insertAfter('#cmnt'+data.placeholder);
-            }
-            $(data.content).each(function() {
-                initCommentReply('#' + $(this).attr('id'));
-                initCommentRates('#' + $(this).attr('id'));
-            });
+            updateComments(data, 1);
+
             clearCommentForms(false);
             commentReplyForm(-1);
             $('input[type=submit]', this).attr('disabled', '');
         }});
         return false;
     });
+}
+
+function updateComments(data, write) {
+    if (!write)
+            $(".new_comment").each(function(){
+                $(this).removeClass('new_comment');
+            });
+    if (data.count > 0) {
+        for (i in data.comments) {
+            if (!$("#cmnt" + data.comments[i].id).length){
+                if (data.comments[i].placeholder == 0) {
+                    $(data.comments[i].content).insertBefore('#main_form');
+                } else {
+                    $(data.comments[i].content).insertAfter('#cmnt'+data.comments[i].placeholder);
+                }
+                $(data.comments[i].content).each(function() {
+                    initCommentReply('#' + $(this).attr('id'));
+                    initCommentRates('#' + $(this).attr('id'));
+                });
+
+            } else data.count--;
+
+        }
+        if ($("#updated_count").html() == '—' || !write) {
+            $("#updated_count").html(data.count);
+
+        }
+        else if (parseInt($("#updated_count").html()) > 0 && write)
+            $("#updated_count").html(parseInt($("#updated_count").html()) + data.count);
+
+        if (!write || data.count > 1)
+                $.jGrowl(data.count + " новых комментариев!");
+    } else {
+        $("#updated_count").html('—');
+        $.jGrowl("Новых комментариев нет!");
+    }
+    $('#updated_count').attr('href', "#" + $(".new_comment:first").parent().attr('id'));
 }
 
 function _get(val, select) {
@@ -299,6 +329,7 @@ function rate(url, type) {
     }});
 }
 
+
 function initCommentRates(context) {
     if (context == -1) {
         context = ".comment_rate";
@@ -348,6 +379,23 @@ $(document).ready(function(){
     $('#new_post_form').submit(function(){
         $('input[type=submit]', this).attr('disabled', 'disabled');
     });
+    $('#update_button').click(function(){
+        $.ajax({ url: "/action/get_last_comments/" + document.location.href.split('/')[4] + '/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+            updateComments(data);
+        }});
+    });
+    $('#updated_count').click(function(){
+        $('#updated_count').attr('href', "#" + $(".new_comment:first").parent().attr('id'));
+        $(".new_comment:first").removeClass('new_comment');
+        cnt = parseInt($('#updated_count').html()) - 1
+        if (cnt)
+            $('#updated_count').html(cnt);
+        else
+            $('#updated_count').html('—');
+    });
+    if ($(".new_comment").length){
+        $('#updated_count').html($(".new_comment").length);
+    }
     initPostType();
     initAnswers();
     initCommentSubmit(-1);
