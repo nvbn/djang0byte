@@ -5,6 +5,10 @@ html, body {
     width: 100%;
 }
 
+img {
+    border: none;
+}
+
 .title {
     overflow: hidden;
     widht: 100%;

@@ -57,12 +57,13 @@ def newpost(request, type = 'post'):
     if request.POST.get('preview'):
         preview = True
         is_draft = True
+
+    print (request.POST.get('draft'),request.POST.get('preview') )
     extend = 'base.html'
     if request.GET.get('json'):
         extend = 'json.html'
     if type != 'answer':
         _type = type
-        print type
         if type == 'post':
             type = 0
             form = CreatePostForm
@@ -74,24 +75,15 @@ def newpost(request, type = 'post'):
             form = CreatePostTranslateForm
         if request.method == 'POST':
             form = form(request.POST)
-            if form.is_valid() and not preview:
+            if form.is_valid() and not (preview or is_draft):
                 data = form.cleaned_data
-                if is_draft:
-                    post = Draft()
-                else:
-                    post = Post()
+                post = Post()
                 post.author = request.user
                 post.type = type
                 post.set_data(data)
                 post.save(edit=False)
-                if not is_draft:
-                    post.set_tags(data['tags'])
-                    return HttpResponseRedirect('/post/%d/' % (post.id))
-                else:
-                    if preview:
-                        return HttpResponseRedirect('/draft/%d/' % (draft.id))
-                    else:
-                        return HttpResponseRedirect('/draft/')
+                post.set_tags(data['tags'])
+                return HttpResponseRedirect('/post/%d/' % (post.id))
             else:
                 if is_draft:
                     draft = Draft()

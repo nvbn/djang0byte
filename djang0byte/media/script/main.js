@@ -376,8 +376,11 @@ $(document).ready(function(){
     $('.comment_reply_form').each(function(){
        initCommentPreview($(this));
     });
-    $('#new_post_form').submit(function(){
-        $('input[type=submit]', this).attr('disabled', 'disabled');
+    var sended = 0;
+    $('#new_post_form').submit(function(event){
+        if (!sended)
+            event.preventDefault();
+        sended = 1;
     });
     $('#update_button').click(function(){
         $.ajax({ url: "/action/get_last_comments/" + document.location.href.split('/')[4] + '/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {

@@ -22,7 +22,7 @@
 </div>
 <input type="button" id="add_answ" value="Add"/><input type="button" id="rm_answ" value="{% trans 'Remove' %}"/><br/><br/><br/>
 <label><input type='checkbox' name='multi' />{% trans "Allow multiple answer" %}</label><br />
-<input type='text' name='tags'/><br />
+<label>{% trans "Tags:" %} <input type='text' name='tags'/></label><br />
 <input type='hidden' name='count' value='{{ count }}' id='count' />
 <input type='submit'>
 </form>
