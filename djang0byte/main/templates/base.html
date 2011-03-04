@@ -25,7 +25,7 @@
             <div id="user_setting">
                 {% if user.is_authenticated %}
                     <span class="left"><a href="/user/{{ user.username }}/">{{ user.username }}</a> {{ your_rate }} <a href="/newpost/">{% trans "New post" %}</a> / <a href='/newblog/'>{% trans "blog" %}</a>.
-                        {% trans "Your" %} <a href='/myblogs/'>{% trans "blogs" %}</a> {% trans "and" %} <a href='/pm/'>{% trans "PM's" %}</a>
+                        <a href='/myblogs/'>{% trans "Your blogs" %}</a> {% trans "and" %} <a href='/pm/'>{% trans "PM's" %}</a>
                         {% if messages_inbox_count %}
                             {{ messages_inbox_count }}
                         {% endif %}</span>
