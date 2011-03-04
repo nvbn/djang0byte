@@ -8,7 +8,7 @@
         {% for comment in object_list %}
                     <div class='comment' id="cmnt{{ comment.id }}">
                 <div class='comment_top'>
-                    <a href="/user/{{ user }}/" class="comment_author">{{ user }}</a>
+                    <a href="/user/{{ user }}/" class="comment_author"><img src='{{ user.get_profile.get_avatar }}' class='mini_av' />{{ user }}</a>
                     <span class="date">{{ comment.created }}</span>
                     <a href="/post/{{ comment.post.id }}/#cmnt{{ comment.id }}">#</a>
                     <div class="comment_rate">

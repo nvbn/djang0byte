@@ -144,7 +144,10 @@ class Blog(models.Model):
             uib.save()
 
     def get_avatar(self):
-        pass
+        try:
+            return(self.avatar.url)
+        except ValueError:
+            return(False)
 
     @staticmethod
     def create_list(profile, selected = None):

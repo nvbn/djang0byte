@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class='comment' id="cmnt{{ comment.id }}" style="margin-left:{{comment.get_margin}}px;">
     <div class='comment_top'>
-        <a href="/user/{{ comment.author }}/" class="comment_author">{{ comment.author }}</a>
+        <a href="/user/{{ comment.author }}/" class="comment_author"><img src='{{ comment.author.get_profile.get_avatar }}' class='mini_av' /> {{ comment.author }}</a>
         <span class="date">{{ comment.created }}</span>
         <a href="/post/{{ post.id }}/#cmnt{{ comment.id }}">#</a>
         <div class="comment_rate">

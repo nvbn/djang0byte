@@ -335,3 +335,15 @@ img {
 .post_container {
     overflow: hidden;
 }
+
+.mini_av {
+    max-height: 20px;
+    border: none;
+    margin-right: 5px;
+}
+
+.post_av {
+    max-height: 30px;
+    border: none;
+    margin-right: 5px;
+}
