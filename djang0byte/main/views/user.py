@@ -72,7 +72,7 @@ def profile(request, name):
     Returns: HttpResponse
 
     """
-    user = User.objects.filter(username=name)[0]
+    user = User.objects.get(username=name)
     profile = user.get_profile()
     meon = profile.get_me_on()
     for site in meon:

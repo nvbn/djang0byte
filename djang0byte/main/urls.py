@@ -27,7 +27,7 @@ from django.contrib.auth.views import *
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-  ('^user/(\w*)/$', profile),
+  ('^user/(.*)/$', profile),
   ('^newblog/$', newblog),
   ('^newpost/$', newpost),
   ('^newpost/(.*)/$', newpost),

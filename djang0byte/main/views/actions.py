@@ -133,7 +133,6 @@ def rate_blog(request, profile, blog_id, json, action):
 def preview_comment(request):
     return jsend({'text':utils.parse(request.POST.get('text'))})
 
-@login_required
 def action(request, type, id, action = None):
     """Add or remove from favourite and spy, rate
 
@@ -150,6 +149,11 @@ def action(request, type, id, action = None):
     if request.GET.get('json', 0):
         extend = 'json.html'
         json = True
+    if not request.user.is_authenticated():
+        if json:
+            return jsend({'error': _('Please register for this action!')})
+        else:
+            return HttpResponseRedirect('/')
     try:
         post = Post.objects.select_related('author').get(id=id)
     except Post.DoesNotExist:
