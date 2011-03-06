@@ -98,6 +98,8 @@ INSTALLED_APPS = (
      'django.contrib.sessions',
      'django.contrib.sites',
      'registration',
+     'captcha',
+     'register',
      'treebeard',
      'main',
      'parser',
@@ -134,3 +136,5 @@ MENU_CACHE_TIME = DEFAULT_CACHE_TIME
 SIDEBAR_CACHE_TIME = DEFAULT_CACHE_TIME
 DEFAULT_AVATAR = '/media/style/figure.gif'
 LOGIN_REDIRECT_URL = '/'
+RECAPTCHA_PUBLIC_KEY = '6LeLNMISAAAAAI2FBbNBnjf_ms6a5werjXbTbNCk '
+RECAPTCHA_PRIVATE_KEY = '6LeLNMISAAAAAMassCnG27qheWXn7Fr_ePSvMP6r '

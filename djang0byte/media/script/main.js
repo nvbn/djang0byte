@@ -360,6 +360,91 @@ function initPostRates(context) {
     });
 }
 
+function isValidEmailAddress(emailAddress) {
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+    return pattern.test(emailAddress);
+};
+
+function check_register_all() {
+    cls = ['#id_email', '#id_username', '#id_password1', '#id_password2'];
+    for (i in cls) {
+        $(cls[i]).removeClass("all_good");
+        $(cls[i]).removeClass("all_bad");
+    }
+    if ($("#id_password1").val() == $("#id_password2").val() && $("#id_password1").val().length > 3) {
+        $("#id_password1").addClass("all_good");
+        $("#id_password2").addClass("all_good");
+    } else {
+        $("#id_password1").addClass("all_bad");
+        $("#id_password2").addClass("all_bad");
+    }
+    $.ajax({url: "/accounts/check/all/" + $('#id_username').val() + '/' + $('#id_email').val() + "/", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+        if (data.mail)
+            $('#id_email').addClass('all_good');
+        else
+            $('#id_email').addClass('all_bad');
+        if (data.username)
+            $('#id_username').addClass('all_good');
+        else
+            $('#id_username').addClass('all_bad');
+        cls = ['#id_email', '#id_username', '#id_password1', '#id_password2'];
+        flag = 0;
+        for (i in cls) {
+            if ($(cls[i]).hasClass("all_bad")) {
+                flag = 1;
+            }
+        }
+        if (!flag)
+            alert(1);
+            //$("#register_form").submit()
+        else
+            $.jGrowl("Вы неправильно заполнили поля!");
+    }});
+}
+
+function check_register(type, value) {
+    if (type != 'password') {
+        if (value.length > 2 && (type == 'username' || isValidEmailAddress(value)))
+        $.ajax({url: "/accounts/check/" + type + "/" + value + "/", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+            if (data.type == 'mail') {
+                $("#id_email").removeClass("all_good");
+                $("#id_email").removeClass("all_bad");
+                if (data.value)
+                    $("#id_email").addClass("all_good");
+                else
+                    $("#id_email").addClass("all_bad");
+            } else if (data.type == 'username') {
+                $("#id_username").removeClass("all_good");
+                $("#id_username").removeClass("all_bad");
+                if (data.value)
+                    $("#id_username").addClass("all_good");
+                else
+                    $("#id_username").addClass("all_bad");
+            }
+        }});
+        else if (type == 'mail') {
+            $("#id_email").removeClass("all_good");
+            $("#id_email").removeClass("all_bad");
+        }
+        else if (type == 'username') {
+            $("#id_username").removeClass("all_good");
+            $("#id_username").removeClass("all_bad");
+        }
+    } else if ($("#id_password2").val()) {
+        $("#id_password1").removeClass("all_good");
+        $("#id_password1").removeClass("all_bad");
+        $("#id_password2").removeClass("all_good");
+        $("#id_password2").removeClass("all_bad");
+        if ($("#id_password1").val() == $("#id_password2").val()) {
+            $("#id_password1").addClass("all_good");
+            $("#id_password2").addClass("all_good");
+        } else {
+            $("#id_password1").addClass("all_bad");
+            $("#id_password2").addClass("all_bad");
+        }
+    }
+}
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();
@@ -398,9 +483,26 @@ $(document).ready(function(){
         else
             $('#updated_count').html('—');
     });
+    $("#id_username").keyup(function(){
+        check_register('username', $(this).val());
+    });
+    $("#id_email").keyup(function(){
+        check_register('mail', $(this).val());
+    });
+    $("#id_password1").keyup(function(){
+        check_register('password', $(this).val());
+    });
+    $("#id_password2").keyup(function(){
+        check_register('password', $(this).val());
+    });
     if ($(".new_comment").length){
         $('#updated_count').html($(".new_comment").length);
     }
+    $("#register_btn").click(function(){
+       check_register_all();
+    });
+    $("#register_btn").css('display', 'block');
+    $("#register_submit").css('display', 'none');
     initPostType();
     initAnswers();
     initCommentSubmit(-1);
