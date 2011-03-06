@@ -47,14 +47,22 @@ def edit_draft(request, id):
                     return HttpResponseRedirect('/post/%d/' % (post.id))
             else:
                 draft.set_data(form.cleaned_data)
+                try:
+                    blog = draft.blog.id
+                except AttributeError:
+                    blog = None
                 return render_to_response('newpost.html',
-                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), draft.blog.id), 'type': draft.type, 'extend': 'base.html'},
+                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), blog), 'type': draft.type, 'extend': 'base.html'},
                          context_instance=RequestContext(request))
         else:
             data = {'tags': draft.raw_tags, 'title': draft.title, 'text': unparse(draft.text), 'addition':draft.addition}
             form = form(data)
+            try:
+                blog = draft.blog.id
+            except AttributeError:
+                blog = None
             return render_to_response('newpost.html',
-                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), draft.blog.id),
+                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), blog),
                          'preview': utils.parse(draft.text, VALID_TAGS, VALID_ATTRS),
                          'type': draft.type, 'extend': 'base.html', 'draft': True, 'id': draft.id},
                          context_instance=RequestContext(request))

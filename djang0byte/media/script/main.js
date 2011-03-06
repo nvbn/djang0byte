@@ -156,8 +156,9 @@ function initCommentSubmit(context) {
         context = context + ">.comment_reply_form>form";
     }
     $(context).submit(function(event){
-        $('input[type=submit]', this).attr('disabled', 'disabled');
         event.preventDefault();
+        if ($(this).find('#id_text').val()) {
+            $('input[type=submit]', this).attr('disabled', 'disabled');
         $.ajax({ url: "/newcomment/?json=1", type: 'POST', data: $(this).serialize(),
             context: document.body, success: function(data, textStatus, XMLHttpRequest) {
  
@@ -168,6 +169,7 @@ function initCommentSubmit(context) {
             commentReplyForm(-1);
             $('input[type=submit]', this).attr('disabled', '');
         }});
+        } else $.jGrowl("Введите текст комментария!");
         return false;
     });
 }
@@ -378,7 +380,7 @@ $(document).ready(function(){
     });
     var sended = 0;
     $('#new_post_form').submit(function(event){
-        if (!sended)
+        if (sended)
             event.preventDefault();
         sended = 1;
     });
