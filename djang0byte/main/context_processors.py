@@ -1,6 +1,6 @@
 from main.models import *
 from main.utils import Access
-from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, MENU_CACHE_TIME, SIDEBAR_CACHE_TIME, LANGUAGE_CODE
+from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, MENU_CACHE_TIME, SIDEBAR_CACHE_TIME, LANGUAGE_CODE, SITENAME
 import random, time
 from django.contrib.auth.decorators import login_required
 
@@ -41,7 +41,7 @@ def djbyte(request):
     return({'your_rate': rate, 'top_post_comment': objects, 'top_profiles': profiles, 'top_blogs': blogs,
             'blogs_count': Blog.objects.count(), 'profiles_count': Profile.objects.count(),
             'city_count': City.objects.count(), 'MENU_CACHE_TIME': MENU_CACHE_TIME, 'SIDEBAR_CACHE_TIME': SIDEBAR_CACHE_TIME,
-            'LANGUAGE_CODE': LANGUAGE_CODE})
+            'LANGUAGE_CODE': LANGUAGE_CODE, 'SITENAME': SITENAME })
 
 @login_required
 def permission(request):

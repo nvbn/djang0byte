@@ -188,29 +188,37 @@ def post_list(request, type = None, param = None):
     subject = None
     option = None
     if type == None:
+        title = ''
         blog_types = BlogType.objects.filter(display_default=False)
         blogs = Blog.objects.filter(type__in=blog_types)
         posts = Post.objects.exclude(blog__in=blogs)
     elif BlogType.check(type):
-        posts = Post.objects.filter(blog__in=BlogType.objects.get(name=type).get_blogs())
+        blog_type = BlogType.objects.get(name=type)
+        title = blog_type.name
+        posts = Post.objects.filter(blog__in=blog_type.get_blogs())
     elif type == 'pers':
+        title = _('Presonal posts')
         posts = Post.objects.filter(blog=None)
     elif type == 'blog':
         blog = Blog.objects.get(id=param)
+        title = _('Blog in ') + blog.name
         posts = blog.get_posts()
         subject = blog
         option = request.user.is_authenticated() and blog.check_user(request.user)
     elif type == 'tag':
+        title = _('Posts with tag ') + param
         posts = TaggedItem.objects.get_by_model(Post, param)
         subject = param
         #posts = [post.post for post in posts_with_tag]
     elif type == 'auth':
+        title = _('Posts by ') + param
         user = User.objects.get(username=param)
         profile = user.get_profile()
         posts = profile.get_posts()
         subject = profile
         option = request.user.is_authenticated() and profile.is_my_friend(request.user)
     elif type == 'favourite':
+        title = _('Favourite posts')
         #TODO: rewrite favorite to ManyToMany
         posts = [f.post for f in Favourite.objects.select_related('post').filter(user=request.user)]
     try:
@@ -218,7 +226,7 @@ def post_list(request, type = None, param = None):
     except AttributeError:
         pass
     #TODO: fix answer result in post list
-    return {'object_list': posts, 'single': False, 'type': type, 'subject': subject, 'option': option}
+    return {'object_list': posts, 'single': False, 'type': type, 'subject': subject, 'option': option, 'title': title}
 
 def post_list_with_param(request, type, param = None):
     """Wrapper for post_list

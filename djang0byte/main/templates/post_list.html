@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block title %}
-
+{% if title %} {% if title == 'answer' %}Вопросы и ответы{% else %}{{ title }} {% endif %}{% endif %}
 {% endblock %}
 {% block content %}
 <div class='post_list'>
