@@ -273,7 +273,7 @@ class Draft(models.Model):
 
 class Post(Draft):
     """Posts table"""
-    date = models.DateTimeField(auto_now=True, editable=False, verbose_name=_('Date'))
+    date = models.DateTimeField(default=datetime.datetime.now(), editable=False, verbose_name=_('Date'))
     rate = models.IntegerField(default=0, verbose_name=_('Post rate'))
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
     preview = models.TextField(blank=True, verbose_name=_('Preview text'))
