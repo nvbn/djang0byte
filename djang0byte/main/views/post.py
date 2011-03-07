@@ -113,6 +113,7 @@ def newpost(request, type = 'post'):
             else:
                 post.type = 3#post.type = 'Answer'
             post.save(edit=False)
+            post.create_comment_root()
             post.set_tags(request.POST.get('tags'))
             for answer_item in range(int(request.POST.get('count'))):
                 answer = Answer()

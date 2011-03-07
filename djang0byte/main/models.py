@@ -413,7 +413,6 @@ class Post(Draft):
             self.preview = utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
             self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         if not edit:
-            self.create_comment_root()
             if not convert:
                 Notify.new_post_notify(self)
         super(Post, self).save() # Call the "real" save() method

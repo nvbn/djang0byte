@@ -59,7 +59,6 @@ def parse(value, valid_tags = 'p i strong b u a h1 h2 h3 pre br img cut fcut  ta
                 code = highlight(code, lexer, formatter)
                 code = code.replace('<table class="highlighttable">', '<table class="highlighttable" id="%d">' % (code_model.id,))
                 tag.replaceWith(code)
-
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
 
