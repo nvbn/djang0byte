@@ -159,6 +159,7 @@ table.top {
 #fast_panel_selector {
     width: 20px;
 }
+
 .top  td {
     vertical-align: top;
 }
@@ -413,4 +414,20 @@ a.post_link {
 
 #register_btn {
     display: none;
+}
+.digg_pages, .digg_pages_disabled {
+    border: 1px solid #F0F0F0;
+    color: #F0F0F0;
+    margin-right: 1px;
+    padding: 2px 5px 2px 5px;
+    text-decoration: none;
+}
+
+a.digg_pages {
+    color: #999;
+    text-decoration: none;
+}
+
+.paginator {
+    text-align: center;
 }
