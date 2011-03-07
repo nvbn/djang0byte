@@ -182,7 +182,7 @@ function updateComments(data, write) {
     if (data.count > 0) {
         for (i in data.comments) {
             if (!$("#cmnt" + data.comments[i].id).length){
-                if (data.comments[i].placeholder == 0) {
+                if (data.comments[i].placeholder == 0 || ! $('#cmnt'+data.comments[i].placeholder).length) {
                     $(data.comments[i].content).insertBefore('#main_form');
                 } else {
                     $(data.comments[i].content).insertAfter('#cmnt'+data.comments[i].placeholder);

@@ -82,6 +82,7 @@ def newpost(request, type = 'post'):
                 post.type = type
                 post.set_data(data)
                 post.save(edit=False)
+                post.create_comment_root()
                 post.set_tags(data['tags'])
                 return HttpResponseRedirect('/post/%d/' % (post.id))
             else:

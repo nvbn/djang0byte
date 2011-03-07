@@ -43,6 +43,7 @@ def edit_draft(request, id):
                     post = Post.from_draft(draft)
                 post.save(edit=False)
                 if not is_draft:
+                    post.create_comment_root()
                     post.set_tags(data['tags'])
                     return HttpResponseRedirect('/post/%d/' % (post.id))
             else:
