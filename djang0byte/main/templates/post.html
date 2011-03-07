@@ -44,6 +44,7 @@
 {% for comment in comments %}
     {% include 'single_comment.html' %}
 {% endfor %}
+{% if request.user.is_authenticated %}
 <div class="comment_reply_form" id='main_form'>
     <form action="/newcomment/" method="POST">
         {{ comment_form.text }}
@@ -54,4 +55,5 @@
 </div>
 <a href='#main_form' id="main_form_hide">{% trans "Reply" %}</a>
 <div id="update_button_holder"><img id='update_button' style="cursor:pointer" src="/media/style/refr.gif"><br /><a id='updated_count'>—</a></div>
+{% endif %}
 {% endblock %}
