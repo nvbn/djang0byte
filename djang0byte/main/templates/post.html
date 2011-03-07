@@ -28,15 +28,15 @@
             <a href='/action/delete_post/{{ post.id }}/'>{% trans "Delete post!" %}</a>
         {% endif %}
         {% if options.favourite %}
-            <a href='/action/favourite/{{ post.id }}/'>{% trans "Remove from favourite!" %}</a>
+            <a href='/action/favourite/{{ post.id }}/' id='remove_favourite'>{% trans "Remove from favourite!" %}</a>
         {% else %}
-            <a href='/action/favourite/{{ post.id }}/'>{% trans "Add to favourite!" %}</a>
+            <a href='/action/favourite/{{ post.id }}/' id='add_favourite'>{% trans "Add to favourite!" %}</a>
         {% endif %}
         {% if post.author != request.user %}
             {% if options.spy %}
-                <a href='/action/spy/{{ post.id }}/'>{% trans "Remove from spy!" %}</a>
+                <a href='/action/spy/{{ post.id }}/' id="remove_spy">{% trans "Remove from spy!" %}</a>
             {% else %}
-                <a href='/action/spy/{{ post.id }}/'>{% trans "Add to spy!" %}</a>
+                <a href='/action/spy/{{ post.id }}/' id="add_spy">{% trans "Add to spy!" %}</a>
             {% endif %}
         {% endif %}
     </div>

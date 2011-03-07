@@ -573,11 +573,11 @@ msgstr "Добавить в избранное!"
 
 #: templates/post.html:37
 msgid "Remove from spy!"
-msgstr "Отслеживать!"
+msgstr "Перестать следить!"
 
 #: templates/post.html:39
 msgid "Add to spy!"
-msgstr "Перестать следить!"
+msgstr "Отслеживать!"
 
 #: templates/post_list.html:10
 #, fuzzy
