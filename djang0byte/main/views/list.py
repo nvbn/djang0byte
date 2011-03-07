@@ -64,9 +64,9 @@ def list_users(request, order = None, param = None, param_value = None):
             % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
             order_by=['fullrate',])
     elif order == 'name_desc':
-        items = items.order_by('-user')
+        items = items.order_by('-user__username')
     else:
-        items = items.order_by('user')
+        items = items.order_by('user__username')
 
     return({'object_list': items, 'type': 'users', 'param': param,
             'param_value': param_value, 'order': order, 'url': url})

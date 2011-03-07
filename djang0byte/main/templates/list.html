@@ -6,8 +6,8 @@
 {% block content %}
 <table style="width: 100%">
 <tr>
-    <td><a href='{{ url }}name_desc/'>&#8595;</a>{% trans 'Name' %}<a href='{{ url }}name/'>&#8593;</a></td>
-    <td><a href='{{ url }}rate_desc/'>&#8595;</a>{% if type != 'cities' %}{% trans 'Rate' %}{% else %}{% trans 'Count' %}{% endif %}<a href='{{ url }}rate/'>&#8593;</a></td>
+    <td class='left'><a href='{{ url }}name_desc/'>&#8595;</a>{% trans 'Name' %}<a href='{{ url }}name/'>&#8593;</a></td>
+    <td class='right'><a href='{{ url }}rate_desc/'>&#8595;</a>{% if type != 'cities' %}{% trans 'Rate' %}{% else %}{% trans 'Count' %}{% endif %}<a href='{{ url }}rate/'>&#8593;</a></td>
 </tr>
 
     {% for item in object_list %}
