@@ -341,9 +341,9 @@ function initCommentRates(context) {
     if (context == -1) {
         context = ".comment_rate";
     } else {
-        context = context + ">.comment_rate";
+        context = context + " .comment_rate";
     }
-    $(context + ">a").each(function(){
+    $(context + " a").each(function(){
         $(this).attr('href', '#' + $(this).attr('href'));
         $(this).click(function(){
             rate($(this).attr('href').split('#')[1], 'comment');
