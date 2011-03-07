@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% block content %}
+{% if request.user.is_authenticated %}
+<h2>{% trans "No-no-no!" %}</h2>
+{% else %}
 <form method="post" action="">
 <table>
     <tr>
@@ -18,4 +20,5 @@
 
 <p>{% trans "Forgot password" %}? <a href="{% url auth_password_reset %}">{% trans "Reset it" %}</a></p>
 <p>{% trans "Not member" %}? <a href="{% url registration_register %}">{% trans "Register" %}</a>!</p>
+{% endif %}
 {% endblock %}

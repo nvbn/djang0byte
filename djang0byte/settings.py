@@ -31,7 +31,7 @@ CACHES = {
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/Moscow'
-
+DATETIME_FORMAT = 'd.m.Y H:i'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'ru-ru'
@@ -41,7 +41,7 @@ SITE_ID = 1
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
-
+USE_L10N = True
 MEDIA_ROOT = '/home/nvbn/work/djang0byte/djang0byte/media/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 MEDIA_URL = '/media/'

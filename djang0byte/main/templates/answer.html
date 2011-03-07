@@ -1,5 +1,5 @@
 
-{% if post.is_result %}
+{% if post.is_result or not request.user.is_authenticated %}
     <table>
     {% for answ in post.is_answer %}
         <tr>

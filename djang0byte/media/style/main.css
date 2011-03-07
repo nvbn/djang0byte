@@ -371,7 +371,7 @@ img {
 }
 
 .post_av {
-    max-height: 30px;
+    max-height: 20px;
     border: none;
     margin-right: 5px;
 }
@@ -430,4 +430,28 @@ a.digg_pages {
 
 .paginator {
     text-align: center;
+}
+
+#msg_type>a {
+    margin-right: 15px;
+}
+
+#msg_type {
+    margin-bottom: 20px;
+}
+
+a.del_msg {
+    margin-left: 20px;
+}
+
+ul.messages {
+    padding: 0;
+}
+
+li.list_msg {
+    list-style: none;
+}
+
+li.new_msg {
+    background: #99CC88;
 }

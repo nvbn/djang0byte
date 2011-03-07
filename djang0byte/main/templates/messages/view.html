@@ -2,21 +2,17 @@
 {% load i18n %} 
 {% block content %}
 {% include "messages/menu.html" %}
-<h2>{% trans "View Message" %}</h2>
-<dl class="message-headers">
-    <dt>{% trans "Subject" %}</dt>
-    <dd><strong>{{ message.subject }}</strong></dd>
-    <dt>{% trans "Sender" %}</dt>
-    <dd>{{ message.sender }}</dd>
-    <dt>{% trans "Date" %} </dt>
-    <dd>{{ message.sent_at|date:_("DATETIME_FORMAT")}}</dd>
-    <dt>{% trans "Recipient" %}</dt>
-    <dd>{{ message.recipient }}</dd>
-</dl>
+<div class='msg_container'>
+
+    <span class="date">{{ message.sent_at }}</span>
+    <h2><a href='/user/{{ message.sender }}/'><img src='{{ message.sender.get_profile.get_avatar }}' class='post_av' /> {{ message.sender }}</a> — {{ message.subject }}</h2>
+
+
 {{ message.body|linebreaksbr }}<br /><br />
 
 {% ifequal message.recipient.pk user.pk %}
 <a href="{% url messages_reply message.id %}">{% trans "Reply" %}</a>
 {% endifequal %}
 <a href="{% url messages_delete message.id %}">{% trans "Delete" %}</a>
+</div>
 {% endblock %}
