@@ -64,6 +64,9 @@
                 </td>
                 </tr>
             </table>
+            <div class='top search'>
+                <div class="yandexform" onclick="return {type: 3, logo: 'rb', arrow: false, webopt: false, websearch: false, bg: '#D8DBDE', fg: '#000000', fontsize: 12, suggest: true, site_suggest: true, encoding: '', language: 'ru'}"><form action="http://yandex.ru/sitesearch" method="get"><input type="hidden" name="searchid" value="1065792"/><input name="text"/><input type="submit" value="Найти"/></form></div><script type="text/javascript" src="http://site.yandex.net/load/form/1/form.js" charset="utf-8"></script>
+            </div>
             <div id="tag">
                 {% load tagging_tags %}
                 {% tag_cloud_for_model main.Post as tags with steps=9 distribution=log min_count=20 %}
