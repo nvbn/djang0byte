@@ -1,5 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from annoying.decorators import ajax_request
+from django.contrib.auth.views import logout_then_login
 
 @ajax_request
 def check(request, type, value, value_2 = None):
@@ -27,3 +29,7 @@ def check(request, type, value, value_2 = None):
         except User.DoesNotExist:
             username = True
         return {'username': username, 'mail': mail}
+
+@login_required
+def logout(request):
+    return logout_then_login(request,'/')

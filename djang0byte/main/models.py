@@ -574,6 +574,12 @@ class Profile(models.Model):
     def get_posts(self):
         """Get posts by user"""
         return Post.objects.filter(author=self.user)
+
+    def get_city(self):
+        if self.city:
+            return self.city.name
+        else:
+            return False
         
     def get_friends(self, friend_with_me = False):
         """Get user friends"""
