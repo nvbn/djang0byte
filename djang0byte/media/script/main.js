@@ -155,6 +155,11 @@ function initCommentSubmit(context) {
     } else {
         context = context + ">.comment_reply_form>form";
     }
+    $(context + ">textarea").keyup(function(event){
+        if (event.ctrlKey && event.keyCode == 13) {
+            $(this).parent().submit();
+        }
+    });
     $(context).submit(function(event){
         event.preventDefault();
         if ($(this).find('#id_text').val()) {
@@ -546,6 +551,7 @@ $(document).ready(function(){
             document.location = '/pm/';
         }});
     });
+
     $("#register_btn").css('display', 'block');
     $("#register_submit").css('display', 'none');
     initClicks();

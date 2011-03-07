@@ -360,7 +360,7 @@ def get_last_comments(request, post):
                                'post': post,
                                'comment': comment,
                                'last_view': last_view_date
-                               }),
+                               }, RequestContext(request)),
                            'placeholder': comment.get_placceholder().id,
                            'id': comment.id,
                            } for comment in comments],
