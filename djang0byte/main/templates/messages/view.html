@@ -13,6 +13,6 @@
 {% ifequal message.recipient.pk user.pk %}
 <a href="{% url messages_reply message.id %}">{% trans "Reply" %}</a>
 {% endifequal %}
-<a href="{% url messages_delete message.id %}">{% trans "Delete" %}</a>
+<a class="msg_del_big" href="{% url messages_delete message.id %}">{% trans "Delete" %}</a>
 </div>
 {% endblock %}

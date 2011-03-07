@@ -532,6 +532,20 @@ $(document).ready(function(){
     $("#register_btn").click(function(){
        check_register_all();
     });
+    $(".del_msg").click(function(event){
+        event.preventDefault();
+        $.ajax({ url:$(this).attr('href'), context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
+
+        if ($(".del_msg").length == 1)
+            $(this).parent().parent().html("Сообщений нет.");
+        else
+            $(this).parent().remove();
+    });
+    $(".msg_del_big").click(function(event) {
+        $.ajax({ url:$(this).attr('href'), context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+            document.location = '/pm/';
+        }});
+    });
     $("#register_btn").css('display', 'block');
     $("#register_submit").css('display', 'none');
     initClicks();
