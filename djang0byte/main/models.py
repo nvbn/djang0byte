@@ -173,7 +173,7 @@ class Blog(models.Model):
 class City(models.Model):
     """All of cities"""
     name = models.CharField(max_length=60, verbose_name=_('Name of city'))
-    count = models.IntegerField(verbose_name=_('Users from this city'), null=True)
+    count = models.IntegerField(verbose_name=_('Users from this city'), null=True)#wtf?
 
     @staticmethod
     def get_city(name):
@@ -199,6 +199,9 @@ class City(models.Model):
     def __unicode__(self):
         """Return name"""
         return self.name
+
+    def get_count(self):
+        return Profile.objects.filter(city=self).count()
 
     class Meta:
         verbose_name = _("City")

@@ -48,7 +48,7 @@
                     <img src='/media/style/city.png' alt='' /> <a href='/list/users/city/{{ item.name }}/'>{{ item.name }}</a>
                 </td>
                 <td class='right'>
-                    <span class='plus_rate'>{{ item.count }}</span>
+                    <span class='plus_rate'>{{ item.get_count }}</span>
                 </td>
             {% endif %}
         {% endif %}
