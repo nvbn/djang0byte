@@ -2,7 +2,7 @@
 import os.path
 
 # Django settings for djang0byte project.
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -139,3 +139,4 @@ LOGIN_REDIRECT_URL = '/'
 RECAPTCHA_PUBLIC_KEY = '6LeLNMISAAAAAI2FBbNBnjf_ms6a5werjXbTbNCk '
 RECAPTCHA_PRIVATE_KEY = '6LeLNMISAAAAAMassCnG27qheWXn7Fr_ePSvMP6r '
 SITENAME = 'Djang0byte is a capital of'
+POST_RATE_TO_MAIN = 0
