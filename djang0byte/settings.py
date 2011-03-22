@@ -2,7 +2,7 @@
 import os.path
 
 # Django settings for djang0byte project.
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

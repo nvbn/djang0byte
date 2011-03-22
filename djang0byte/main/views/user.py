@@ -27,6 +27,7 @@ from urlparse import urlparse
 from django.template.context import RequestContext
 from annoying.decorators import render_to
 from simplepagination import paginate
+from parser.utils import parse
 
 @render_to('register.html')
 def register(request, next = None):
@@ -165,7 +166,7 @@ def edit_user(request):
             data = form.cleaned_data
             profile = request.user.get_profile()
             request.user.email = data['mail']
-            profile.about = data['about']
+            profile.about = parse(data['about'])
             profile.icq = data['icq']
             profile.jabber = data['jabber']
             profile.timezone = data['timezone']
