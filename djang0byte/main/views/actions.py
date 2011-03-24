@@ -253,6 +253,7 @@ def edit_post(request, id):
 def get_val(request, type, count=20):
     out = []
     if type == 'comments':
+        request.session['right_panel'] = type
         comments = Comment.objects.exclude(depth=1).select_related('post', 'post.blog', 'post.author').order_by('-id')[:count]
         for comment in comments:
             out.append({
@@ -268,6 +269,7 @@ def get_val(request, type, count=20):
                            'type': 'comment',
             })
     elif type == 'posts':
+        request.session['right_panel'] = type
         posts = Post.objects.select_related('blog', 'author').order_by('-id')[:count]
         for post in posts:
             out.append({
@@ -280,6 +282,7 @@ def get_val(request, type, count=20):
                 'type': 'post',
             })
     elif type == 'users':
+        request.session['right_panel_2'] = 'users'
         users = Profile.objects.select_related('user').extra(select={'fullrate':
             'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
             % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
@@ -292,6 +295,7 @@ def get_val(request, type, count=20):
                 'type': 'user',
             })
     elif type == 'blogs':
+        request.session['right_panel_2'] = 'blogs'
         blogs = Blog.objects.order_by('-rate')[:count]
         for blog in blogs:
             out.append({
@@ -302,6 +306,7 @@ def get_val(request, type, count=20):
             })
     elif type == 'favourites':
         favourites = Favourite.objects.select_related('post').filter(user=request.user).order_by('-id')[:count]
+        request.session['right_panel'] = type
         for favourite in favourites:
            out.append({
                 'title': favourite.post.title,
@@ -317,6 +322,7 @@ def get_val(request, type, count=20):
             })
     elif type == 'spies':
         favourites = Spy.objects.select_related('post').filter(user=request.user).order_by('-id')[:count]
+        request.session['right_panel'] = type
         for favourite in favourites:
            out.append({
                 'title': favourite.post.title,
@@ -326,6 +332,7 @@ def get_val(request, type, count=20):
             })
     elif type == 'drafts':
         drafts = Draft.objects.filter(author=request.user, is_draft=True).order_by('-id')[:count]
+        request.session['right_panel'] = type
         for draft in drafts:
            out.append({
                 'title': draft.title,

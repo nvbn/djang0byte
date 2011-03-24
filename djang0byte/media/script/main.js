@@ -5,9 +5,10 @@ var comment_text = '';
 var fast_panel_type = 'all';
 var fast_panel_cache = Array();
 var fast_list_type = 'list';
+var fast_funcs = Array();
 
 function createFast(type, where) {
-    $('#fast_' + type).click(function(){
+    fast_funcs[type] = function(){
        if (fast_panel_type == type) {
            if (where == "#fast_list_area")
             fast_panel_type = 'list'
@@ -21,7 +22,6 @@ function createFast(type, where) {
            } else {
                 $.ajax({ url: "/action/get_val/" + type + "/", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
                     result = '<ul>';
-
                     for (i in data) {
                         element = data[i];
                         result = result + '<li class="' + element.type + '"><a href="' + element.url + '">' + element.title + '</a></li>'
@@ -32,7 +32,8 @@ function createFast(type, where) {
                 }});
            }
        }
-    });
+    };
+    $('#fast_' + type).click(fast_funcs[type]);
 }
 
 function initFastPanel() {

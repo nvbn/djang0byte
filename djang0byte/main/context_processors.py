@@ -38,10 +38,15 @@ def djbyte(request):
     except Profile.DoesNotExist:
         profiles = []
     blogs = Blog.objects.order_by('-rate')[0:][:10]
+    try:
+        type = request.session['right_panel']
+        right_panel_js = "fast_funcs['%s']()" % (type)
+    except KeyError:
+        right_panel_js = None
     return({'your_rate': rate, 'top_post_comment': objects, 'top_profiles': profiles, 'top_blogs': blogs,
             'blogs_count': Blog.objects.count(), 'profiles_count': Profile.objects.count(),
             'city_count': City.objects.count(), 'MENU_CACHE_TIME': MENU_CACHE_TIME, 'SIDEBAR_CACHE_TIME': SIDEBAR_CACHE_TIME,
-            'LANGUAGE_CODE': LANGUAGE_CODE, 'SITENAME': SITENAME })
+            'LANGUAGE_CODE': LANGUAGE_CODE, 'SITENAME': SITENAME, 'RIGHT_PANEL_JS': right_panel_js })
 
 @login_required
 def permission(request):

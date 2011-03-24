@@ -58,9 +58,11 @@
                 <td  id='fast_panel_selector'>
                     <a href='#fast_post' id='fast_posts' class='fast_panel'></a>
                     <a href='#fast_comment' id='fast_comments' class='fast_panel'></a>
-                    <a href='#fast_draft' id='fast_drafts' class='fast_panel'></a>
-                    <a href='#fast_spy' id='fast_spies' class='fast_panel'></a>
-                    <a href='#fast_favourite' id='fast_favourites' class='fast_panel'></a>
+                    {% if user.is_authenticated %}
+                        <a href='#fast_draft' id='fast_drafts' class='fast_panel'></a>
+                        <a href='#fast_spy' id='fast_spies' class='fast_panel'></a>
+                        <a href='#fast_favourite' id='fast_favourites' class='fast_panel'></a>
+                    {% endif %}
                 </td>
                 </tr>
             </table>
@@ -118,5 +120,14 @@
             {% show_menu "bottom_menu" "ordered-list" %}
         </div>
         {% endcache %}
+{% if RIGHT_PANEL_JS %}
+    <script>
+    {% autoescape off %}
+        $(document).ready(function(){
+            setTimeout("{{ RIGHT_PANEL_JS  }}", 3000);
+        });
+    {% endautoescape %}
+    </script>
+{% endif %}
 </body>
 </html>
