@@ -201,17 +201,17 @@ def post_list(request, type = None, param = None):
         posts = Post.objects.filter(blog=None)
     elif type == 'blog':
         blog = Blog.objects.get(id=param)
-        title = _('Blog in ') + blog.name
+        title = _('Blog in %s') % blog.name
         posts = blog.get_posts()
         subject = blog
         option = request.user.is_authenticated() and blog.check_user(request.user)
     elif type == 'tag':
-        title = _('Posts with tag ') + param
+        title = _(u'Posts with tag %s') % param
         posts = TaggedItem.objects.get_by_model(Post, param)
         subject = param
         #posts = [post.post for post in posts_with_tag]
     elif type == 'auth':
-        title = _('Posts by ') + param
+        title = _('Posts by %s') % param
         user = User.objects.get(username=param)
         profile = user.get_profile()
         posts = profile.get_posts()
