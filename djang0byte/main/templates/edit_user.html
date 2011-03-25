@@ -6,9 +6,40 @@
 {% block content %}
     <h2>{% trans "Edit user account" %}</h2>
     <form action="/action/edit_user/" method="post">
-        <ul class="form">
-            {{ form.as_ul }}
-        </ul>
+        <table>
+            <tr>
+                <td>E-mail</td><td>{{ form.mail }}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'Show mail' %}</td><td>{{ form.show_mail }}</td>
+            </tr>
+            <tr>
+                <td>ICQ</td><td>{{ form.icq }}</td>
+            </tr>
+            <tr>
+                <td>Jabber</td><td>{{ form.jabber }}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'Site' %}</td><td>{{ form.site }}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'City' %}</td><td>{{ form.city }}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'Timezone' %}</td><td>{{ form.timezone }}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'Notify post reply' %}</td><td>{{ form.notify_post_reply }}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'Notify comment reply' %}</td><td>{{ form.notify_comment_reply }}</td>
+            </tr>
+            <tr>
+                <td>{% trans 'Notify pm' %}</td><td>{{ form.notify_pm }}</td>
+            </tr>
+        </table>
+        {% trans 'About you:' %}<br />
+        {{ form.about }}<br />
         {% trans "Your accounts on other web sites:" %}
         <div id='meon_area'>
             {% if profile.get_me_on %}

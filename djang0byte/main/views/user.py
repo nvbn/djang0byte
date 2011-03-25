@@ -20,6 +20,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.views.decorators.cache import never_cache
 from main.forms import LoginForm, RegisterForm, EditUserForm, EditUserPick, EditUserPick
 from main.models import *
 from django.db import transaction
@@ -113,6 +114,7 @@ def login(request, next = None):
         form = LoginForm()
     return({'form': form, 'next': next})
 
+@never_cache
 @login_required
 def friend(request, name):
     """Add or remove friends
@@ -149,6 +151,7 @@ def logout(request):
     auth.logout(request)
     return HttpResponseRedirect("/")
 
+@never_cache
 @login_required
 @render_to('edit_user.html')
 @transaction.commit_on_success
@@ -210,6 +213,7 @@ def edit_user(request):
         form = EditUserForm(data)
     return({'form': form, 'user': request.user, 'profile': request.user.get_profile()})
 
+@never_cache
 @login_required
 @render_to('change_userpic.html')
 @transaction.commit_on_success
