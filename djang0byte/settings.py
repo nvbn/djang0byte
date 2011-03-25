@@ -111,6 +111,7 @@ INSTALLED_APPS = (
     'south',
 'tagging_autocomplete',
 'pytils',
+'django_push',
 
 )
 
@@ -140,3 +141,5 @@ RECAPTCHA_PUBLIC_KEY = '6LeLNMISAAAAAI2FBbNBnjf_ms6a5werjXbTbNCk '
 RECAPTCHA_PRIVATE_KEY = '6LeLNMISAAAAAMassCnG27qheWXn7Fr_ePSvMP6r '
 SITENAME = 'Djang0byte is a capital of'
 POST_RATE_TO_MAIN = 0
+PUSH_HUB = u'http://pubsubhubbub.appspot.com/'
+FEED_URL = u'http://localhost/rss/'

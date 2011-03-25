@@ -16,19 +16,23 @@
 
 
 
-from django.contrib.syndication.views import Feed
+from django_push.publisher.feeds import Feed
 from main.models import Post
+from settings import SITENAME
 
 class PostFeed(Feed):
-    title = "feed"
+    title = SITENAME
     link = "/rss/"
     description = ""
 
     def items(self):
         return Post.objects.order_by('-id')[:50]
 
-    def item_title(self, item):
-        return item.title
+    def item_link(self, item):
+        return "/post/%d/" % item.id
+
+    def get_absolute_url(self, item):
+        return "/post/%s/" % item.id
 
     def item_description(self, item):
         return item.text

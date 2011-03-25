@@ -126,14 +126,15 @@ def friend(request, name):
     """
     print name
     user = User.objects.get(username=name)
-    try:
-        friend = Friends.objects.get(user=request.user.get_profile(),friend=user)
-        friend.delete()
-    except Friends.DoesNotExist:
-        friend = Friends()
-        friend.user = request.user.get_profile()
-        friend.friend = user
-        friend.save()
+    if name != request.user.username:
+        try:
+            friend = Friends.objects.get(user=request.user.get_profile(),friend=user)
+            friend.delete()
+        except Friends.DoesNotExist:
+            friend = Friends()
+            friend.user = request.user.get_profile()
+            friend.friend = user
+            friend.save()
     return(HttpResponseRedirect('/user/%s/' % (name)))
     
 def logout(request):

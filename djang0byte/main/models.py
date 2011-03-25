@@ -13,8 +13,7 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-
-
+from django_push.publisher import ping_hub
 
 from treebeard.ns_tree import NS_Node
 from django.contrib.auth.models import User
@@ -23,7 +22,7 @@ import tagging
 from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
-from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR
+from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR, PUSH_HUB, FEED_URL
 from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
 from utils import file_upload_path, Access, get_status
 from parser import utils
@@ -417,6 +416,7 @@ class Post(Draft):
             self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         if not edit:
             if not convert:
+                ping_hub(FEED_URL, hub_url=PUSH_HUB)
                 Notify.new_post_notify(self)
         super(Post, self).save() # Call the "real" save() method
 
@@ -557,7 +557,7 @@ class Profile(models.Model):
     user = models.ForeignKey(User, unique=True, verbose_name=_('User'))
     city = models.ForeignKey(City, blank=True, null=True, verbose_name=_('City'))
     icq = models.CharField(max_length=10, blank=True, verbose_name=_('Icq'))
-    jabber = models.CharField(max_length=60, blank=True, verbose_name=_('Jabber'))
+    jabber = models.EmailField(max_length=60, blank=True, verbose_name=_('Jabber'))
     site = models.URLField(blank=True, verbose_name=_('Web site'))
     rate = models.IntegerField(default=0, verbose_name=_('Personal rate'))
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
