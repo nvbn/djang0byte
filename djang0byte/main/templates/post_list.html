@@ -9,19 +9,19 @@
     {% if type == 'auth' %}
         <span class="left">{% trans "Posts by " %}<a href='/user/{{ subject.user }}/'><img src='{{ subject.user.get_profile.get_avatar }}' class='mini_av' /> {{ subject.user }}</a></span>
             <span class="right">{% if option == 0 %}
-            <a href="/action/friend/{{ subject.user }}/">{% trans "Add to friends!" %}</a>
+            <a id='add_friend' href="/action/friend/{{ subject.user }}/">{% trans "Add to friends!" %}</a>
             {% endif %}
             {% if option == 1 %}
-                <a href="/action/friend/{{ subject.user }}/">{% trans "Remove from friends!" %}</a>
+                <a id='remove_friend' href="/action/friend/{{ subject.user }}/">{% trans "Remove from friends!" %}</a>
             {% endif %}</span>
     {% endif %}
     {% if type == 'blog' %}
         <span class="left">{% trans "Posts in " %}<a href='/blog/{{ subject.id }}/'><img src='{{ subject.get_avatar }}' class='mini_av' /> {{ subject.name }}</a></span>
             <span class="right">{% if option == 0 %}
-            <a href="/action/join/{{ subject.id }}/">{% trans "Invite!" %}</a>
+            <a id='join_blog' href="/action/join/{{ subject.id }}/">{% trans "Invite!" %}</a>
             {% endif %}
             {% if option == 1 %}
-                <a href="/action/join/{{ subject.id }}/">{% trans "Get out!" %}</a>
+                <a id='leave_blog' href="/action/join/{{ subject.id }}/">{% trans "Get out!" %}</a>
             {% endif %}</span>
     {% endif %}
     {% if type == 'tag' %}

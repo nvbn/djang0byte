@@ -134,6 +134,7 @@ def rate_blog(request, profile, blog_id, json, action):
 def preview_comment(request):
     return jsend({'text':utils.parse(request.POST.get('text'))})
 
+@never_cache
 def action(request, type, id, action = None):
     """Add or remove from favourite and spy, rate
 

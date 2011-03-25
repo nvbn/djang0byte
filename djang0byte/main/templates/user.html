@@ -55,11 +55,11 @@
 {% else %}
     {% if is_my_friend == 0 %}
         <br /><br />
-        <a href="/action/friend/{{ user_user }}/">{% trans "Add to friends!" %}</a>
+        <a id='add_friend' href="/action/friend/{{ user_user }}/">{% trans "Add to friends!" %}</a>
     {% endif %}
     {% if is_my_friend == 1 %}
         <br /><br />
-        <a href="/action/friend/{{ user_user }}/">{% trans "Remove from friends!" %}</a>
+        <a id='remove_friend' href="/action/friend/{{ user_user }}/">{% trans "Remove from friends!" %}</a>
     {% endif %}
 {% endif %}
-{%  endblock %}
+{% endblock %}

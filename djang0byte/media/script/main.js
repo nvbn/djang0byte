@@ -453,35 +453,25 @@ function check_register(type, value) {
     }
 }
 
+function clickAction(text, id, old_id) {
+        $("#" + old_id).click(function(event){
+            $(this).html(text);
+            $(this).attr('id', id);
+            initClicks();
+            event.preventDefault();
+            $.ajax({ url: $(this).attr('href'), cache: false, context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
+        });
+}
+
 function initClicks() {
-    $("#add_spy").click(function(event){
-        $(this).html('Перестать следить!');
-        $(this).attr('id', 'remove_spy');
-        initClicks();
-        event.preventDefault();
-        $.ajax({ url: $(this).attr('href'), context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
-    });
-    $("#remove_spy").click(function(event){
-        $(this).html('Отслеживать!');
-        $(this).attr('id', 'add_spy');
-        initClicks();
-        event.preventDefault();
-        $.ajax({ url: $(this).attr('href'), context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
-    });
-    $("#add_favourite").click(function(event){
-        $(this).html('Убрать из избранного!');
-        $(this).attr('id', 'remove_favourite');
-        initClicks();
-        event.preventDefault();
-        $.ajax({ url: $(this).attr('href'), context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
-    });
-    $("#remove_favourite").click(function(event){
-        $(this).html('Добавить в избранное!');
-        $(this).attr('id', 'add_favourite');
-        initClicks();
-        event.preventDefault();
-        $.ajax({ url: $(this).attr('href'), context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
-    });
+    clickAction('Перестать следить!','remove_spy', "add_spy");
+    clickAction('Отслеживать!', 'add_spy', "remove_spy");
+    clickAction('Убрать из избранного!', 'remove_favourite', "add_favourite");
+    clickAction('Добавить в избранное!', 'add_favourite', "remove_favourite");
+    clickAction('Перестать дружить!', 'remove_friend', "add_friend");
+    clickAction('Начать дружить!', 'add_friend', "remove_friend");
+    clickAction('Покинуть!', 'leave_blog', "join_blog");
+    clickAction('Вступить!', 'join_blog', "leave_blog");
 }
 
 $(document).ready(function(){
