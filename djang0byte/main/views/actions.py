@@ -26,7 +26,7 @@ from main.forms import *
 from main.models import *
 from parser.utils import unparse, unparse
 from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
@@ -250,10 +250,14 @@ def edit_post(request, id):
                      'type': post.type, 'extend': 'base.html', 'edit': True, 'id': post.id},
                      context_instance=RequestContext(request))
 
+@never_cache
 def get_val(request, type, count=20):
     out = []
+    print type
+    del request.session['right_panel']
     if type == 'comments':
         request.session['right_panel'] = type
+        print request.session['right_panel']
         comments = Comment.objects.exclude(depth=1).select_related('post', 'post.blog', 'post.author').order_by('-id')[:count]
         for comment in comments:
             out.append({

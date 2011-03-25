@@ -124,7 +124,7 @@
     <script>
     {% autoescape off %}
         $(document).ready(function(){
-            setTimeout("{{ RIGHT_PANEL_JS  }}", 3000);
+            {{ RIGHT_PANEL_JS  }};
         });
     {% endautoescape %}
     </script>

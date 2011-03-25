@@ -12,15 +12,17 @@ function createFast(type, where) {
        if (fast_panel_type == type) {
            if (where == "#fast_list_area")
             fast_panel_type = 'list'
-           else
+           else {
             fast_panel_type = 'all';
+               $.ajax({ url: "/action/get_val/all/", cache: false, success: function(data, textStatus, XMLHttpRequest) {}});
+           }
            $(where).html(fast_panel_cache[fast_panel_type]);
        } else {
            fast_panel_type = type;
            if (fast_panel_cache[fast_panel_type]) {
                $(where).html(fast_panel_cache[fast_panel_type]);
            } else {
-                $.ajax({ url: "/action/get_val/" + type + "/", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+                $.ajax({ url: "/action/get_val/" + type + "/", context: document.body, cache: false, success: function(data, textStatus, XMLHttpRequest) {
                     result = '<ul>';
                     for (i in data) {
                         element = data[i];
