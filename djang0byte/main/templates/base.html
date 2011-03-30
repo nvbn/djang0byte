@@ -27,7 +27,13 @@
         {% cache MENU_CACHE_TIME menu %}
         <div class='menu'>
             {% load tree_menu_tags %}
-            {% show_menu "menu" "ordered-list" %}
+            {% load menus %}
+            <ol>
+            {% show_menu 'menu' %}
+            {% for menu_item in menu.root_item.children %}
+                <li class="{{ menu_item.url|menu_class:request.path }}"><a href='{{ menu_item.url }}'>{{ menu_item }}</a></li>
+            {% endfor %}
+            </ol>
             <div id="user_setting">
                 {% if user.is_authenticated %}
                     <span class="left"><a href="/user/{{ user.username }}/">{{ user.username }}</a> {{ your_rate }} <a href="/newpost/">{% trans "New post" %}</a> / <a href='/newblog/'>{% trans "blog" %}</a>.

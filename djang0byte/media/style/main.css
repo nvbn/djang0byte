@@ -45,15 +45,16 @@ a, a:hover, a:active {
 }
 
 .menu ol li {
-    display: inline;
+    display: inline-block;
     padding: 5px;
     padding-right: 15px;
     padding-left: 8px;
     background: #fdfdfd url('rwt.png') no-repeat right;
-    margin: 0;
-    height: 31px;
+    margin: 0 !important;
+    margin-right:-5px !important;
+    height: 14px;
     text-align: center;
-    vertical-align: middle;
+    vertical-align: bottom;
 }
 
 .menu ol {
@@ -62,8 +63,12 @@ a, a:hover, a:active {
     margin: 0;
 }
 
-.menu ol li:first-child {
+.menu ol li.current {
     background: #edeff0 url('rgt.png') no-repeat right;
+}
+
+.menu ol li.previos {
+    background:url('lrwt.png') no-repeat right;
 }
 
 .menu {

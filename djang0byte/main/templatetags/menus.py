@@ -16,5 +16,31 @@
 
 
 
-from answer import *
-from menus import *
+
+from django.template import Library
+
+from timezones.utils import localtime_for_timezone
+
+register = Library()
+
+@register.filter
+def menu_class(url, current_url):
+    """
+        kostil =)
+    """
+    urls = [
+        '/',
+        '/answer/',
+        '/talks/',
+        '/lenta/',
+    ]
+    if url == current_url:
+        return 'current'
+    try:
+        id = urls.index(current_url) - 1
+        if id >= 0 and urls[id] == url:
+            return 'previos'
+        else:
+            return ''
+    except ValueError:
+        return url == '/' and 'current' or ''
