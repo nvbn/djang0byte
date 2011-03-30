@@ -26,6 +26,7 @@ except:
 db= MySQLdb.connect(host='127.0.0.1', user='root', passwd='qazwsx',
                     db='welinux', charset = "utf8", use_unicode = True)
 cursor = db.cursor()
+"""
 cursor.execute('SELECT COUNT(*) FROM users WHERE name != "nvbn"')
 count = cursor.fetchall()[0][0]
 mark = count / 20
@@ -146,6 +147,7 @@ for post in cursor.fetchall():
         new_post.save()
         new_post.date = datetime.fromtimestamp(float(post[1]))
         new_post.save(edit=False, convert=True)
+        post.create_comment_root()
         new_post.set_tags(post[10])
     except (IntegrityError, HTMLParseError, TypeError):
         pass
@@ -161,7 +163,10 @@ for rate in cursor.fetchall():
     except (ndb.User.DoesNotExist, ndb.Post.DoesNotExist):
         pass
 
-print('post rates converted')
+print('post rates converted')"""
+for post in ndb.Post.objects.all():
+    post.create_comment_root()
+print 'roots'
 cursor.execute('SELECT COUNT(*) FROM comment')
 count = cursor.fetchall()[0][0]
 mark = count / 20
@@ -198,7 +203,7 @@ for rate in cursor.fetchall():
         pass
 
 print('comment rates converted')
-
+"""
 cursor.execute("SELECT * FROM answ")
 for answ in cursor.fetchall():
     try:
@@ -238,3 +243,4 @@ for eye in cursor.fetchall():
         pass
 
 print('spy converted')
+"""
