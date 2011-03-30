@@ -12,6 +12,17 @@
     {% endif %}
 {% endblock %}
 {% block content %}
+<h2>
+    {% if draft %}
+        {% trans "Edit draft" %}
+    {% else %}
+        {% if edit %}
+            {% trans "Edit post" %}
+        {% else %}
+            {% trans "New post" %}
+        {% endif %}
+    {% endif %}
+</h2>
 {% if not draft and not edit %}
     <div id="post_type">
     <a href="?">{% trans "Post" %}</a> <a href="?type=link">{% trans "Link" %}</a> <a href="?type=translate">{% trans "Translate" %}</a> <a href="?type=answer">{% trans "Answer" %}</a>
@@ -43,7 +54,7 @@
         {% trans "Source:" %}
     {%  endif %}
 {{ form.addition }}<br /></label>
-<label>{% trans "Tags:" %} {{ form.tags }}</label><br />
+<label>{% trans "Tags:" %} {{ form.tags }}</label><br /><br />
 <input type='submit' /> {% if not edit %}<input type='submit' value='{% trans "Preview" %}' name='preview' /> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">{% endif %}
 </form>
 {%  endblock %}

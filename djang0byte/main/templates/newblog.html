@@ -4,14 +4,12 @@
 {% trans "Create new blog" %}
 {% endblock %}
 {% block content %}
+    <h2>{% trans "New blog creating" %}</h2>
 <form action='/newblog/' method='post'>
-<table>
-<tr>
-    <td>{% trans "Name:" %}</td><td>{{ form.name }}</td>
-</tr><tr>
-    <td>{% trans "Description:" %}</td><td>{{ form.description }}</td>
-</tr>
-</table>
+    {% trans "Name" %}<br>{{ form.name }}
+    <br>
+{% trans "Description" %}<br>{{ form.description }}
+<br>
 <input type='submit'>
 </form>
 {% endblock %}

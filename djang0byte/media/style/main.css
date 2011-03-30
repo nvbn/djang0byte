@@ -318,11 +318,20 @@ a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
 }
 
 .comment_top {
-    margin-bottom: 6px;
     margin-top: 12px;
     overflow: hidden;
     background: #D8DBDE;
-    padding: 2px;
+    padding: 3px !important;
+    vertical-align: middle;
+}
+
+.comment_text {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+a.comment_author {
+    text-decoration: none;
 }
 
 .post_list_head {
@@ -353,6 +362,9 @@ a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
     margin-bottom: 10px;
 }
 
+#fast_list_area {
+    padding: 5px;
+}
 
 #fast_users {
     background: url('/media/style/figure.gif');
@@ -373,7 +385,7 @@ img {
 }
 
 .mini_av {
-    max-height: 20px;
+    max-height: 15px;
     border: none;
     margin-right: 5px;
 }
