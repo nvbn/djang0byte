@@ -7,7 +7,6 @@
 {% block content %}
 <img class="userpic_profile" src="{{ profile_user.get_avatar }}" alt="" />
 <h2>{{ user_user.username }} <span{% if profile_user.get_rate > 0 %} class='plus_rate' {% endif %}{% if profile_user.get_rate < 0 %} class='minus_rate' {% endif %}>{{ profile_user.get_rate }}</span></h2>
-    {% cache 500 user_user.username %}
     {% for status in profile_user.get_status %}
         <p class="status">
         <a href="{{ status.obj.url }}">
@@ -15,7 +14,6 @@
             {{ status.text }}</a>
         </p>
     {% endfor %}
-    {% endcache %}
 {% if profile_user.get_city%}<a href='/list/users/city/{{ profile_user.get_city }}/'><img src='/media/style/city.png' /> {{ profile_user.city }}</a>, {% endif %}
 <a href='/pm/compose/{{ profile_user }}/'><img src='/media/style/envelope.gif' /> PM</a>
 {% if profile_user.hide_mail %}, <a href='mailto:{{ user_user.email }}'><img src='/media/style/mailing.gif' /> {{ user_user.email }}</a>{% endif %}
