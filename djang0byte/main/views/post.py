@@ -33,7 +33,7 @@ from actions import  get_last_comments
 from settings import DEFAULT_CACHE_TIME, POST_RATE_TO_MAIN
 from django.views.decorators.vary import vary_on_cookie
 from django.utils import simplejson
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 
 @transaction.commit_on_success
@@ -206,7 +206,7 @@ def post_list(request, type = None, param = None):
         subject = blog
         option = request.user.is_authenticated() and blog.check_user(request.user)
     elif type == 'tag':
-        title = _(u'Posts with tag %s') % param
+        title = _(u'Posts with tag %s') % unicode(param)
         posts = TaggedItem.objects.get_by_model(Post, param)
         subject = param
         #posts = [post.post for post in posts_with_tag]

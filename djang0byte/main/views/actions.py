@@ -214,6 +214,7 @@ def delete_post(request, id):
                               context_instance=RequestContext(request))
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 
+@never_cache
 @login_required
 def edit_post(request, id):
     try:

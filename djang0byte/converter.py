@@ -137,7 +137,7 @@ for post in cursor.fetchall():
             blog = False
 
         new_post = ndb.Post(author=author, title=post[2], preview=post[3],
-                            text=post[7].replace('[','<').replace(']','>'), id=post[0],
+                            text=post[7].replace('[','<').replace(']','>').replace('<code=','<code lang='), id=post[0],
                             rate=int(post[5])-int(post[6]), rate_count=int(post[5])+int(post[6]),
                             type=post[13])
 
