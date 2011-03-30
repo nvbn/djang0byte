@@ -462,6 +462,27 @@ function clickAction(text, id, old_id) {
         });
 }
 
+function initRegistrationChecker() {
+     $("#id_username").keyup(function(){
+        check_register('username', $(this).val());
+    });
+    $("#id_email").keyup(function(){
+        check_register('mail', $(this).val());
+    });
+    $("#id_password1").keyup(function(){
+        check_register('password', $(this).val());
+    });
+    $("#id_password2").keyup(function(){
+        check_register('password', $(this).val());
+    });
+    if ($(".new_comment").length){
+        $('#updated_count').html($(".new_comment").length);
+    }
+    $("#register_btn").click(function(){
+       check_register_all();
+    });
+}
+
 function initClicks() {
     clickAction('Перестать следить!','remove_spy', "add_spy");
     clickAction('Отслеживать!', 'add_spy', "remove_spy");
@@ -511,24 +532,7 @@ $(document).ready(function(){
         else
             $('#updated_count').html('—');
     });
-    $("#id_username").keyup(function(){
-        check_register('username', $(this).val());
-    });
-    $("#id_email").keyup(function(){
-        check_register('mail', $(this).val());
-    });
-    $("#id_password1").keyup(function(){
-        check_register('password', $(this).val());
-    });
-    $("#id_password2").keyup(function(){
-        check_register('password', $(this).val());
-    });
-    if ($(".new_comment").length){
-        $('#updated_count').html($(".new_comment").length);
-    }
-    $("#register_btn").click(function(){
-       check_register_all();
-    });
+
     $(".del_msg").click(function(event){
         event.preventDefault();
         $.ajax({ url:$(this).attr('href'), context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
@@ -543,7 +547,9 @@ $(document).ready(function(){
             document.location = '/pm/';
         }});
     });
-
+    if (document.location.pathname == '/accounts/register/') {
+        initRegistrationChecker();
+    }
     $("#register_btn").css('display', 'block');
     $("#register_submit").css('display', 'none');
     initClicks();
