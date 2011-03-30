@@ -59,7 +59,7 @@ def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr
                 code = highlight(code, lexer, formatter)
                 code = code.replace('<table class="highlighttable">', '<table class="highlighttable" id="%d">' % (code_model.id,))
                 tag.replaceWith(code)
-            if tag.name == 'iframe' and attr == 'src' and val.find('http://www.youtube.com/embed/') != 0:
+            if tag.name == 'iframe' and attr == 'src' and (val.find('http://www.youtube.com/embed/') != 0 and val.find('http://player.vimeo.com/video/') != 0):
                 tag.hidden = True
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
