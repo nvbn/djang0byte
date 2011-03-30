@@ -555,4 +555,9 @@ $(document).ready(function(){
     initCommentRates(-1);
     initPostRates(-1);
     initFastPanel();
+    $('#id_timezone').hyjack_select({          /* Defaults */
+        ddImage: '/media/style/arrow_down.png',      // arrow_down.png
+        ddCancel: '/media/style/cancel.png',    // cancel.png
+        emptyMessage: 'Пусто'
+    });
 });
