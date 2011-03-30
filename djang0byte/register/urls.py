@@ -1,11 +1,11 @@
 from django.conf.urls.defaults import *
 from registration.views import register
 from views import *
-from captcha.forms import RegistrationFormCaptcha
+from forms import RegistrationFormProfile
 
 urlpatterns = patterns('',
     url(r'^register/$', register,
-        {'form_class': RegistrationFormCaptcha},
+        {'form_class': RegistrationFormProfile},
         name='registration.views.register'),
     (r'^logout/', logout),
     (r'', include('registration.urls')),
