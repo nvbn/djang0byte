@@ -4,7 +4,13 @@
 {% if request.user.is_authenticated %}
 <h2>{% trans "No-no-no!" %}</h2>
 {% else %}
+    {{ error }}
 <form method="post" action="">
+{% if form.errors %}
+    {% for error in form.non_field_errors %}
+    <span class='error'>{{ error }}</span>
+    {% endfor %}
+{% endif %}
 <table>
     <tr>
         <td>Логин</td><td>{{ form.username }}</td>
