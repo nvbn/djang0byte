@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.contrib.auth.views import password_reset
 from registration.views import register
 from views import *
 from forms import RegistrationFormProfile

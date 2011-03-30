@@ -84,6 +84,7 @@ ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates'),
+    os.path.join(os.path.dirname(__file__),'register' ,'templates'),
     "/usr/lib/pymodules/python2.6/django/contrib/admin/templates/",
 )
 
