@@ -23,7 +23,7 @@ from pygments.util import ClassNotFound
 
 from parser.models import Code
 
-def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr td div pre span spoiler',
+def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe',
     valid_attrs = 'href src lang class name id style'):
     """Cleans non-allowed HTML from the input.
     
@@ -43,7 +43,7 @@ def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr
         if tag.name not in valid_tags:
             tag.hidden = True
         for attr, val in tag.attrs:
-            if re.match('javascript:', val, re.I) is not None:
+            if attr in ('src', 'href') and val.find('javascript') == 0:
                 tag.hidden = True
             if tag.name == 'code' and attr == 'lang':
                 try:
@@ -59,6 +59,8 @@ def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr
                 code = highlight(code, lexer, formatter)
                 code = code.replace('<table class="highlighttable">', '<table class="highlighttable" id="%d">' % (code_model.id,))
                 tag.replaceWith(code)
+            if tag.name == 'iframe' and attr == 'src' and val.find('http://www.youtube.com/embed/') != 0:
+                tag.hidden = True
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
 

@@ -506,3 +506,8 @@ li.new_msg {
     width: 500px;
     min-height: 350px;
 }
+
+.post_container iframe {
+    width: 480px;
+    height: 360px;
+}
