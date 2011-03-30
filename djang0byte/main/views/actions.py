@@ -255,7 +255,10 @@ def edit_post(request, id):
 def get_val(request, type, count=20):
     out = []
     print type
-    del request.session['right_panel']
+    try:
+        del request.session['right_panel']
+    except KeyError:
+        pass
     if type == 'comments':
         request.session['right_panel'] = type
         print request.session['right_panel']

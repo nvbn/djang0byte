@@ -362,7 +362,7 @@ a.comment_author {
     margin-bottom: 10px;
 }
 
-#fast_list_area {
+#fast_list_area, #fast_panel_area {
     padding: 5px;
 }
 
