@@ -1,15 +1,18 @@
 from main.models import *
 from main.utils import Access
-from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, MENU_CACHE_TIME, SIDEBAR_CACHE_TIME, LANGUAGE_CODE, SITENAME
+from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, MENU_CACHE_TIME, SIDEBAR_CACHE_TIME, LANGUAGE_CODE, SITENAME, TIME_ZONE
 import random, time
 from django.contrib.auth.decorators import login_required
 
 def djbyte(request):
     """Get special variables into template"""
     rate = None
+    timezone = TIME_ZONE
     if request.user.is_authenticated():
         try:
-            rate = Profile.objects.get(user=request.user).get_rate()
+            profile = Profile.objects.get(user=request.user)
+            rate = profile.get_rate()
+            timezone = profile.timezone
         except Profile.DoesNotExist:
             pass
     posts = Post.objects.order_by('-date').all()[0:][:20]
@@ -45,7 +48,7 @@ def djbyte(request):
     except KeyError:
         right_panel_js = None
     return({'your_rate': rate, 'top_post_comment': objects, 'top_profiles': profiles, 'top_blogs': blogs,
-            'blogs_count': Blog.objects.count(), 'profiles_count': Profile.objects.count(),
+            'blogs_count': Blog.objects.count(), 'profiles_count': Profile.objects.count(), 'TIMEZONE': timezone,
             'city_count': City.objects.count(), 'MENU_CACHE_TIME': MENU_CACHE_TIME, 'SIDEBAR_CACHE_TIME': SIDEBAR_CACHE_TIME,
             'LANGUAGE_CODE': LANGUAGE_CODE, 'SITENAME': SITENAME, 'RIGHT_PANEL_JS': right_panel_js })
 

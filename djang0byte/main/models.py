@@ -451,6 +451,7 @@ class Post(Draft):
         """Check if 'cut' exsisted"""
         return(self.text != self.preview)
 
+
     def __unicode__(self):
         """Return post title"""
         return(self.title)
