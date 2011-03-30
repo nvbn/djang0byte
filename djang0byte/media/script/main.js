@@ -319,8 +319,6 @@ function initCommentReply(context) {
 
 function rate(url, type) {
     $.ajax({ url: url + "?json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
-            //data = eval('(' + data + ')');
-            //alert(data.error);
             if (data.error != '') {
                 $.jGrowl(data.error);
             } else {
