@@ -405,8 +405,7 @@ function check_register_all() {
             }
         }
         if (!flag)
-            alert(1);
-            //$("#register_form").submit()
+            $("#register_form").submit()
         else
             $.jGrowl("Вы неправильно заполнили поля!");
     }});
