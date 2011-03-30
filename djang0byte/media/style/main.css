@@ -488,3 +488,7 @@ li.new_msg {
 .post_container h2 {
     font-weight:normal;
 }
+
+.post_actions {
+    padding-bottom: 15px;
+}

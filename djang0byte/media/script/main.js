@@ -265,6 +265,7 @@ function setPostType(type) {
 
 function commentReplyForm(url) {
     clearCommentForms(true);
+
     $('.comment_reply_form').each(function() {
         $(this).css('display', 'none');
     });
@@ -290,6 +291,7 @@ function commentReplyForm(url) {
             initCommentPreview(form);
             $('#cmnt' + id).append(form);
             document.location.hash = 'cmnt' + id;
+            $('#id_text').markItUp(mySettings);
             initCommentSubmit('#cmnt' + id);
         }});
     } else {
@@ -560,4 +562,8 @@ $(document).ready(function(){
         ddCancel: '/media/style/cancel.png',    // cancel.png
         emptyMessage: 'Пусто'
     });
+    $('.site_favicon').error(function(){
+        $(this).unbind("error").attr("src", "/media/style/world.gif");
+    });
+    $('#id_text').markItUp(mySettings);
 });

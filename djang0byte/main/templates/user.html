@@ -24,7 +24,7 @@
 {% if profile_user.site %}, <a href='{{ profile_user.site }}'><img src='/media/style/world.gif' /> {{ profile_user.site }}</a>{% endif %}
 {% if meon %}
     {% for site in meon %}
-        , <a href="{{ site.url }}"><img src="{{ site.favicon }}" /> {{ site.title }}</a>
+        , <a href="{{ site.url }}"><img class='site_favicon' src="{{ site.favicon }}" /> {{ site.title }}</a>
     {% endfor %}
 {% endif %}
 <br /><br />
