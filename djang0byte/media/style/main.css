@@ -1,5 +1,6 @@
 html, body {
-    font-size: 16px;
+    font-family: dejavu-serif, Verdana;
+    font-size: 12px;
     padding: 0 !important;
     margin: 0 !important;
     width: 100%;
@@ -35,8 +36,12 @@ h2 {
 }
 
 a, a:hover, a:active {
-    color: #464646;
+    color: #2669A6;
+}
+
+.menu li a, .menu li a:hover, .menu li a:active, .post_container h2 a, .post_container h2 a:hover, .post_container h2 a:active {
     text-decoration: none;
+    color: #000;
 }
 
 .menu ol li {
@@ -62,6 +67,7 @@ a, a:hover, a:active {
 }
 
 .menu {
+    font-size: 14px;
     margin-left: 0;
     margin-right: 0;
     padding-left: 0;
@@ -96,12 +102,14 @@ a, a:hover, a:active {
 }
 
 a.plust_rate, a.minus_rate {
+    text-decoration: none !important;
     display: inline-block;
     width: 14px;
     text-align: center;
 }
 
 .plus_rate,  a.plus_rate {
+    text-decoration: none !important;
     color: #73BF60 !important;
 }
 
@@ -112,11 +120,13 @@ a.plust_rate, a.minus_rate {
 a.minus_rate:hover {
     color: #fff !important;
     background: #802021 !important;
+    text-decoration: none !important;
 }
 
 a.plus_rate:hover {
     color: #fff !important;
     background: #73BF60 !important;
+    text-decoration: none !important;
 }
 
 .userpic_profile {
@@ -145,9 +155,26 @@ a.plus_rate:hover {
     margin-bottom: 20px;
 }
 
+#tag a {
+    text-decoration: none;
+    padding: 5px;
+}
+
+#tag a:hover {
+    color: #fff;
+    background: #2669A6;
+}
+
 table.top {
     width: 100%;
+    padding: 0;
+    border-spacing: 0px;
     vertical-align: top;
+}
+
+table.top tbody {
+    margin: 0;
+    padding: 0;
 }
 
 #fast_panel_selector, #fast_list_selector {
@@ -250,7 +277,7 @@ li.blog, li.user, li.post, li.comment, li.draft, li.spy, li.favourite {
 }
 
 .result {
-    background: #D8DBDE;
+    background: #2669A6;
     height: 12px;
     display: inline-block;
 }
@@ -322,34 +349,15 @@ a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
     width: 12px;
     height: 12px;
 }
-
-#fast_posts {
-    background: url('/media/style/document.gif');
+#fast_panel_selector a, #fast_list_selector a {
+    margin-bottom: 10px;
 }
 
-#fast_comments {
-    background: url('/media/style/speech_bubble.gif');
-}
 
 #fast_users {
     background: url('/media/style/figure.gif');
 }
 
-#fast_blogs {
-    background: url('/media/style/documents.gif');
-}
-
-#fast_drafts {
-    background: url('/media/style/draft.png');
-}
-
-#fast_favourites {
-    background: url('/media/style/fav.gif');
-}
-
-#fast_spies {
-    background: url('/media/style/eye.gif');
-}
 
 .left img {
     width: 20px;
@@ -428,8 +436,13 @@ a.digg_pages {
     text-decoration: none;
 }
 
+.paginator a {
+    text-decoration: none;
+}
+
 .paginator {
     text-align: center;
+    font-size: 16px;
 }
 
 #msg_type>a {
@@ -458,4 +471,8 @@ li.new_msg {
 
 .search {
     background: #D8DBDE;
+}
+
+.post_container h2 {
+    font-weight:normal;
 }
