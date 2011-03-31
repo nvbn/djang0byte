@@ -35,7 +35,6 @@ from django.views.decorators.vary import vary_on_cookie
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
-
 @transaction.commit_on_success
 @login_required
 def newpost(request, type = 'post'):

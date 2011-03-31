@@ -113,7 +113,7 @@ INSTALLED_APPS = (
 'tagging_autocomplete',
 'pytils',
 'django_push',
-
+'compressor',
 )
 
 EMAIL_HOST = 'localhost'
@@ -145,3 +145,7 @@ POST_RATE_TO_MAIN = 0
 PUSH_HUB = u'http://pubsubhubbub.appspot.com/'
 FEED_URL = u'http://localhost/rss/'
 DOMAIN_NAME = 'localhost'
+COMPRESS_PARSER = 'compressor.parser.LxmlParser'
+COMPRESS = True
+COMPRESS_YUI_BINARY = '/usr/bin/yui-compressor'
+COMPRESS_CSS_FILTERS = ['compressor.filters.yui.YUICSSFilter',]
