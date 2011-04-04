@@ -41,13 +41,13 @@ mySettings = {
 		},
         {name:'Size', key:'S', openWith:'<span style="size: [![Text size]!]px">', closeWith:'</span>',
             dropMenu :[
-                {name:'9', openWith:'[size=200]', closeWith:'</span>' },
-                {name:'12', openWith:'[size=200]', closeWith:'</span>' },
-                {name:'14', openWith:'[size=200]', closeWith:'</span>' },
-                {name:'16', openWith:'[size=200]', closeWith:'</span>' },
-                {name:'18', openWith:'[size=200]', closeWith:'</span>' },
-                {name:'20', openWith:'[size=200]', closeWith:'</span>' },
-                {name:'22', openWith:'[size=200]', closeWith:'</span>' }
+                {name:'9', openWith:'<span style="size:9px">', closeWith:'</span>' },
+                {name:'12', openWith:'<span style="size:12px">', closeWith:'</span>' },
+                {name:'14', openWith:'<span style="size:14px">', closeWith:'</span>' },
+                {name:'16', openWith:'<span style="size:16px">', closeWith:'</span>' },
+                {name:'18', openWith:'<span style="size:18px">', closeWith:'</span>' },
+                {name:'20', openWith:'<span style="size:20px">', closeWith:'</span>' },
+                {name:'22', openWith:'<span style="size:22px">', closeWith:'</span>' }
 		]},
 		{name:'Ul', openWith:'<ul>\n', closeWith:'</ul>\n' },
 		{name:'Ol', openWith:'<ol>\n', closeWith:'</ol>\n' },
