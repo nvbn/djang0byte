@@ -514,3 +514,7 @@ li.new_msg {
     width: 480px;
     height: 360px;
 }
+
+iframe {
+    border: none !important;
+}
