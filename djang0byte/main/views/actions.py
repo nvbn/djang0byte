@@ -222,7 +222,7 @@ def edit_post(request, id):
         if request.user.has_perm('main.edit_post'):
             post = Post.objects.get(id=id, type__lt='3')
         else:
-                post = Post.objects.get(id=id, author=request.user, type__lt='3')
+            post = Post.objects.get(id=id, author=request.user, type__lt='3')
     except Post.DoesNotExist:
         return HttpResponseRedirect('/post/%d/' % (int(id)))
     if post.type == 0:
@@ -245,6 +245,9 @@ def edit_post(request, id):
                      'type': post.type, 'extend': 'base.html', 'edit': True},
                     context_instance=RequestContext(request))
     else:
+        if post.text.find('<fcut>'):
+            post.text = post.preview + post.text
+        #TODO: stay fcut and cut tag in editor
         data = {'tags': ', '.join(map(lambda x: x.__unicode__(), post.get_tags())), #ejebaka
                 'title': post.title, 'text': unparse(post.text), 'addition': post.addition}
         form = form(data)

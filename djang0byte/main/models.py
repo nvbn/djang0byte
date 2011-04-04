@@ -407,10 +407,10 @@ class Post(Draft):
         Tag.objects.update_tags(self, tag_list)
         
         
-    def save(self, edit=True, convert=False):
+    def save(self, edit=True, convert=False, retry=False):
         """Parse html and save"""
         self.is_draft = False
-        if self.type < 3 and not convert:
+        if self.type < 3 and not convert and not retry:
             self.preview, self.text = utils.cut(self.text)
             self.preview = utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
             self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)

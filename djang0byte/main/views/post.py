@@ -57,7 +57,6 @@ def newpost(request, type = 'post'):
         preview = True
         is_draft = True
 
-    print (request.POST.get('draft'),request.POST.get('preview') )
     extend = 'base.html'
     if request.GET.get('json'):
         extend = 'json.html'
@@ -80,7 +79,7 @@ def newpost(request, type = 'post'):
                 post.author = request.user
                 post.type = type
                 post.set_data(data)
-                post.save(edit=False)
+                post.save(edit=False, retry=True)
                 post.create_comment_root()
                 post.set_tags(data['tags'])
                 return HttpResponseRedirect('/post/%d/' % (post.id))
