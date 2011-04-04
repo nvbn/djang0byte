@@ -14,8 +14,6 @@ function color(color) {
 }
 
 mySettings = {
-	onShiftEnter:	{keepDefault:false, replaceWith:'<br />\n'},
-	onCtrlEnter:	{keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
 	onTab:			{keepDefault:false, openWith:'	 '},
 	markupSet: [
 		{name:'Heading 3', key:'3', openWith:'<h3(!( class="[![Class]!]")!)>', closeWith:'</h3>', placeHolder:'Заголовок' },

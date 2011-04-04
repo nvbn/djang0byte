@@ -38,6 +38,7 @@ from django.views.decorators.vary import vary_on_cookie
 from django.utils import simplejson
 from django.utils.translation import gettext as _
 from annoying.decorators import ajax_request
+import simplejson as json
 
 def rate_comment(request, profile, comment_id, json, action):
     """Rate post
@@ -382,3 +383,18 @@ def get_last_comments(request, post):
                            } for comment in comments],
               'count': comments.count(),
          })
+
+def get_users(request, users):
+    out = []
+    for username in users.split(','):
+        try:
+            user = User.objects.get(username=username)
+            profile = user.get_profile()
+            out.append({
+                'name': username,
+                'is_active': user.is_active,
+                'avatar': profile.get_avatar(),
+            })
+        except User.DoesNotExist:
+            pass
+    return jsend(out)

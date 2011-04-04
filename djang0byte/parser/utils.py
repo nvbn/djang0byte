@@ -26,14 +26,14 @@ from parser.models import Code
 def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user',
     valid_attrs = 'href src lang class name id style'):
     """Cleans non-allowed HTML from the input.
-    
+
     Keyword arguments:
     value -- String
     valid_tags -- String
     valid_attrs -- String
-       
+
     Returns: String
-        
+
     """
     valid_tags = valid_tags.split()
     valid_attrs = valid_attrs.split()
@@ -42,6 +42,8 @@ def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr
     for tag in soup.findAll(True):
         if tag.name not in valid_tags:
             tag.hidden = True
+        if tag.name == 'user':
+            tag.replaceWith('<a class="user_tag user_tag_%s" href="/user/%s/">%s</a>' % (tag.string, tag.string, tag.string))
         for attr, val in tag.attrs:
             if attr in ('src', 'href') and val.find('javascript') == 0:
                 tag.hidden = True
@@ -61,6 +63,8 @@ def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr
                 tag.replaceWith(code)
             if tag.name == 'iframe' and attr == 'src' and (val.find('http://www.youtube.com/embed/') != 0 and val.find('http://player.vimeo.com/video/') != 0):
                 tag.hidden = True
+
+
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
     return soup.renderContents().decode('utf8')
 
@@ -72,6 +76,8 @@ def unparse(value):
     for code in soup.findAll({'table': True, 'class=highlighttable': True}):
         new_code = Code.objects.get(id=int(code['id']))
         code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
+    for user in soup.findAll({'table': True, 'class=user_tag': True}):
+        user.replaceWith("<user>%s</user>" % (user.string))
     return soup.renderContents().decode('utf8')
 
 def cut(text):

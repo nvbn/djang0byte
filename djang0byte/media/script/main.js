@@ -569,4 +569,17 @@ $(document).ready(function(){
         $(this).unbind("error").attr("src", "/media/style/world.gif");
     });
     $('#id_text').markItUp(mySettings);
+    if ($('.user_tag').length > 0) {
+        users = '';
+        for (i in $('.user_tag').toArray())
+            users = users + ',' + ($('.user_tag').get(0).innerHTML);
+        $.ajax({ url:'/action/get_users/' + users + '/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+            for (i in data) {
+                html = '<img src="' + data[i].avatar + '" /> ' + data[i].name;
+                if (!data[i].is_active)
+                    html = '<del>' + html + '</del>';
+                $('.user_tag_' + data[i].name).html(html);
+            }
+        }});
+    }
 });
