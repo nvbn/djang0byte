@@ -23,7 +23,7 @@ from pygments.util import ClassNotFound
 
 from parser.models import Code
 
-def parse(value, valid_tags = 'p i strong b u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user',
+def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user',
     valid_attrs = 'href src lang class name id style'):
     """Cleans non-allowed HTML from the input.
 
