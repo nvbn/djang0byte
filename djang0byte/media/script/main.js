@@ -252,7 +252,6 @@ function setPostType(type) {
     $.ajax({ url: "/newpost/?type=" + type + "&json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest){
         data = eval('(' + data + ')');
         $('#content').html(data.content);
-        initPostType();
         initAnswers();
         _set('blog', true);
         set('title');
@@ -260,6 +259,8 @@ function setPostType(type) {
         set('tags');
         set('link');
         set('addition');
+        initPostType();
+        initEditor();
     }});
 }
 
@@ -494,6 +495,10 @@ function initClicks() {
     clickAction('Вступить!', 'join_blog', "leave_blog");
 }
 
+function initEditor() {
+    $('#id_text').markItUp(mySettings);
+}
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();
@@ -551,7 +556,7 @@ $(document).ready(function(){
         initRegistrationChecker();
     }
     $("#register_btn").css('display', 'block');
-    $("#register_submit").css('display', 'none');
+    $("#register_submpostit").css('display', 'none');
     initClicks();
     initPostType();
     initAnswers();
@@ -568,7 +573,7 @@ $(document).ready(function(){
     $('.site_favicon').error(function(){
         $(this).unbind("error").attr("src", "/media/style/world.gif");
     });
-    $('#id_text').markItUp(mySettings);
+    initEditor();
     if ($('.user_tag').length > 0) {
         users = '';
         for (i in $('.user_tag').toArray())

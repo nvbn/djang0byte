@@ -518,3 +518,34 @@ li.new_msg {
 iframe {
     border: none !important;
 }
+
+.selected_post_type, .selected_post_type:hover, .selected_post_type:active {
+    color: #000;
+}
+
+#post_type {
+    margin-bottom: 20px;
+}
+
+.input_title {
+    font-size: 24px;
+}
+
+#new_post_form input[type=text] {
+    width: 300px;
+}
+
+#new_post_form input[type=submit], #new_post_form input[type=button] {
+    font-size: 16px;
+}
+
+#new_post_form input[type=checkbox] {
+    height: 22px;
+    width: 22px;
+}
+
+.answer_input {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 500px;
+}
