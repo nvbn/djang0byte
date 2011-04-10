@@ -169,8 +169,6 @@ function initCommentSubmit(context) {
             $('input[type=submit]', this).attr('disabled', 'disabled');
         $.ajax({ url: "/newcomment/?json=1", type: 'POST', data: $(this).serialize(),
             context: document.body, success: function(data, textStatus, XMLHttpRequest) {
- 
-       
             updateComments(data, 1);
 
             clearCommentForms(false);
@@ -292,8 +290,8 @@ function commentReplyForm(url) {
             initCommentPreview(form);
             $('#cmnt' + id).append(form);
             document.location.hash = 'cmnt' + id;
-            $('#id_text').markItUp(mySettings);
             initCommentSubmit('#cmnt' + id);
+            initEditor();
         }});
     } else {
         $('#main_form_hide').css("display", 'none');

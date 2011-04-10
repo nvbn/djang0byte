@@ -6,9 +6,9 @@
 {% block content %}
     <h2>{% trans "New blog creating" %}</h2>
 <form action='/newblog/' method='post'>
-    {% trans "Name" %}<br>{{ form.name }}
+    <span class='input_title'>{% trans 'Name' %} &ndash; </span> {{ form.name }}
     <br>
-{% trans "Description" %}<br>{{ form.description }}
+<span class='input_title'>{% trans 'Description' %}:</span><br> {{ form.description }}
 <br>
 <input type='submit'>
 </form>
