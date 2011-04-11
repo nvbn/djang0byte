@@ -23,7 +23,7 @@ from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
 from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR, PUSH_HUB, FEED_URL
-from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
+from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, PUBSUB
 from utils import file_upload_path, Access, get_status
 from parser import utils
 from django.utils.translation import gettext as _
@@ -416,7 +416,11 @@ class Post(Draft):
             self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         if not edit:
             if not convert:
-                ping_hub(FEED_URL, hub_url=PUSH_HUB)
+                try:
+                    if PUBSUB:
+                        ping_hub(FEED_URL, hub_url=PUSH_HUB)
+                except:
+                    pass
                 Notify.new_post_notify(self)
         super(Post, self).save() # Call the "real" save() method
 
