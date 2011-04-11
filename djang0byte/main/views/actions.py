@@ -24,7 +24,7 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from main.forms import *
 from main.models import *
-from parser.utils import unparse, unparse
+from parser.utils import unparse, unparse, remove_code
 from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
 from django.views.decorators.cache import cache_page, never_cache
 from simplepagination import paginate
@@ -235,6 +235,8 @@ def edit_post(request, id):
         form = form(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            remove_code(post.text)
+            remove_code(post.preview)
             post.set_data(data)
             post.save(edit=True)
             post.set_tags(data['tags'])
@@ -245,7 +247,7 @@ def edit_post(request, id):
                      'type': post.type, 'extend': 'base.html', 'edit': True},
                     context_instance=RequestContext(request))
     else:
-        if post.text.find('<fcut>'):
+        if post.text.find('<fcut>') >= 0:
             post.text = post.preview + post.text
         #TODO: stay fcut and cut tag in editor
         data = {'tags': ', '.join(map(lambda x: x.__unicode__(), post.get_tags())), #ejebaka

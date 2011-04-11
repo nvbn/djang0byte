@@ -69,10 +69,31 @@ def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table
     return soup.renderContents().decode('utf8')
 
 
+def remove_code(value):
+    """Remove code models from db
+
+    Keyword arguments:
+    value -- String
+
+    Returns: None
+    """
+    soup = BeautifulSoup(value)
+    for code in soup.findAll({'table': True, 'class=highlighttable': True}):
+        try:
+            Code.objects.get(id=int(code['id'])).delete()
+        except Code.DoesNotExist:
+            pass
+
 def unparse(value):
+    """Revert parser activity
+
+    Keyword arguments:
+    value -- String
+
+    Returns: String
+    """
     value = value.replace('<br />','\n')
     soup = BeautifulSoup(value)
-
     for code in soup.findAll({'table': True, 'class=highlighttable': True}):
         new_code = Code.objects.get(id=int(code['id']))
         code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
