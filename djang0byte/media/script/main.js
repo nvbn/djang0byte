@@ -215,7 +215,8 @@ function updateComments(data, write) {
                     initCommentReply('#' + $(this).attr('id'));
                     initCommentRates('#' + $(this).attr('id'));
                 });
-
+                alert(data.comments[i].own);
+                if (data.comments[i].own) document.location.href = "#cmnt" + data.comments[i].id;
             } else data.count--;
 
         }

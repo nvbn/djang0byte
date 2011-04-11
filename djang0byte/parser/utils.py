@@ -20,7 +20,6 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, PhpLexer
 from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
-
 from parser.models import Code
 
 def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user',
@@ -84,6 +83,28 @@ def remove_code(value):
         except Code.DoesNotExist:
             pass
 
+def find_mentions(value):
+    soup = BeautifulSoup(value)
+    for user in soup.findAll({'a': True, 'class=user_tag': True}):
+        yield user
+        """try:
+            if post.author.username == user:
+                next
+        except:
+            if comment.author.username == user:
+                next
+        try:
+            usr = User.objects.get(username=user)
+            if not usr.get_profile().notify_mention:
+                next
+            try:
+                notify = Notify.objects.get(post=post, comment=comment, user=usr)
+            except Notify.DoesNotExist:
+                notify = Notify(post=post, comment=comment, user=usr)
+                notify.save()
+        except User.DoesNotExist:
+            pass"""
+
 def unparse(value):
     """Revert parser activity
 
@@ -97,7 +118,7 @@ def unparse(value):
     for code in soup.findAll({'table': True, 'class=highlighttable': True}):
         new_code = Code.objects.get(id=int(code['id']))
         code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
-    for user in soup.findAll({'table': True, 'class=user_tag': True}):
+    for user in soup.findAll({'a': True, 'class=user_tag': True}):
         user.replaceWith("<user>%s</user>" % (user.string))
     return soup.renderContents().decode('utf8').replace('</fcut>','').replace('</cut>', '')
 

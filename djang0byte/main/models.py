@@ -411,6 +411,8 @@ class Post(Draft):
         """Parse html and save"""
         self.is_draft = False
         if self.type < 3 and not convert and not retry:
+            for mention in utils.find_mentions(self.text):
+                Notify.new_mention_notify(mention, post=self)
             self.preview, self.text = utils.cut(self.text)
             self.preview = utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
             self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
@@ -585,6 +587,7 @@ class Profile(models.Model):
     reply_post = models.BooleanField(default=True, verbose_name=_('Send notify about reply to post?'))
     reply_comment = models.BooleanField(default=True, verbose_name=_('Send notify about reply to comment?'))
     reply_pm = models.BooleanField(default=True, verbose_name=_('Send notify about PM?'))
+    reply_mention = models.BooleanField(default=True, verbose_name=_('Send notify about mention?'))
     about = models.TextField(blank=True, verbose_name=_('About'))
     other = models.TextField(blank=True, verbose_name=_('Field for addition'))
     
@@ -960,7 +963,29 @@ class Notify(models.Model):
                 pass
         else:
             Notify.new_notify(False, comment, comment.get_parent().author)
-            
+
+    @staticmethod
+    def new_mention_notify(user, post = None, comment = None):
+        try:
+            if post.author.username == user:
+                return False
+        except:
+            if comment.author.username == user:
+                return False
+        try:
+            usr = User.objects.get(username=user)
+            if not usr.get_profile().reply_mention:
+                False
+            try:
+                Notify.objects.get(post=post, comment=comment, user=usr)
+            except Notify.DoesNotExist:
+                notify = Notify(post=post, comment=comment, user=usr)
+                notify.save()
+                return True
+        except User.DoesNotExist:
+            pass
+
+
     def get_type(self):
         """Return notify type"""
         if self.post != None:

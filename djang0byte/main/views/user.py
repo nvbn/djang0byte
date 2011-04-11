@@ -179,6 +179,7 @@ def edit_user(request):
             profile.reply_comment = data['notify_comment_reply']
             profile.reply_pm = data['notify_pm']
             profile.reply_post = data['notify_post_reply']
+            profile.reply_mention = data['notify_mention']
             #profile.avatar = data['userpic']
             profile.site= data['site']
             profile.save()
@@ -207,6 +208,7 @@ def edit_user(request):
                 'notify_comment_reply': profile.reply_comment,
                 'notify_post_reply': profile.reply_post,
                 'notify_pm': profile.reply_pm,
+                'notify_mention': profile.reply_mention,
                 'city': profile.city,
                 'site': profile.site,
         }

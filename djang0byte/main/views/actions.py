@@ -365,7 +365,7 @@ def get_val(request, type, count=20):
 
 
 @login_required
-def get_last_comments(request, post):
+def get_last_comments(request, post, comment_id = None):
     post = Post.objects.get(id=post)
     try:
         last_view = LastView.objects.get(post=post, user=request.user)
@@ -381,10 +381,11 @@ def get_last_comments(request, post):
                            'content': render_to_string('single_comment.html', {
                                'post': post,
                                'comment': comment,
-                               'last_view': last_view_date
-                               }, RequestContext(request)),
+                               'last_view': last_view_date,
+                            }, RequestContext(request)),
                            'placeholder': comment.get_placceholder().id,
                            'id': comment.id,
+                           'own': comment_id == comment.id,
                            } for comment in comments],
               'count': comments.count(),
          })

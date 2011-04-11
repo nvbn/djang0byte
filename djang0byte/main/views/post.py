@@ -278,8 +278,10 @@ def new_comment(request, post = 0, comment = 0):
             comment.save()
             if not no_notify:
                 Notify.new_comment_notify(comment)
+            for mention in utils.find_mentions(comment.text):
+                Notify.new_mention_notify(mention, comment=comment)
             if json:
-                return get_last_comments(request, post.id)
+                return get_last_comments(request, post.id, comment.id)
                 
                 """return(render_to_response('comment.html',
                                           ,
