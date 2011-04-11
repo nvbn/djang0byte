@@ -17,7 +17,7 @@
                             <span
                             {% if comment.rate > 0 %}
                                 class='plus_rate'
-                            {% endif %}{% if post.rate < 0 %}
+                            {% endif %}{% if comment.rate < 0 %}
                                 class='minus_rate'
                             {% endif %}>
                                 {{ comment.rate }}
