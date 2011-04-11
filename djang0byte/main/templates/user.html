@@ -34,14 +34,14 @@
 {% endif %}
 <br /><hr />
 {% if profile_user.get_blogs %}
-    {% trans "Blogs:" %} {% for blog in profile.get_blogs %}
-    <a href='/blog/{{ blog.id }}/'>{{ blog }}</a>
+    {% trans "Blogs:" %} {% for blog in profile_user.get_blogs %}
+    <a href='/blog/{{ blog.id }}/'>{{ blog }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
     {% endfor %}
     <br />
 {% endif %}
 {% if profile_user.get_friends %}
     {% trans "Friends:" %} {% for friend in profile_user.get_friends %}
-    <a href='/user/{{ friend }}/'>{{ friend }}</a>
+    <a href='/user/{{ friend }}/'>{{ friend }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
     {% endfor %}
     <br />
 {% endif %}

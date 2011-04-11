@@ -539,6 +539,9 @@ class UserInBlog(models.Model):
     def __unicode__(self):
         return self.blog.name
 
+    def id(self):
+        return self.blog.id
+
     class Meta:
         verbose_name = _("User in blog list")
         verbose_name_plural = _("Users in blogs list")
