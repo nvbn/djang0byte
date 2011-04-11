@@ -66,14 +66,5 @@ def join(request, blog_id):
 
     """
     blog = Blog.objects.get(id=blog_id)
-    if blog.owner == request.user:
-        pass
-    if blog.check_user(request.user):
-        userInBlog = UserInBlog.objects.get(user=request.user, blog=blog)
-        userInBlog.delete()
-    else:
-        userInBlog = UserInBlog()
-        userInBlog.user = request.user
-        userInBlog.blog = blog
-        userInBlog.save()
+    blog.add_or_remove_user(request.user)
     return HttpResponseRedirect('/blog/%d/' % (int(blog_id)))

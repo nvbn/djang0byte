@@ -162,11 +162,7 @@ def action(request, type, id, action = None):
     except Post.DoesNotExist:
         post = Post()
     profile = Profile.objects.get(user=request.user)
-    if type == 'inblog':
-        blog = Blog.objects.get(id=id)
-        blog.addOrRemoveUser(request.user)
-        return HttpResponseRedirect('/blog/%d/' % (int(id)))
-    elif type == 'ratecom':
+    if type == 'ratecom':
         return(rate_comment(request, profile, id, json, action))
     elif type == 'rateblog' and request.user != post.author and profile.checkAccess(Access.rate_blog):
         return(rate_blog(request, profile, id, json, action))
