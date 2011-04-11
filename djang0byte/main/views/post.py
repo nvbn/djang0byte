@@ -82,6 +82,8 @@ def newpost(request, type = 'post'):
                 post.save(edit=False, retry=True)
                 post.create_comment_root()
                 post.set_tags(data['tags'])
+                for mention in utils.find_mentions(data['text']):
+                    Notify.new_mention_notify(mention, post=post)
                 return HttpResponseRedirect('/post/%d/' % (post.id))
             else:
                 if is_draft:
@@ -278,7 +280,7 @@ def new_comment(request, post = 0, comment = 0):
             comment.save()
             if not no_notify:
                 Notify.new_comment_notify(comment)
-            for mention in utils.find_mentions(comment.text):
+            for mention in utils.find_mentions(data['text']):
                 Notify.new_mention_notify(mention, comment=comment)
             if json:
                 return get_last_comments(request, post.id, comment.id)

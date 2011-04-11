@@ -411,8 +411,6 @@ class Post(Draft):
         """Parse html and save"""
         self.is_draft = False
         if self.type < 3 and not convert and not retry:
-            for mention in utils.find_mentions(self.text):
-                Notify.new_mention_notify(mention, post=self)
             self.preview, self.text = utils.cut(self.text)
             self.preview = utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
             self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
@@ -979,7 +977,10 @@ class Notify(models.Model):
             try:
                 Notify.objects.get(post=post, comment=comment, user=usr)
             except Notify.DoesNotExist:
-                notify = Notify(post=post, comment=comment, user=usr)
+                if post:
+                    notify = Notify(post=post, user=usr)
+                else:
+                    notify = Notify(comment=comment, user=usr)
                 notify.save()
                 return True
         except User.DoesNotExist:

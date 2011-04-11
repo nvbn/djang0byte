@@ -85,8 +85,8 @@ def remove_code(value):
 
 def find_mentions(value):
     soup = BeautifulSoup(value)
-    for user in soup.findAll({'a': True, 'class=user_tag': True}):
-        yield user
+    for user in soup.findAll({'user': True}):
+        yield user.string
         """try:
             if post.author.username == user:
                 next
