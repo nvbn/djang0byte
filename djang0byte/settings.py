@@ -115,6 +115,7 @@ INSTALLED_APPS = (
 'django_push',
 'compressor',
 )
+KEYWORD_MIN_COUNT = 50
 PUBSUB = False
 EMAIL_HOST = 'localhost'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'

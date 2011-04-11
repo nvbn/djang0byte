@@ -8,6 +8,11 @@
 {% endif %}
  — {{ post.title }}
 {% endblock %}
+{% block keywords %}
+    {% for tag in post.get_tags %}
+        {{ tag }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+{% endblock %}
 {% block content %}
 {% include 'post_item.html' %}
 {% load tagging_tags %}
