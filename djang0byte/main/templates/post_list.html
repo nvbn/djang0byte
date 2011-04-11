@@ -38,8 +38,9 @@
         {% if post.type < 3 and post.have_cut %}
             <div class="post_full"><a href="/post/{{ post.id }}/">{% trans "Show full." %}</a></div>
         {% endif %}
-
+        {% load post %}
        {% include "post_rate.html" %}
+        <a href='/post/{{ post.id }}/' class='post_rate'>{% comments_count %}</a>
     </div>
 </div>
 {% endfor %}

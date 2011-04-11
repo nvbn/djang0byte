@@ -305,6 +305,11 @@ div .post:last-child {
 
 .post_rate, .comment_rate {
     float: right;
+    margin-left: 10px;
+}
+
+a.post_rate, a.post_rate:hover, a.post_rate:active {
+    text-decoration: none;
 }
 
 .post_full {
