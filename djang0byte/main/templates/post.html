@@ -42,7 +42,7 @@
     </div>
 {% endif %}
 {% for comment in comments %}
-    {% include 'single_comment.html' %}
+     {% include 'single_comment.html' %}
 {% endfor %}
 {% if request.user.is_authenticated %}
 <div class="comment_reply_form" id='main_form'>

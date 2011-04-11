@@ -180,6 +180,23 @@ function initCommentSubmit(context) {
     });
 }
 
+function getNewCommentHolder(parent) {
+
+    margin = parseInt($(parent).css('margin-left').split('px')[0]);
+    parent_id = parseInt(parent.split('#cmnt')[1]);
+    elements = $('div.comment');
+    for (i = 0; i < elements.length; i++) {
+        id = elements[i].id;
+        if (parent_id < parseInt(id.split('cmnt')[1]) && margin >= parseInt($('#' + id).css('margin-left').split('px')[0])) {
+            return id;
+        }
+        
+    }
+    return(parent);
+        //for (i in $('div.comment').toArray())
+    //    alert($($('div.comment').get(i)).attr(id));
+}
+
 function updateComments(data, write) {
     if (!write)
             $(".new_comment").each(function(){
@@ -191,6 +208,7 @@ function updateComments(data, write) {
                 if (data.comments[i].placeholder == 0 || ! $('#cmnt'+data.comments[i].placeholder).length) {
                     $(data.comments[i].content).insertBefore('#main_form');
                 } else {
+                    //$(data.comments[i].content).insertBefore('#' + getNewCommentHolder('#cmnt'+data.comments[i].placeholder));
                     $(data.comments[i].content).insertAfter('#cmnt'+data.comments[i].placeholder);
                 }
                 $(data.comments[i].content).each(function() {
@@ -575,7 +593,7 @@ $(document).ready(function(){
     if ($('.user_tag').length > 0) {
         users = '';
         for (i in $('.user_tag').toArray())
-            users = users + ',' + ($('.user_tag').get(0).innerHTML);
+            users = users + ',' + ($('.user_tag').get(i).innerHTML);
         $.ajax({ url:'/action/get_users/' + users + '/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {
             for (i in data) {
                 html = '<img src="' + data[i].avatar + '" /> ' + data[i].name;
