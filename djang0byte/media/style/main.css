@@ -528,7 +528,7 @@ iframe {
 }
 
 .input_title {
-    font-size: 24px;
+    font-size: 18px;
 }
 
 #new_post_form input[type=text] {
@@ -548,4 +548,18 @@ iframe {
     margin-top: 5px;
     margin-bottom: 5px;
     width: 500px;
+}
+
+.user_edit_title {
+    font-size: 22px;
+    text-decoration: underline;
+}
+
+a.rm_meon, a.rm_meon:hover, a.rm_meon:active {
+    text-decoration: none;
+}
+
+#meon_area input[type=text] {
+    margin-right: 5px;
+    margin-bottom: 5px;
 }

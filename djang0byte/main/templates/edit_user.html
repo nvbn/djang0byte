@@ -6,41 +6,23 @@
 {% block content %}
     <h2>{% trans "Edit user account" %}</h2>
     <form action="/action/edit_user/" method="post">
-        <table>
-            <tr>
-                <td>E-mail</td><td>{{ form.mail }}</td>
-            </tr>
-            <tr>
-                <td>{% trans 'Show mail' %}</td><td>{{ form.show_mail }}</td>
-            </tr>
-            <tr>
-                <td>ICQ</td><td>{{ form.icq }}</td>
-            </tr>
-            <tr>
-                <td>Jabber</td><td>{{ form.jabber }}</td>
-            </tr>
-            <tr>
-                <td>{% trans 'Site' %}</td><td>{{ form.site }}</td>
-            </tr>
-            <tr>
-                <td>{% trans 'City' %}</td><td>{{ form.city }}</td>
-            </tr>
-            <tr>
-                <td>{% trans 'Timezone' %}</td><td>{{ form.timezone }}</td>
-            </tr>
-            <tr>
-                <td>{% trans 'Notify post reply' %}</td><td>{{ form.notify_post_reply }}</td>
-            </tr>
-            <tr>
-                <td>{% trans 'Notify comment reply' %}</td><td>{{ form.notify_comment_reply }}</td>
-            </tr>
-            <tr>
-                <td>{% trans 'Notify pm' %}</td><td>{{ form.notify_pm }}</td>
-            </tr>
-        </table>
-        {% trans 'About you:' %}<br />
-        {{ form.about }}<br />
-        {% trans "Your accounts on other web sites:" %}
+    <span class='user_edit_title'>Контакты:</span><br />
+    <span class='input_title'>{% trans 'E-mail' %} &ndash; </span> {{ form.mail }}<br />
+    <label>{% trans 'Show mail' %} {{ form.show_mail }}</label><br />
+    <span class='input_title'>{% trans 'ICQ' %} &ndash; </span> {{ form.icq }}<br />
+    <span class='input_title'>{% trans 'Jabber' %} &ndash; </span> {{ form.jabber }}<br />
+    <span class='input_title'>{% trans 'Site' %} &ndash; </span> {{ form.site }}<br />
+    <span class='input_title'>{% trans 'City' %} &ndash; </span> {{ form.city }}<br />
+    <span class='user_edit_title'>Уведомления:</span><br />
+    <label><span class='input_title'>{% trans 'Notify post reply' %} &ndash; </span> {{ form.notify_post_reply }}</label><br />
+    <label><span class='input_title'>{% trans 'Notify comment reply' %} &ndash; </span> {{ form.notify_comment_reply }}</label><br />
+    <label><span class='input_title'>{% trans 'Notify om' %} &ndash; </span> {{ form.notify_pm }}</label><br />
+    <label><span class='input_title'>{% trans 'Notify mention' %} &ndash; </span> {{ form.notify_mention }}</label><br />
+    <span class='user_edit_title'>Дополнительная информация:</span><br />
+    <span class='input_title'>{% trans 'Timezone' %} &ndash; </span>{{ form.timezone }}<br />
+    <span class='input_title'>{% trans 'About you:' %}</span><br />
+    {{ form.about }}<br />
+        <span class='user_edit_title'>{% trans "Your accounts on other web sites:" %}</span>
         <div id='meon_area'>
             {% if profile.get_me_on %}
                 {% for meon in profile.get_me_on %}
@@ -56,7 +38,7 @@
                             {% else %}
                             style='display: none'
                             {% endif %}/>
-                        <a href="#" id="{{ meon.num }}" class="rm_meon">X</a>
+                        <a href="#" id="{{ meon.num }}" class="rm_meon"><img src='/media/style/cancel.png' alt='X' /></a>
                     </p>
                 {% endfor %}
                 <input type='hidden' name='count' id="meon_count" value='{{  profile.get_me_on|length }}'/>

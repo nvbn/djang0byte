@@ -81,7 +81,7 @@ function addMeOn() {
     app.append(input);
     input = $('<input>').attr('class', 'meon').attr('type', 'text').attr('value', 'url').attr('name', 'meon_url[' + count + ']');
     app.append(input);
-    app.append('<a href="#" id="'+count+'" class="rm_meon">X</a>');
+    app.append('<a href="#" id="'+count+'" class="rm_meon"><img src="/media/style/cancel.png" alt="X" /></a>');
     $('#'+count).bind('click',function(){
           rmMeOn(parseInt($(this).attr('id')));
     });
