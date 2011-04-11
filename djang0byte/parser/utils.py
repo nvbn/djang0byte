@@ -99,7 +99,7 @@ def unparse(value):
         code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
     for user in soup.findAll({'table': True, 'class=user_tag': True}):
         user.replaceWith("<user>%s</user>" % (user.string))
-    return soup.renderContents().decode('utf8')
+    return soup.renderContents().decode('utf8').replace('</fcut>','').replace('</cut>', '')
 
 def cut(text):
     """Cut text.
@@ -110,6 +110,8 @@ def cut(text):
     Returns: String
         
     """
+    print text
+    text = text.replace('&lt;fcut&gt;','<fcut>').replace('&lt;cut&gt;','<cut>')
     cutted = text.split('<cut>')
     if len(cutted) == 2:
         return cutted[0], text

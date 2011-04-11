@@ -238,7 +238,7 @@ def edit_post(request, id):
             remove_code(post.text)
             remove_code(post.preview)
             post.set_data(data)
-            post.save(edit=True)
+            post.save(edit=True, retry=True)
             post.set_tags(data['tags'])
             return HttpResponseRedirect('/post/%d/' % (post.id))
         else:
