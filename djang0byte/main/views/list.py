@@ -52,17 +52,16 @@ def list_users(request, order = None, param = None, param_value = None):
     else:
         items = Profile.objects.select_related('user')
         url = '/list/users/'
-
     if order == 'rate':
         items = items.extra(select={'fullrate':
-            'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
-            % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
-            order_by=['-fullrate',])
+                'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
+                % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
+                order_by=['-fullrate',])
     elif order == 'rate_desc':
-         items = items.extra(select={'fullrate':
-            'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
-            % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
-            order_by=['fullrate',])
+        items = items.extra(select={'fullrate':
+               'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
+                % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
+                order_by=['fullrate',])
     elif order == 'name_desc':
         items = items.order_by('-user__username')
     else:
@@ -125,6 +124,7 @@ def list_city(request, order = None):
         order_query = '-name'
     else:
         order_query = 'name'
+    print order_query
     cities = City.objects.order_by(order_query)
     return({'object_list': cities, 'type': 'cities', 'param': None,
             'param_value': None, 'order': order, 'url': '/list/city/'})

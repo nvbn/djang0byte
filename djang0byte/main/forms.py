@@ -71,6 +71,7 @@ class EditUserForm(forms.Form):
     notify_comment_reply = forms.BooleanField(required=False)
     notify_pm = forms.BooleanField(required=False)
     notify_mention = forms.BooleanField(required=False)
+    notify_spy = forms.BooleanField(required=False)
 
 
 class EditUserPick(forms.Form):

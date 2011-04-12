@@ -22,9 +22,10 @@ import tagging
 from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
+from main.utils import new_notify_email
 from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR, PUSH_HUB, FEED_URL
 from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, PUBSUB
-from utils import file_upload_path, Access, get_status
+from utils import file_upload_path, Access, get_status, new_notify_email
 from parser import utils
 from django.utils.translation import gettext as _
 import parser.utils
@@ -586,6 +587,7 @@ class Profile(models.Model):
     reply_comment = models.BooleanField(default=True, verbose_name=_('Send notify about reply to comment?'))
     reply_pm = models.BooleanField(default=True, verbose_name=_('Send notify about PM?'))
     reply_mention = models.BooleanField(default=True, verbose_name=_('Send notify about mention?'))
+    reply_spy = models.BooleanField(default=True, verbose_name=_('Send notify about spy?'))
     about = models.TextField(blank=True, verbose_name=_('About'))
     other = models.TextField(blank=True, verbose_name=_('Field for addition'))
     
@@ -952,15 +954,30 @@ class Notify(models.Model):
         
         """
         if comment.depth == 2:
-            Notify.new_notify(False, comment, comment.post.author)
-            spy = Spy.objects.select_related('user').filter(post=comment.post)
             try:
-                for spy_elem in spy:
-                    Notify.new_notify(False, comment, spy_elem.user)
-            except TypeError:
-                pass
+                Notify.objects.get(comment=comment, user=comment.post.author)
+            except Notify.DoesNotExist:
+                Notify.new_notify(False, comment, comment.post.author)
+                if comment.post.author.get_profile().reply_post:
+                    new_notify_email(comment, 'post_reply', comment.post.author)
+                spy = Spy.objects.select_related('user').filter(post=comment.post)
+                try:
+                    for spy_elem in spy:
+                        try:
+                            Notify.objects.get(comment=comment, user=spy_elem.user)
+                        except Notify.DoesNotExist:
+                            Notify.new_notify(False, comment, spy_elem.user)
+                            if spy_elem.user.get_profile().reply_spy:
+                                new_notify_email(comment, 'spy_reply', spy_elem.user)
+                except TypeError:
+                    pass
         else:
-            Notify.new_notify(False, comment, comment.get_parent().author)
+            try:
+                Notify.objects.get(comment=comment, user=comment.get_parent().author)
+            except Notify.DoesNotExist:
+                Notify.new_notify(False, comment, comment.get_parent().author)
+                if comment.get_parent().author.get_profile().reply_comment:
+                    new_notify_email(comment, 'comment_reply', comment.get_parent().author)
 
     @staticmethod
     def new_mention_notify(user, post = None, comment = None):
@@ -972,11 +989,14 @@ class Notify(models.Model):
                 return False
         try:
             usr = User.objects.get(username=user)
-            if not usr.get_profile().reply_mention:
-                False
             try:
                 Notify.objects.get(post=post, comment=comment, user=usr)
             except Notify.DoesNotExist:
+                if usr.get_profile().reply_mention:
+                    if post:
+                       new_notify_email(post, 'post_mention', usr)
+                    else:
+                       new_notify_email(comment, 'mention', usr)
                 if post:
                     notify = Notify(post=post, user=usr)
                 else:
