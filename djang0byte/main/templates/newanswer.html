@@ -6,7 +6,7 @@
 {% block content %}
 <h2>{% trans "New post" %}</h2>
 <div id="post_type">
-<a href="?">{% trans "Post" %}</a> <a href="?type=link">{% trans "Link" %}</a> <a href="?type=translate">{% trans "Translate" %}</a> <a class='selected_post_type'>{% trans "Answer" %}</a>
+<a href="?">{% trans "Post" %}</a> <a href="?type=link">{% trans "Link" %}</a> <a href="?type=translate">{% trans "Translate" %}</a> <a href="?type=answer" class='selected_post_type'>{% trans "Answer" %}</a>
 </div>
 <form id='new_post_form' action='/newpost/?type=answer' method='post'>
 <span class='input_title'>{% trans 'Blog' %} &ndash; </span><select name="blog">

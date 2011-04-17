@@ -117,12 +117,16 @@ def unparse(value):
     """
     value = value.replace('<br />','\n')
     soup = BeautifulSoup(value)
-    for code in soup.findAll({'table': True, 'class=highlighttable': True}):
+    for code in soup.findAll('table', {'class': 'highlighttable'}):
         new_code = Code.objects.get(id=int(code['id']))
         code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
-    for user in soup.findAll({'a': True, 'class=user_tag': True}):
-        user.replaceWith("<user>%s</user>" % (user.string))
-    for quote in soup.findAll({'div': True, 'class=quote': True}):
+    for user in soup.findAll('a'):
+        try:
+            if 'user_tag' in user['class'].split(' '):
+                user.replaceWith("<user>%s</user>" % (user.string))
+        except:
+            pass
+    for quote in soup.findAll('div', {'class': 'quote'}):
         quote.replaceWith("<quote>%s</quote" % (quote.string))
     return soup.renderContents().decode('utf8').replace('</fcut>','').replace('</cut>', '')
 
