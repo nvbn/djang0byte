@@ -17,6 +17,7 @@
 
 
 from django import template
+from django.views.decorators.cache import never_cache
 from main.models import LastView
 
 register = template.Library()
@@ -26,13 +27,17 @@ def comments_count(context):
     """Spike for answers printing"""
     post = context['post']
     user = context['request'].user
-    count = post.get_comment().count()
-    if user.is_authenticated():
-        try:
-            new_count = post.get_comment().filter(created__gt=LastView.objects.get(post=post, user=user).date).count()
-        except LastView.DoesNotExist:
-            new_count = count
-    else:
-        new_count = -1
+    try:
+        count = post.get_comment().count()
+        if user.is_authenticated():
+            try:
+                new_count = post.get_comment().filter(created__gt=LastView.objects.get(post=post, user=user).date).count()
+            except LastView.DoesNotExist:
+                new_count = count
+        else:
+            new_count = -1
+    except AttributeError:
+        count = 0
+        new_count = 0
     return {'count': count, 'new_count': new_count}
     

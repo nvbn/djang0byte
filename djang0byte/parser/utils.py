@@ -22,7 +22,7 @@ from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
 from parser.models import Code
 
-def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user',
+def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user quote',
     valid_attrs = 'href src lang class name id style'):
     """Cleans non-allowed HTML from the input.
 
@@ -43,6 +43,8 @@ def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table
             tag.hidden = True
         if tag.name == 'user':
             tag.replaceWith('<a class="user_tag user_tag_%s" href="/user/%s/">%s</a>' % (tag.string, tag.string, tag.string))
+        if tag.name == 'quote':
+            tag.replaceWith('<div class="quote">%s</div>' % (tag.string, ))
         for attr, val in tag.attrs:
             if attr in ('src', 'href') and val.find('javascript') == 0:
                 tag.hidden = True
@@ -120,6 +122,8 @@ def unparse(value):
         code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
     for user in soup.findAll({'a': True, 'class=user_tag': True}):
         user.replaceWith("<user>%s</user>" % (user.string))
+    for quote in soup.findAll({'div': True, 'class=quote': True}):
+        quote.replaceWith("<quote>%s</quote" % (quote.string))
     return soup.renderContents().decode('utf8').replace('</fcut>','').replace('</cut>', '')
 
 def cut(text):
@@ -131,7 +135,7 @@ def cut(text):
     Returns: String
         
     """
-    print text
+    #print text
     text = text.replace('&lt;fcut&gt;','<fcut>').replace('&lt;cut&gt;','<cut>')
     cutted = text.split('<cut>')
     if len(cutted) == 2:

@@ -221,7 +221,7 @@ class Draft(models.Model):
     title = models.CharField(max_length=300, verbose_name=_('Post title'), default=_('No name'))
     text = models.TextField(blank=True, verbose_name=_('Main text'))
     type = models.IntegerField(choices=POST_TYPE, default=0, verbose_name=_('Type of post'))
-    addition = models.CharField(max_length=300, blank=True, verbose_name=_('Addition field'))
+    addition = models.CharField(max_length=500, blank=True, verbose_name=_('Addition field'))
     raw_tags = models.CharField(max_length=500, blank=True, null=True, default='')
     is_draft = models.BooleanField(default=True)
 
