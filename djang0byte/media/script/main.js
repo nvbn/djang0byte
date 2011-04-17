@@ -523,6 +523,18 @@ function initEditor() {
     $('#id_text').markItUp(mySettings);
 }
 
+function loginForm() {
+    $.ajax({ url:'/accounts/login/js/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+           $.modal(data, {
+               overlayClose:true,
+               opacity: 80,
+               minHeight:150,
+	           minWidth: 250
+           });
+        $('#login_cancel').css('display', 'inline');
+    }});
+}
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();
@@ -612,4 +624,9 @@ $(document).ready(function(){
         }});
     }
     initPostPreview();
+    $('#login_btn').click(function(event){
+       event.preventDefault();
+       loginForm();
+        return false;
+    });
 });

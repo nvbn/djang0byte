@@ -1,30 +1,5 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% block content %}
-{% if request.user.is_authenticated %}
-<h2>{% trans "No-no-no!" %}</h2>
-{% else %}
-    {{ error }}
-<form method="post" action="">
-{% if form.errors %}
-    {% for error in form.non_field_errors %}
-    <span class='error'>{{ error }}</span>
-    {% endfor %}
-{% endif %}
-<table>
-    <tr>
-        <td>Логин</td><td>{{ form.username }}</td>
-    </tr>
-    <tr>
-        <td>Пароль</td><td>{{ form.password }}</td>
-    </tr>
-</table>
-{% csrf_token %}
-  <input type="submit" value="{% trans 'Log in' %}" />
-  <input type="hidden" name="next" value="{{ next }}" />
-</form>
-
-<p>{% trans "Forgot password" %}? <a href="{% url auth_password_reset %}">{% trans "Reset it" %}</a></p>
-<p>{% trans "Not member" %}? <a href="{% url registration_register %}">{% trans "Register" %}</a>!</p>
-{% endif %}
+{% include 'registration/login_form.html' %}
 {% endblock %}

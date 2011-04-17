@@ -592,3 +592,23 @@ a.rm_meon, a.rm_meon:hover, a.rm_meon:active {
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
 }
+
+#simplemodal-overlay {
+    background-color: #000;
+}
+
+#simplemodal-container {
+    top: 10% !important;
+    background-color: #D8DBDE;
+    padding:12px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+.display_it {
+    display: block !important;
+}
+
+#login_cancel {
+    display: none;
+}

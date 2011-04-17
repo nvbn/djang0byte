@@ -91,3 +91,6 @@ msgstr "Регистрация прошла успешно, инструкция
 #: templates/registration/registration_form.html:25
 msgid "Register!"
 msgstr "Зарегистрироваться!"
+
+msgid "Cancel"
+msgstr "Отмена"

@@ -20,6 +20,7 @@
         <script type="text/javascript" src="/media/script/jquery.autocomplete.min.js"></script>
         <script type="text/javascript" src="/media/script/jquery.hyjack.select.min.js"></script>
         <script type="text/javascript" src="/media/script/jquery.markitup.js"></script>
+        <script type="text/javascript" src="/media/script/jquery.simplemodal.1.4.1.min.js"></script>
         <script type="text/javascript" src="/media/script/set.js"></script>
         <script type="text/javascript" src="/media/script/main.js"></script>
     {% endcompress %}
@@ -50,7 +51,7 @@
                     <span class="right"><a href='/accounts/logout/'>{% trans "Log out" %}</a></span>
                 {% else %}
                     <span class="left"><a href='/accounts/register/'>{% trans "Register" %}</a></span>
-                    <span class="right"><a href='/accounts/login/'>{% trans "Log in" %}</a></span>
+                    <span class="right"><a id='login_btn' href='/accounts/login/'>{% trans "Log in" %}</a></span>
                 {% endif %}
             </div>
         </div>
