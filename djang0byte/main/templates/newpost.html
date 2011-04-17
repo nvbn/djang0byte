@@ -37,6 +37,8 @@
                 {{ preview }}
             {% endautoescape %}
         </div>
+    {% else %}
+        <div class='preview'></div>
     {% endif %}
 {% endif %}
 <form id='new_post_form' action='{% if draft %}/draft/{{ id }}/{% else%}{% if edit %}/action/edit_post/{{ id }}/{% else %}/newpost/?type={{ type }}{% endif %}{% endif %}' method='post'>
@@ -57,6 +59,8 @@
     {%  endif %}
 {{ form.addition }}<br /></label>{% if  form.addition  %}<br />{% endif %}
 <label><span class='input_title'>{% trans 'Tags' %} &ndash; </span> {{ form.tags }}</label><br /><br />
-<input type='submit' /> {% if not edit %}<input type='submit' value='{% trans "Preview" %}' name='preview' /> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">{% endif %}
+<input type='submit' /> {% if not edit %}<input type='submit' value='{% trans "Preview" %}' name='preview' /> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">{% else %}
+<input type='button' value='{% trans "Preview" %}' id='preview_post_btn' name='preview' />
+{% endif %}
 </form>
 {%  endblock %}

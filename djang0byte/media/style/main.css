@@ -362,6 +362,12 @@ a.comment_author {
 
 #comment_preview {
     border: 1px #D8DBDE solid;
+    width: 600px;
+}
+
+.preview {
+    margin-bottom: 15px;
+    width: 600px;
 }
 
 .fast_panel {

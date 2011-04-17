@@ -73,6 +73,14 @@ function initCommentPreview(where) {
     });
 }
 
+function initPostPreview() {
+    $('#preview_post_btn').click(function(){
+        $.ajax({ url: "/action/preview_comment/", type: 'POST', data: {'text':  $('#id_text').val()}, context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+                $('.preview').html('<b>Предпросмотр:</b><br />' + data.text);
+        }});
+    });
+}
+
 function addMeOn() {
     //Add meon input to edit user page
     count = $('#meon_count').val();
@@ -603,4 +611,5 @@ $(document).ready(function(){
             }
         }});
     }
+    initPostPreview();
 });
