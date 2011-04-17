@@ -839,3 +839,12 @@ msgstr "Имя пользователя"
 
 msgid "Post list"
 msgstr "Тексты"
+
+msgid "Notify mention"
+msgstr "Уведомлять о упоминаниях"
+
+msgid "Notify spy"
+msgstr "О ответах на отслеживаемое"
+
+msgid "Source"
+msgstr "Источник"

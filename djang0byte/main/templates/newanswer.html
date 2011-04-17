@@ -19,10 +19,10 @@
 <input type='text' name='title'/>
 <div id="answ_area">
 {% for i in answers_count %}
-<p id="answp_{{ i }}"><input class='answer_input' type='text' name='{{ i }}'/><a href="#" id="{{ i }}" class="rm_answ">X</a></p>
+<p id="answp_{{ i }}"><input class='answer_input' type='text' name='{{ i }}'/><a href="#" id="{{ i }}" class="rm_answ"><img src='/media/style/cancel.png' alt='X' /></a></p>
 {% endfor %}
 </div>
-<input type="button" id="add_answ" value="Add"/><input type="button" id="rm_answ" value="{% trans 'Remove' %}"/><br/><br/><br/>
+<input type="button" id="add_answ" value="{% trans 'Add' %}"/><input type="button" id="rm_answ" value="{% trans 'Remove' %}"/><br/><br/><br/>
 <label class='input_title'><input type='checkbox' name='multi' />{% trans "Allow multiple answer" %}</label><br />
 <br /><label><span class='input_title'>{% trans 'Tags' %} &ndash; </span> <input type='text' name='tags'/></label><br /><br />
 <input type='hidden' name='count' value='{{ count }}' id='count' />

@@ -8,7 +8,7 @@
         {% if comment.get_depth > 2 %}
             <a href="/post/{{ post.id }}/#cmnt{{ comment.get_parent.id }}">↑</a>
         {% endif %}
-        <div class="comment_rate">
+        <div class="comment_rate" title="{% trans 'Count of raters' %}: {{ comment.rate_count }}">
             <a class="minus_rate" href='/action/ratecom/{{ comment.id }}/0/'>-</a>
                 <span
                 {% if comment.rate > 0 %}

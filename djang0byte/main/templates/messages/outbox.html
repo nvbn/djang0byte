@@ -9,7 +9,7 @@
 {% for message in message_list %}
 
         <li class="list_msg {% if message.new %}new_msg{% endif %}"><a href='/user/{{ message.recipient }}/'><img src='{{ message.recipient.get_profile.get_avatar }}' class='mini_av' />{{ message.recipient }}</a>
-         — <a href="{{message.get_absolute_url }}">{{ message.subject }}</a> <a class='del_msg' href="{% url messages.views.delete message.id %}">[X]</a>
+         — <a href="{{message.get_absolute_url }}">{{ message.subject }}</a> <a class='del_msg' href="{% url messages.views.delete message.id %}"><img src="/media/style/cancel.png" alt="X" /></a>
         </li>
 
 {% endfor %}

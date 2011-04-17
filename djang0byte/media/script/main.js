@@ -107,7 +107,7 @@ function addAnsw() {
     app = $('<p>').attr('id','answp_'+count);
     input = $('<input>').attr('type', 'text').attr('name', '' + count + '');
     app.append(input);
-    app.append('<a href="#" id="'+count+'" class="rm_answ">X</a>');
+    app.append('<a href="#" id="'+count+'" class="rm_answ"><img src="/media/style/cancel.png" alt="X" /></a>');
     $('#'+count).bind('click',function(){
           rmAnsw(parseInt($(this).attr('id')));
     });

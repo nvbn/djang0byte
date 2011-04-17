@@ -1,4 +1,5 @@
- <div class="post_rate" id="prate{{ post.id }}">
+{% load i18n %}
+<div title="{% trans 'Count of raters' %}: {{ post.rate_count }}" class="post_rate" id="prate{{ post.id }}">
         <a class="minus_rate" href='/action/ratepost/{{ post.id }}/0/'>-</a>
             <span
             {% if post.rate > 0 %}
