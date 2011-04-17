@@ -9,16 +9,17 @@
             <a href="/post/{{ post.id }}/#cmnt{{ comment.get_parent.id }}">↑</a>
         {% endif %}
         <div class="comment_rate" title="{% trans 'Count of raters' %}: {{ comment.rate_count }}">
-            <a class="minus_rate" href='/action/ratecom/{{ comment.id }}/0/'>-</a>
+            <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
+
                 <span
                 {% if comment.rate > 0 %}
                     class='plus_rate'
-                {% endif %}{% if post.rate < 0 %}
+                {% endif %}{% if comment.rate < 0 %}
                     class='minus_rate'
                 {% endif %}>
                     {{ comment.rate }}
                 </span>
-            <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
+            <a class="minus_rate" href='/action/ratecom/{{ comment.id }}/0/'>-</a>
         </div>
     </div>
     <div class="comment_text">
