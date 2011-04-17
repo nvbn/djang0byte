@@ -580,7 +580,7 @@ $(document).ready(function(){
         initRegistrationChecker();
     }
     $("#register_btn").css('display', 'block');
-    $("#register_submpostit").css('display', 'none');
+    $("#register_submit").css('display', 'none');
     initClicks();
     initPostType();
     initAnswers();
