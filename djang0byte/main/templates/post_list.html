@@ -8,21 +8,25 @@
 <div class="post_list_head">
     {% if type == 'auth' %}
         <span class="left">{% trans "Posts by " %}<a href='/user/{{ subject.user }}/'><img src='{{ subject.user.get_profile.get_avatar }}' class='mini_av' /> {{ subject.user }}</a></span>
-            <span class="right">{% if option == 0 %}
-            <a id='add_friend' href="/action/friend/{{ subject.user }}/">{% trans "Add to friends!" %}</a>
+            {% if request.user.is_authenticated %}
+                <span class="right">{% if option == 0 %}
+                <a id='add_friend' href="/action/friend/{{ subject.user }}/">{% trans "Add to friends!" %}</a>
+                {% endif %}
+                {% if option == 1 %}
+                    <a id='remove_friend' href="/action/friend/{{ subject.user }}/">{% trans "Remove from friends!" %}</a>
+                {% endif %}</span>
             {% endif %}
-            {% if option == 1 %}
-                <a id='remove_friend' href="/action/friend/{{ subject.user }}/">{% trans "Remove from friends!" %}</a>
-            {% endif %}</span>
     {% endif %}
     {% if type == 'blog' %}
         <span class="left">{% trans "Posts in " %}<a href='/blog/{{ subject.id }}/'><img src='{{ subject.get_avatar }}' class='mini_av' /> {{ subject.name }}</a></span>
-            <span class="right">{% if option == 0 %}
-            <a id='join_blog' href="/action/join/{{ subject.id }}/">{% trans "Invite!" %}</a>
+            {% if request.user.is_authenticated %}
+                <span class="right">{% if option == 0 %}
+                <a id='join_blog' href="/action/join/{{ subject.id }}/">{% trans "Invite!" %}</a>
+                {% endif %}
+                {% if option == 1 %}
+                    <a id='leave_blog' href="/action/join/{{ subject.id }}/">{% trans "Get out!" %}</a>
+                {% endif %}</span>
             {% endif %}
-            {% if option == 1 %}
-                <a id='leave_blog' href="/action/join/{{ subject.id }}/">{% trans "Get out!" %}</a>
-            {% endif %}</span>
     {% endif %}
     {% if type == 'tag' %}
         <span>{% trans "Posts with tag " %} <a href="/tag/{{ subject }}/">{{ subject }}</a></span>
