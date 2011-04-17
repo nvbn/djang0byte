@@ -121,7 +121,7 @@ class Blog(models.Model):
             rate.blog = self
             rate.user = user
             rate.save()
-            user = Profile.objects.get(user=self.user)
+            user = self.owner.get_profile()
             user.blogs_rate += 1
             user.save()
             return(True)
@@ -388,6 +388,9 @@ class Post(Draft):
             rate.post = self
             rate.user = user
             rate.save()
+            profile = self.author.get_profile()
+            profile.posts_rate += value
+            profile.save()
             return(True)
             
     def get_tags(self):
@@ -531,7 +534,7 @@ class Comment(NS_Node):
             rate.comment = self
             rate.user = user
             rate.save()
-            user = Profile.objects.get(user=self.author)
+            user = self.author.get_profile()
             user.comments_rate += 1
             user.save()
             self.save()
