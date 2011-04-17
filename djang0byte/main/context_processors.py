@@ -17,20 +17,21 @@ def djbyte(request):
             pass
     posts = Post.objects.order_by('-date').all()[0:][:20]
     comments = Comment.objects.select_related('post').order_by('-created').exclude(depth=1).all()[0:][:20]
-    objects = [{'type': 'post', 'date': post.date, 'object': post} for post in posts]
-    objects += [{'type': 'comment', 'date': comment.created, 'object': comment} for comment in comments]
-    #bubble sort, yeba! =)
-    def quicksort(L):
-        todate = lambda date: time.mktime(date.timetuple())
-        if len(L) > 1:
-          pivot = random.randrange(len(L))
-          elements = L[:pivot]+L[pivot+1:]
-          left  = [element for element in elements if todate(element['date']) < todate(L[pivot]['date'])]
-          right = [element for element in elements if todate(element['date']) >= todate(L[pivot]['date'])]
-          return quicksort(left)+[L[pivot]]+quicksort(right)
-        return L
-    objects = quicksort(objects)
-    objects.reverse()
+    objects = [
+        {
+            'type': 'post',
+            'date': post.date,
+            'object': post
+        }   for post in posts
+    ]
+    objects += [
+        {
+            'type': 'comment',
+            'date': comment.created,
+            'object': comment
+        } for comment in comments
+    ]
+    objects.sort(key = lambda element: element['date'], reverse = True)
     objects = objects[:20]
     try:
         profiles = Profile.objects.select_related('user').extra(select={'fullrate':
