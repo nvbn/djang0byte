@@ -361,8 +361,13 @@ a.comment_author {
 }
 
 #comment_preview {
+    margin-top: 15px;
     border: 1px #D8DBDE solid;
-    width: 600px;
+    width: 400px;
+}
+
+.comment_reply_form textarea {
+    width: 400px;
 }
 
 .preview {

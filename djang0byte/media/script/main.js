@@ -66,7 +66,7 @@ function clearCommentForms(store) {
 function initCommentPreview(where) {
     where.find('.preview_comment_button').click(function(){
         $("#comment_preview").remove();
-        $('<div id="comment_preview"></div>').insertBefore($(this).parent().find('textarea'));
+        $('<div id="comment_preview"></div>').insertBefore($(this).parent());
         $.ajax({ url: "/action/preview_comment/", type: 'POST', data: {'text':  $(this).parent().find('textarea').val()}, context: document.body, success: function(data, textStatus, XMLHttpRequest) {
                 $('#comment_preview').html(data.text);
         }});
