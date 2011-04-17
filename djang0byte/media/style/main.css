@@ -446,8 +446,8 @@ img {
 }
 
 a.post_link {
-    color: #666;
-    text-decoration: underline;
+    color: #666 !important;
+    text-decoration: underline !important;
 }
 
 .all_good {

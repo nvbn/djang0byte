@@ -35,12 +35,12 @@
 <div class='post'>
     {% include 'post_item.html' %}
     <div class="post_bottom">
-        {% if post.type < 3 and post.have_cut %}
+        {% if post.type < 3 and post.have_cut or post.type == 1 %}
             <div class="post_full"><a href="/post/{{ post.id }}/">{% trans "Show full." %}</a></div>
         {% endif %}
         {% load post %}
        {% include "post_rate.html" %}
-        <a href='/post/{{ post.id }}/' class='post_rate'>{% comments_count %}</a>
+        <a href='/post/{{ post.id }}/#comment' class='post_rate'>{% comments_count %}</a>
     </div>
 </div>
 {% endfor %}
