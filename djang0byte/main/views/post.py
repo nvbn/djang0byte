@@ -13,7 +13,7 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-
+from django.core.exceptions import MultipleObjectsReturned
 
 from django.template.loader import render_to_string
 from django.db import transaction
@@ -150,12 +150,20 @@ def post(request, id):
     last_view_date = None
     if request.user.is_authenticated():
         try:
-            options['favourite'] = Favourite.objects.get(post=post, user=request.user)
-        except Favourite.DoesNotExist:
+            try:
+                options['favourite'] = Favourite.objects.get(post=post, user=request.user)
+            except Favourite.DoesNotExist:
+                options['favourite'] = False
+        except MultipleObjectsReturned:
+            Favourite.objects.filter(post=post, user=request.user).delete()
             options['favourite'] = False
         try:
-            options['spy'] = Spy.objects.get(post=post, user=request.user)
-        except Spy.DoesNotExist:
+            try:
+                options['spy'] = Spy.objects.get(post=post, user=request.user)
+            except Spy.DoesNotExist:
+                options['spy'] = False
+        except MultipleObjectsReturned:
+            Spy.objects.filter(post=post, user=request.user).delete() #shit, but work
             options['spy'] = False
         try:
             last_view = LastView.objects.get(post=post, user=request.user)
