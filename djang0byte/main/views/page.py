@@ -21,3 +21,7 @@ def text_page(request, url):
     """
     text_page = TextPage.objects.get(url=url)
     return({'page': text_page})
+
+@render_to('search.html')
+def search(request):
+    return {}
