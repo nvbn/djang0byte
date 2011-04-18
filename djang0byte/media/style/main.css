@@ -398,7 +398,8 @@ a.comment_author {
 
 
 .left img {
-    width: 20px;
+    width: 12px;
+    padding-top: 5px;
 }
 
 img {
@@ -501,6 +502,7 @@ ul.messages {
 
 li.list_msg {
     list-style: none;
+    font-size: 16px;
 }
 
 li.new_msg {

@@ -31,7 +31,7 @@
         {% load cache %}
         {% load i18n %}
         {% load pytils_numeral %}
-        {% cache MENU_CACHE_TIME menu %}
+        {% cache MENU_CACHE_TIME menu user %}
         <div class='menu'>
             {% load tree_menu_tags %}
             {% load menus %}
@@ -43,7 +43,14 @@
             </ol>
             <div id="user_setting">
                 {% if user.is_authenticated %}
-                    <span class="left"><a href="/user/{{ user.username }}/">{{ user.username }}</a> {{ your_rate }} <a href="/newpost/">{% trans "New post" %}</a> / <a href='/newblog/'>{% trans "blog" %}</a>.
+                    <span class="left"><a href="/user/{{ user.username }}/">{{ user.username }}</a> <span
+                {% if your_rate > 0 %}
+                    class='plus_rate'
+                {% endif %}{% if your_rate < 0 %}
+                    class='minus_rate'
+                {% endif %}>
+                    {{ your_rate }}
+                </span> <a href="/newpost/">{% trans "New post" %}</a> / <a href='/newblog/'>{% trans "blog" %}</a>.
                         <a href='/myblogs/'>{% trans "Your blogs" %}</a> {% trans "and" %} <a href='/pm/'>{% trans "PM's" %}</a>
                         {% if messages_inbox_count %}
                             {{ messages_inbox_count }}
@@ -61,7 +68,7 @@
         <div id='content'>
             {% block content %}{% endblock %}
         </div>
-        {% cache SIDEBAR_CACHE_TIME sidebar user %}
+        {% cache SIDEBAR_CACHE_TIME sidebar request.user.is_authenticated %}
         <div id="sidebar">
             <table class="top">
                 <tr><td id='fast_panel_area'>
@@ -134,7 +141,7 @@
             </table>
         </div>
         {% endcache %}
-        {% cache 0 bottom_menu %}
+        {% cache MENU_CACHE_TIME bottom_menu %}
         <div class='menu' id="bottom">
             {% show_menu "bottom_menu" "ordered-list" %}
         </div>

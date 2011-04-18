@@ -222,7 +222,7 @@ def post_list(request, type = None, param = None):
         #TODO: rewrite favorite to ManyToMany
         posts = [f.post for f in Favourite.objects.select_related('post').filter(user=request.user)]
     try:
-        posts = posts.order_by('-id')
+        posts = posts.order_by('-id').select_related('author', 'blog')
     except AttributeError:
         pass
     #TODO: fix answer result in post list

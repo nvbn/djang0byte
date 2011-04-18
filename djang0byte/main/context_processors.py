@@ -15,8 +15,8 @@ def djbyte(request):
             timezone = profile.timezone
         except Profile.DoesNotExist:
             pass
-    posts = Post.objects.order_by('-date').all()[0:][:20]
-    comments = Comment.objects.select_related('post').order_by('-created').exclude(depth=1).all()[0:][:20]
+    posts = Post.objects.order_by('-date').select_related('author').all()[0:][:20]
+    comments = Comment.objects.select_related('post', 'author').order_by('-created').exclude(depth=1).all()[0:][:20]
     objects = [
         {
             'type': 'post',

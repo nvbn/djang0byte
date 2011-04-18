@@ -319,7 +319,7 @@ class Post(Draft):
         """Return first level comments in post"""
         try:
             comments = Comment.objects.filter(post=self, depth=1)[0]
-            return comments.get_descendants()
+            return comments.get_descendants().select_related('author', 'post', 'post__author')
         except IndexError:
             return(None)
 
@@ -437,6 +437,8 @@ class Post(Draft):
         Returns: Array/Boolean
 
         """
+        if self.type < 3:
+            return False
         try:
             if force:
                 raise

@@ -77,7 +77,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -114,6 +114,7 @@ INSTALLED_APPS = (
 'pytils',
 'django_push',
 'compressor',
+'debug_toolbar'
 )
 KEYWORD_MIN_COUNT = 50
 PUBSUB = False
@@ -134,9 +135,9 @@ RATEBLOG_RATE = 0
 POST_RATE_COEFFICIENT = 0.3
 BLOG_RATE_COEFFICIENT = 0.2
 COMMENT_RATE_COEFFICIENT = 0.1
-DEFAULT_CACHE_TIME = 0
-MENU_CACHE_TIME = DEFAULT_CACHE_TIME
-SIDEBAR_CACHE_TIME = DEFAULT_CACHE_TIME
+DEFAULT_CACHE_TIME = 60
+MENU_CACHE_TIME = 120
+SIDEBAR_CACHE_TIME = 120
 DEFAULT_AVATAR = '/media/style/figure.gif'
 LOGIN_REDIRECT_URL = '/'
 RECAPTCHA_PUBLIC_KEY = '6LeLNMISAAAAAI2FBbNBnjf_ms6a5werjXbTbNCk '
@@ -151,3 +152,11 @@ COMPRESS = True
 COMPRESS_YUI_BINARY = '/usr/bin/yui-compressor'
 COMPRESS_CSS_FILTERS = ['compressor.filters.yui.YUICSSFilter',]
 API_KEY = "API_KEY"
+"""
+INTERNAL_IPS = ('127.0.0.1:8000',)
+def custom_show_toolbar(request):
+    return True # Always show toolbar, for example purposes only.
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
+}"""
