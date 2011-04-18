@@ -33,13 +33,13 @@
 {% endautoescape %}
 {% endif %}
 <br /><hr />
-{% if profile_user.get_blogs %}
+{% if profile_user.get_blogs.count > 0 %}
     {% trans "Blogs:" %} {% for blog in profile_user.get_blogs %}
-    <a href='/blog/{{ blog.id }}/'>{{ blog }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
+    <a href='/blog/{{ blog.blog.id }}/'>{{ blog }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
     {% endfor %}
     <br />
 {% endif %}
-{% if profile_user.get_friends %}
+{% if profile_user.get_friends.count > 0 %}
     {% trans "Friends:" %} {% for friend in profile_user.get_friends %}
     <a href='/user/{{ friend }}/'>{{ friend }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
     {% endfor %}
