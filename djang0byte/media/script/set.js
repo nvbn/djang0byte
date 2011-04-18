@@ -60,6 +60,8 @@ mySettings = {
             dropMenu :[
                 {name:'cut', replaceWith:'<cut>' },
                 {name:'fcut', replaceWith:'<fcut>' }
-		]}
+		]},
+        {name:'Spoiler', openWith:'<spoiler>',  closeWith:'</spoiler>'},
+        {name:'Quote', openWith:'<quote>',  closeWith:'</quote>'}
 	]
 }

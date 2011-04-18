@@ -22,7 +22,7 @@ from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
 from parser.models import Code
 
-def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user quote',
+def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user quote spoiler',
     valid_attrs = 'href src lang class name id style'):
     """Cleans non-allowed HTML from the input.
 
@@ -45,6 +45,8 @@ def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table
             tag.replaceWith('<a class="user_tag user_tag_%s" href="/user/%s/">%s</a>' % (tag.string, tag.string, tag.string))
         if tag.name == 'quote':
             tag.replaceWith('<div class="quote">%s</div>' % (tag.string, ))
+        if tag.name == 'spoiler':
+            tag.replaceWith('<div class="spoiler">%s</div>' % (tag.string, ))
         for attr, val in tag.attrs:
             if attr in ('src', 'href') and val.find('javascript') == 0:
                 tag.hidden = True
@@ -127,7 +129,9 @@ def unparse(value):
         except:
             pass
     for quote in soup.findAll('div', {'class': 'quote'}):
-        quote.replaceWith("<quote>%s</quote" % (quote.string))
+        quote.replaceWith("<quote>%s</quote>" % (quote.string))
+    for quote in soup.findAll('div', {'class': 'spoiler'}):
+        quote.replaceWith("<spoiler>%s</spoiler>" % (quote.string))
     return soup.renderContents().decode('utf8').replace('</fcut>','').replace('</cut>', '')
 
 def cut(text):

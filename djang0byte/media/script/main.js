@@ -222,6 +222,7 @@ function updateComments(data, write) {
                 $(data.comments[i].content).each(function() {
                     initCommentReply('#' + $(this).attr('id'));
                     initCommentRates('#' + $(this).attr('id'));
+                    initSpoilers('#' + $(this).attr('id'));
                 });
                 if (data.comments[i].own) document.location.href = "#cmnt" + data.comments[i].id;
             } else data.count--;
@@ -580,6 +581,24 @@ function createMap(points, id) {
     }
 }
 
+function initSpoilers(context) {
+    if (context == -1)
+        context = '';
+    else
+        context = context + '>';
+    $(context + 'div.spoiler').each(function(){
+        opener = $('<a>Показать</a>');
+        opener.click(function(){
+            if ($(this).next().css('display') == 'none')
+                $(this).next().css('display', 'block');
+            else
+                $(this).next().css('display', 'none');
+        });
+        $(this).css('display', 'none');
+        opener.insertBefore(this);
+    });
+}
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();
@@ -646,6 +665,7 @@ $(document).ready(function(){
     initCommentRates(-1);
     initBlogRates(-1);
     initPostRates(-1);
+    initSpoilers(-1);
     initFastPanel();
     $('#id_timezone').hyjack_select({          /* Defaults */
         ddImage: '/media/style/arrow_down.png',      // arrow_down.png

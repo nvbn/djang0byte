@@ -585,7 +585,7 @@ a.rm_meon, a.rm_meon:hover, a.rm_meon:active {
     margin-bottom: 5px;
 }
 
-.quote {
+.quote, .spoiler {
     background-color: #E8F0FA;
     color: #666;
     padding: 10px;

@@ -43,6 +43,12 @@
 .markItUp .markItUpButton14 a {
 	background-image:url(/media/style/markitup/cut.png);
 }
+.markItUp .markItUpButton15 a {
+	background-image:url(/media/style/markitup/spoiler.png);
+}
+.markItUp .markItUpButton16 a {
+	background-image:url(/media/style/markitup/quotes.png);
+}
 .markItUp .clean a {
 	background-image:url(/media/style/markitup/clean.png);
 }
