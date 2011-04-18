@@ -16,8 +16,11 @@
 {% block content %}
 {% include 'post_item.html' %}
 {% load tagging_tags %}
-<div class="post_bottom">
+<br />
+<hr />
+<div class="single_post_bottom">
     <div class="post_full">
+    <span class='grey'>{% trans 'Tags:' %}</span>
         {% for tag in post.get_tags %}
             <a href='/tag/{{ tag }}/'>{{ tag }}</a>
         {% endfor %}
@@ -27,26 +30,27 @@
 {% if request.user.is_authenticated %}
     <div class='post_actions'>
         {% if PERM_EDIT_POST %}
-            <a href='/action/edit_post/{{ post.id }}/'>{% trans "Edit post!" %}</a>
+            <a href='/action/edit_post/{{ post.id }}/'><img src='/media/style/pen.gif' /> {% trans "Edit post!" %}</a>
         {% endif %}
         {% if PERM_DELETE_POST %}
-            <a href='/action/delete_post/{{ post.id }}/' id='delete_post'>{% trans "Delete post!" %}</a>
-            <a href='/action/post_options/{{ post.id }}/' id='post_options'>{% trans "Post options" %}</a>
+            <a href='/action/delete_post/{{ post.id }}/' id='delete_post'><img src='/media/style/trash.gif' /> {% trans "Delete post!" %}</a>
+            <a href='/action/post_options/{{ post.id }}/' id='post_options'><img src='/media/style/pound.gif' /> {% trans "Post options" %}</a>
         {% endif %}
         {% if options.favourite %}
-            <a href='/action/favourite/{{ post.id }}/' id='remove_favourite'>{% trans "Remove from favourite!" %}</a>
+            <a href='/action/favourite/{{ post.id }}/' style='margin-right:0'><img src='/media/style/fav.gif' /></a> <a href='/action/favourite/{{ post.id }}/' id='remove_favourite'>{% trans "Remove from favourite!" %}</a>
         {% else %}
-            <a href='/action/favourite/{{ post.id }}/' id='add_favourite'>{% trans "Add to favourite!" %}</a>
+            <a href='/action/favourite/{{ post.id }}/' style='margin-right:0'><img src='/media/style/fav.gif' /></a> <a href='/action/favourite/{{ post.id }}/' id='add_favourite'>{% trans "Add to favourite!" %}</a>
         {% endif %}
         {% if post.author != request.user %}
             {% if options.spy %}
-                <a href='/action/spy/{{ post.id }}/' id="remove_spy">{% trans "Remove from spy!" %}</a>
+                <a href='/action/spy/{{ post.id }}/' style='margin-right:0'><img src='/media/style/eye.gif' /></a> <a href='/action/spy/{{ post.id }}/' id="remove_spy">{% trans "Remove from spy!" %}</a>
             {% else %}
-                <a href='/action/spy/{{ post.id }}/' id="add_spy">{% trans "Add to spy!" %}</a>
+                <a href='/action/spy/{{ post.id }}/' style='margin-right:0'><img src='/media/style/eye.gif' /></a> <a href='/action/spy/{{ post.id }}/' id="add_spy">{% trans "Add to spy!" %}</a>
             {% endif %}
         {% endif %}
     </div>
 {% endif %}
+<hr />
 <a id='comment'></a>
 {% for comment in comments %}
      {% include 'single_comment.html' %}

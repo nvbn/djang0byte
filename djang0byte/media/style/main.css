@@ -324,6 +324,11 @@ a.post_rate, a.post_rate:hover, a.post_rate:active {
     margin-top: 15px;
     margin-bottom: 15px;
 }
+.single_post_bottom {
+    overflow: hidden;
+}
+
+
 
 a#main_form_hide, a#main_form_hide:hover, a#main_form_hide:active {
     border-bottom: 1px dashed;
@@ -516,10 +521,6 @@ li.new_msg {
     font-weight:normal;
 }
 
-.post_actions {
-    padding-bottom: 15px;
-}
-
 .error {
     font-size: 18px;
     color: #802021;
@@ -612,4 +613,22 @@ a.rm_meon, a.rm_meon:hover, a.rm_meon:active {
 
 #login_cancel {
     display: none;
+}
+
+.post_actions a, .post_actions a:visited, .post_actions a:hover, .comment_bottom a, .comment_bottom a:hover .comment_bottom a:visited {
+    color: #464646 !important;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.grey {
+    color: #999999;
+}
+
+hr {
+    border-style: solid;
+    border-width: 1px 0 0;
+    clear: both;
+    color: #A6A6A6;
+    height: 0;
 }
