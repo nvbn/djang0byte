@@ -599,6 +599,7 @@ function initSpoilers(context) {
     });
 }
 
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();

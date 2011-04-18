@@ -27,7 +27,7 @@
             {{ comment }}
         {% endautoescape %}
     </div>
-{% if request.user.is_authenticated %}
+{% if request.user.is_authenticated and not post.disable_reply %}
     <a class='comment_reply' href='/newcomment/{{ post.id }}/{{ comment.id}}/'><img src="/media/style/speech_bubble.gif" alt="" />{% trans "Reply" %}</a>
 {% endif %}
 </div>

@@ -1,0 +1,15 @@
+{% extends extend %}
+{% load i18n %}
+{% block title %}
+    {% trans "Post options" %}
+{% endblock %}
+{% block content %}
+    <h2>{% trans "Post options" %}</h2>
+    <form method='post' action='/action/post_options/{{ id }}/'>
+        <label><span class='input_title'>{% trans 'Pinch post' %} &ndash; </span>{{ form.pinch }}</label><br />
+        <label><span class='input_title'>{% trans 'Disable reply' %} &ndash; </span>{{ form.disable_reply }}</label><br />
+        <label><span class='input_title'>{% trans 'Disable rate' %} &ndash; </span>{{ form.disable_rate }}</label><br /><br />
+        <input type='submit' value='{% trans 'Apply' %}' />
+        <input type='button' value='{% trans 'Cancel' %}' id='login_cancel'  onclick="$.modal.close()" />
+    </form>
+{% endblock %}

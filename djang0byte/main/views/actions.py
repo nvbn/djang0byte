@@ -199,17 +199,7 @@ def action(request, type, id, action = None):
 
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 
-@login_required
-def delete_post(request, id):
-    if request.user.has_perm('main.delete_post'):
-        post = Post.objects.get(id=id)
-        if request.POST.get('yes'):
-            post.delete()
-            return HttpResponseRedirect('/')
-        elif not request.POST.get('no'):
-            return render_to_response('delete_post.html', {'extend': 'base.html', 'post': post},
-                              context_instance=RequestContext(request))
-    return HttpResponseRedirect('/post/%d/' % (int(id)))
+
 
 @never_cache
 @login_required
@@ -400,3 +390,46 @@ def get_users(request, users):
         except User.DoesNotExist:
             pass
     return jsend(out)
+
+@never_cache
+@render_to('post_options.html')
+@login_required
+def post_options(request, id):
+    extend = 'base.html'
+    if request.GET.get('json', 0):
+        extend = 'json.html'
+    if not request.user.has_perm('main.delete_post'):
+        return {}
+    post = Post.objects.get(id=id)
+    if request.method == 'POST':
+        form = PostOptions(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            post.disable_rate = data['disable_rate']
+            post.disable_reply = data['disable_reply']
+            post.pinch = data['pinch']
+            post.save()
+            return HttpResponseRedirect('/post/%d/' % (post.id))
+    else:
+        data = {
+            'disable_rate': post.disable_rate,
+            'disable_reply': post.disable_reply,
+            'pinch': post.pinch
+        }
+        form = PostOptions(data)
+    return({'form': form, 'extend': extend, 'id': post.id})
+
+@render_to('delete_post.html')
+@login_required
+def delete_post(request, id):
+    extend = 'base.html'
+    if request.GET.get('json', 0):
+        extend = 'json.html'
+    if request.user.has_perm('main.delete_post'):
+        post = Post.objects.get(id=id)
+        if request.POST.get('yes'):
+            post.delete()
+            return HttpResponseRedirect('/')
+        elif not request.POST.get('no'):
+            return ({'extend': extend, 'post': post})
+    return HttpResponseRedirect('/post/%d/' % (int(id)))

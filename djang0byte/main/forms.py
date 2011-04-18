@@ -73,6 +73,11 @@ class EditUserForm(forms.Form):
     notify_mention = forms.BooleanField(required=False)
     notify_spy = forms.BooleanField(required=False)
 
+class PostOptions(forms.Form):
+    """Edit post settings"""
+    pinch = forms.BooleanField(required=False)
+    disable_reply = forms.BooleanField(required=False)
+    disable_rate = forms.BooleanField(required=False)
 
 class EditUserPick(forms.Form):
     userpic = forms.ImageField()

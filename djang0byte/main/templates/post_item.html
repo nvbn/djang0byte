@@ -6,7 +6,7 @@
 {% load timezone_filters %}
 <span class="date">{{ post.date|localtime:TIMEZONE  }}</span>
 </div>
-<h2>{% if post.blog %}
+<h2>{% if post.pinch %}<img src='/media/style/chain.gif' />{% endif %}{% if post.blog %}
 <a href="/blog/{{ post.blog.id }}/">
     {% if post.blog.get_avatar %}
         <img src='{{ post.blog.get_avatar }}' class='post_av' />

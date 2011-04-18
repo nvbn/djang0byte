@@ -19,7 +19,7 @@ DATABASE_HOST = ''             # Set to empty string for localhost. Not used wit
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 JOHNNY_MIDDLEWARE_KEY_PREFIX = 'my_project1_jonny_cache_key'
-CACHE_BACKEND = 'johnny.backends.memcached://localhost:11211'
+#CACHE_BACKEND = 'johnny.backends.memcached://localhost:11211'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -134,9 +134,9 @@ RATEBLOG_RATE = 0
 POST_RATE_COEFFICIENT = 0.3
 BLOG_RATE_COEFFICIENT = 0.2
 COMMENT_RATE_COEFFICIENT = 0.1
-DEFAULT_CACHE_TIME = 60
-MENU_CACHE_TIME = 120
-SIDEBAR_CACHE_TIME = 120
+DEFAULT_CACHE_TIME = 0
+MENU_CACHE_TIME = 0
+SIDEBAR_CACHE_TIME = 0
 DEFAULT_AVATAR = '/media/style/figure.gif'
 LOGIN_REDIRECT_URL = '/'
 RECAPTCHA_PUBLIC_KEY = '6LeLNMISAAAAAI2FBbNBnjf_ms6a5werjXbTbNCk '
@@ -155,10 +155,11 @@ MAN_IN_BLACKLIST = (
 'main_spy',
 'main_favourite',
 )
+"""
 INTERNAL_IPS = ('127.0.0.1:8000',)
 def custom_show_toolbar(request):
     return True # Always show toolbar, for example purposes only.
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-}
+}"""

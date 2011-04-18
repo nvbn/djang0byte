@@ -4,9 +4,9 @@
 {% trans "Delete post" %} "{{ post.title }}"
 {% endblock %}
 {% block content %}
-<h2>{% trans "Are you sure to delete post" %} "{{ post.title }}"?</h2>
+<p>{% trans "Are you sure to delete post" %} "{{ post.title }}"?</p>
 <form action="/action/delete_post/{{ post.id }}/" method="POST">
     <input type="submit" value='{% trans "Yes!" %}' name='yes' />
-    <input type="submit" value='{% trans "No!" %}' name='no' />
+    <input type="submit" value='{% trans "No!" %}' name='no' onclick='$.modal.close(); return false;' />
 </form>
 {% endblock %}

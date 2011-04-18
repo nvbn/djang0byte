@@ -576,7 +576,7 @@ msgstr "Редактировать пост"
 
 #: templates/post.html:28
 msgid "Delete post!"
-msgstr "Новый пост"
+msgstr "Удалить пост"
 
 #: templates/post.html:31
 msgid "Remove from favourite!"
@@ -852,3 +852,15 @@ msgstr "Источник"
 #, python-format
 msgid "%d users from this city"
 msgstr "%d пользователей"
+
+msgid "Post options"
+msgstr "Настройки"
+
+msgid "Pinch post"
+msgstr "Закрепить"
+
+msgid "Disable reply"
+msgstr "Запрет комментирования"
+
+msgid "Disable rate"
+msgstr "Запрет голосования"

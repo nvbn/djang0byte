@@ -230,7 +230,7 @@ def post_list(request, type = None, param = None):
         #TODO: rewrite favorite to ManyToMany
         posts = [f.post for f in Favourite.objects.select_related('post').filter(user=request.user)]
     try:
-        posts = posts.order_by('-id').select_related('author', 'blog')
+        posts = posts.order_by('-pinch', '-id').select_related('author', 'blog')
     except AttributeError:
         pass
     #TODO: fix answer result in post list
@@ -271,6 +271,8 @@ def new_comment(request, post = 0, comment = 0):
         if form.is_valid():
             data = form.cleaned_data
             post = Post.objects.get(id=data['post'])
+            if post.disable_reply:
+                return HttpResponseRedirect('/post/%d/' % (post.id, ))
             if data['comment'] == 0:
                 root = Comment.objects.get(post=post, depth=1)
                 last = 0

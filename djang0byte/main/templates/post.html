@@ -30,7 +30,8 @@
             <a href='/action/edit_post/{{ post.id }}/'>{% trans "Edit post!" %}</a>
         {% endif %}
         {% if PERM_DELETE_POST %}
-            <a href='/action/delete_post/{{ post.id }}/'>{% trans "Delete post!" %}</a>
+            <a href='/action/delete_post/{{ post.id }}/' id='delete_post'>{% trans "Delete post!" %}</a>
+            <a href='/action/post_options/{{ post.id }}/' id='post_options'>{% trans "Post options" %}</a>
         {% endif %}
         {% if options.favourite %}
             <a href='/action/favourite/{{ post.id }}/' id='remove_favourite'>{% trans "Remove from favourite!" %}</a>
@@ -50,7 +51,7 @@
 {% for comment in comments %}
      {% include 'single_comment.html' %}
 {% endfor %}
-{% if request.user.is_authenticated %}
+{% if request.user.is_authenticated and not post.disable_reply %}
 <div class="comment_reply_form" id='main_form'>
     <form action="/newcomment/" method="POST">
         {{ comment_form.text }}

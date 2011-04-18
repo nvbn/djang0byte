@@ -281,6 +281,9 @@ class Post(Draft):
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
     preview = models.TextField(blank=True, verbose_name=_('Preview text'))
     tags = TagField(verbose_name=_('Tags'), blank=True, null=True)
+    disable_reply = models.BooleanField(default=False, verbose_name=_('Disable reply'))
+    disable_rate = models.BooleanField(default=False, verbose_name=_('Disable rate'))
+    pinch = models.BooleanField(default=False, verbose_name=_('Pinch post'))
 
     class Meta:
         ordering = ('-id', )
@@ -377,6 +380,8 @@ class Post(Draft):
         Returns: Integer
         
         """
+        if self.disable_rate:
+            return(False)
         try:
             PostRate.objects.get(post=self, user=user)
             return(False)
