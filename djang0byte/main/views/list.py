@@ -67,16 +67,15 @@ def list_users(request, order = None, param = None, param_value = None):
         items = items.order_by('-user__username')
     else:
         items = items.order_by('user__username')
-    if not param:
-        map = [
-            {
-                'point': city.name,
-                'title': _("%d users from this city") % (city.get_count()),
-                'count': city.get_count(),
-            }
-            for city in City.objects.all()
-        ]
-    elif param == 'city':
+    map = [
+        {
+            'point': city.name,
+            'title': _("%d users from this city") % (city.get_count()),
+            'count': city.get_count(),
+        }
+        for city in City.objects.all()
+    ]
+    if param == 'city':
         city = City.objects.get(name=param_value)
         map = [
             {
@@ -134,15 +133,17 @@ def list_city(request, order = None):
     Returns: Array
 
     """
-    if order == 'rate_desc':
-        order_query = '-count'
-    elif order == 'rate':
-        order_query = 'count'
-    elif order == 'name_desc':
+
+    if order == 'name_desc':
         order_query = '-name'
     else:
         order_query = 'name'
     cities = City.objects.order_by(order_query)
+    if order == 'rate_desc':
+        cities = sorted(cities.all(), key=lambda element: element.get_count())
+    elif order == 'rate':
+        cities = sorted(cities.all(), key=lambda element: element.get_count(), reverse=True)
+
     map = [
         {
             'point': city.name,
