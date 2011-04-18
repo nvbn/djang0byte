@@ -848,3 +848,7 @@ msgstr "О ответах на отслеживаемое"
 
 msgid "Source"
 msgstr "Источник"
+
+#, python-format
+msgid "%d users from this city"
+msgstr "%d пользователей"

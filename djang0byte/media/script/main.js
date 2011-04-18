@@ -535,6 +535,36 @@ function loginForm() {
     }});
 }
 
+function createMap(points, id) {
+    var map = new GMap2(document.getElementById(id), { size: new GSize(640,320) });
+    var geocoder = new GClientGeocoder();
+    var customUI = map.getDefaultUI();
+        customUI.maptypes.hybrid = false;
+        map.setUI(customUI);
+        map.setCenter(new GLatLng(55.0, 82.0), 2);
+    function add(address, title) {
+      geocoder.getLatLng(
+        address,
+        function(point) {
+        function createMarker(point) {
+                  var marker = new GMarker(point);
+                  GEvent.addListener(marker, "click", function() {
+                      marker.openInfoWindowHtml(marker.text);
+                        });
+                  return marker;
+                  }
+
+            var marker = new createMarker(point);
+            marker.text= title;
+            map.addOverlay(marker);
+        }
+      );
+    }
+    for (i in points) {
+        add(points[i]['address'], '<html><body><br /><b>' + points[i]['title'] + '</b></body></html>');
+    }
+}
+
 $(document).ready(function(){
     $("#add").click(function(){
            addMeOn();

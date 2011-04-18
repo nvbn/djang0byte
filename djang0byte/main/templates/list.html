@@ -4,6 +4,17 @@
 {% trans "List" %}
 {% endblock %}
 {% block content %}
+{% if type != 'blogs' %}
+    <div id='gmap' style='width: 640px; height: 320px;'></div>
+    <script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{ API_KEY }}"></script>
+    <script type="text/javascript">
+            markers = [{% for item in map %}{
+                address: '{{ item.point }}',
+                title: '{{ item.title }}'
+            }{% if not forloop.last %},{% endif %}{% endfor %}];
+            createMap(markers, 'gmap');
+    </script>
+{% endif %}
 <table style="width: 100%">
 <tr>
     <td class='left'><a href='{{ url }}name_desc/'>&#8595;</a>{% trans 'Name' %}<a href='{{ url }}name/'>&#8593;</a></td>

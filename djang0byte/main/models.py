@@ -450,7 +450,7 @@ class Post(Draft):
                 if user is not None:
                     self.is_result = user.is_authenticated() and not Answer.check(self, user)
                 return(self._is_answer)
-            except Answer.DoesNotExist:
+            except (Answer.DoesNotExist, IndexError):
                 self._is_answer = False
                 self.is_result = False
                 return(False)

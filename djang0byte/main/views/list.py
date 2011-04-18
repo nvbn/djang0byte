@@ -26,6 +26,7 @@ from django.views.decorators.cache import cache_page
 from simplepagination import paginate
 from annoying.decorators import render_to
 from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
+from django.utils.translation import ugettext as _
 
 @cache_page(0)
 @render_to('list.html')
@@ -66,8 +67,25 @@ def list_users(request, order = None, param = None, param_value = None):
         items = items.order_by('-user__username')
     else:
         items = items.order_by('user__username')
-
-    return({'object_list': items, 'type': 'users', 'param': param,
+    if not param:
+        map = [
+            {
+                'point': city.name,
+                'title': _("%d users from this city") % (city.get_count()),
+                'count': city.get_count(),
+            }
+            for city in City.objects.all()
+        ]
+    elif param == 'city':
+        city = City.objects.get(name=param_value)
+        map = [
+            {
+                'point': city.name,
+                'title': _("%d users from this city") % (city.get_count()),
+                'count': city.get_count(),
+            }
+        ]
+    return({'object_list': items, 'type': 'users', 'param': param, "map": map,
             'param_value': param_value, 'order': order, 'url': url})
 
 
@@ -124,9 +142,16 @@ def list_city(request, order = None):
         order_query = '-name'
     else:
         order_query = 'name'
-    print order_query
     cities = City.objects.order_by(order_query)
-    return({'object_list': cities, 'type': 'cities', 'param': None,
+    map = [
+        {
+            'point': city.name,
+            'title': _("%d users from this city") % (city.get_count()),
+            'count': city.get_count(),
+        }
+        for city in City.objects.all()
+    ]
+    return({'object_list': cities, 'type': 'cities', 'param': None, 'map': map,
             'param_value': None, 'order': order, 'url': '/list/city/'})
 
 @login_required
