@@ -20,12 +20,23 @@
     {% if type == 'blog' %}
         <span class="left">{% trans "Posts in " %}<a href='/blog/{{ subject.id }}/'><img src='{{ subject.get_avatar }}' class='mini_av' /> {{ subject.name }}</a></span>
             {% if request.user.is_authenticated %}
-                <span class="right">{% if option == 0 %}
+                <span id='blog_rate' class="right">{% if option == 0 %}
                 <a id='join_blog' href="/action/join/{{ subject.id }}/">{% trans "Invite!" %}</a>
                 {% endif %}
                 {% if option == 1 %}
                     <a id='leave_blog' href="/action/join/{{ subject.id }}/">{% trans "Get out!" %}</a>
-                {% endif %}</span>
+                {% endif %}
+                <a class="plus_rate rate_blog" href='/action/rateblog/{{ subject.id }}/1/'>+</a>
+                <span
+                {% if subject.rate > 0 %}
+                    class='plus_rate'
+                {% endif %}{% if subject.rate < 0 %}
+                    class='minus_rate'
+                {% endif %}>
+                    {{ subject.rate }}
+                </span>
+            <a class="minus_rate rate_blog" href='/action/rateblog/{{ subject.id }}/0/'>-</a>
+                </span>
             {% endif %}
     {% endif %}
     {% if type == 'tag' %}

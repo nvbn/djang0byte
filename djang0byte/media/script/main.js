@@ -358,7 +358,8 @@ function rate(url, type) {
                     hash = '#cmnt' + data.id + '>div.comment_top>div.comment_rate>span';
                 } else if (type == 'post') {
                     hash = '#prate' + data.id + '>span';
-                }
+                } else if (type == 'blog')
+                    hash = 'span#blog_rate>span';
                 $(hash).html(data.rate).attr('class', class);
             }
     }});
@@ -389,6 +390,20 @@ function initPostRates(context) {
         $(this).attr('href', '#' + $(this).attr('href'));
         $(this).click(function(){
             rate($(this).attr('href').split('#')[1], 'post');
+        });
+    });
+}
+
+function initBlogRates(context) {
+    if (context == -1) {
+        context = "#blog_rate";
+    } else {
+        context = context + ">.#blog_rate";
+    }
+    $(context + ">a.rate_blog").each(function(){
+        $(this).attr('href', '#' + $(this).attr('href'));
+        $(this).click(function(){
+            rate($(this).attr('href').split('#')[1], 'blog');
         });
     });
 }
@@ -629,6 +644,7 @@ $(document).ready(function(){
     initCommentSubmit(-1);
     initCommentReply(-1);
     initCommentRates(-1);
+    initBlogRates(-1);
     initPostRates(-1);
     initFastPanel();
     $('#id_timezone').hyjack_select({          /* Defaults */

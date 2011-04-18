@@ -113,7 +113,7 @@ def rate_blog(request, profile, blog_id, json, action):
     Returns: HttpResponse
 
     """
-    blog = Blog.objects.filter(id=blog_id)
+    blog = Blog.objects.get(id=blog_id)
     if request.user != blog.owner:
         if profile.check_access(Access.rate_blog):
             if action == '1':
@@ -164,7 +164,7 @@ def action(request, type, id, action = None):
     profile = Profile.objects.get(user=request.user)
     if type == 'ratecom':
         return(rate_comment(request, profile, id, json, action))
-    elif type == 'rateblog' and request.user != post.author and profile.checkAccess(Access.rate_blog):
+    elif type == 'rateblog' and profile.check_access(Access.rate_blog):
         return(rate_blog(request, profile, id, json, action))
     post = Post.objects.get(id=id)
     if type == 'favourite':

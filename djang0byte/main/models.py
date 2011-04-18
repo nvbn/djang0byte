@@ -23,7 +23,7 @@ from tagging.fields import TagField
 from tagging.models import Tag
 from timezones.fields import TimeZoneField
 from main.utils import new_notify_email
-from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR, PUSH_HUB, FEED_URL
+from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR, PUSH_HUB, FEED_URL, RATEBLOG_RATE
 from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, PUBSUB
 from utils import file_upload_path, Access, get_status, new_notify_email
 from parser import utils
