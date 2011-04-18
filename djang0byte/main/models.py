@@ -516,6 +516,11 @@ class Comment(NS_Node):
         return Comment.get_last(self.get_parent(), self.created)
         #return self.get_parent()
 
+    def get_parent_id(self):
+        try:
+            return self.get_parent().id
+        except:
+            return self.id
         
     def rate_comment(self, user, value):
         """Rate Comment

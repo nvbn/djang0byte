@@ -6,7 +6,7 @@
         <span class="date">{{ comment.created|localtime:TIMEZONE }}</span>
         <a href="/post/{{ post.id }}/#cmnt{{ comment.id }}">#</a>
         {% if comment.get_depth > 2 %}
-            <a href="/post/{{ post.id }}/#cmnt{{ comment.get_parent.id }}">↑</a>
+            <a href="/post/{{ post.id }}/#cmnt{{ comment.get_parent_id }}">↑</a>
         {% endif %}
         <div class="comment_rate" title="{% trans 'Count of raters' %}: {{ comment.rate_count }}">
             <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
