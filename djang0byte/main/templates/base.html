@@ -31,7 +31,7 @@
         {% load cache %}
         {% load i18n %}
         {% load pytils_numeral %}
-        {% cache MENU_CACHE_TIME menu user %}
+
         <div class='menu'>
             {% load tree_menu_tags %}
             {% load menus %}
@@ -43,6 +43,7 @@
             </ol>
             <div id="user_setting">
                 {% if user.is_authenticated %}
+                    {% cache MENU_CACHE_TIME menu user %}
                     <span class="left"><a href="/user/{{ user.username }}/">{{ user.username }}</a> <span
                 {% if your_rate > 0 %}
                     class='plus_rate'
@@ -56,6 +57,7 @@
                             {{ messages_inbox_count }}
                         {% endif %}</span>
                     <span class="right"><a href='/accounts/logout/'>{% trans "Log out" %}</a></span>
+                    {% endcache %}
                 {% else %}
                     <span class="left"><a href='/accounts/register/'>{% trans "Register" %}</a></span>
                     <span class="right"><a id='login_btn' href='/accounts/login/'>{% trans "Log in" %}</a></span>
@@ -63,7 +65,7 @@
             </div>
         </div>
        
-        {% endcache %}
+
    
         <div id='content'>
             {% block content %}{% endblock %}

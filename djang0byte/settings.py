@@ -18,12 +18,8 @@ DATABASE_PASSWORD = 'qazwsx'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': ['127.0.0.1:11211', '10.43.43.45:11211',],
-    }
-}
+JOHNNY_MIDDLEWARE_KEY_PREFIX = 'my_project1_jonny_cache_key'
+CACHE_BACKEND = 'johnny.backends.memcached://localhost:11211'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -71,6 +67,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'johnny.middleware.LocalStoreClearMiddleware',
+    'johnny.middleware.QueryCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.cache.CacheMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -114,7 +112,8 @@ INSTALLED_APPS = (
 'pytils',
 'django_push',
 'compressor',
-'debug_toolbar'
+'debug_toolbar',
+'johnny',
 )
 KEYWORD_MIN_COUNT = 50
 PUBSUB = False
@@ -152,11 +151,11 @@ COMPRESS = True
 COMPRESS_YUI_BINARY = '/usr/bin/yui-compressor'
 COMPRESS_CSS_FILTERS = ['compressor.filters.yui.YUICSSFilter',]
 API_KEY = "API_KEY"
-"""
+
 INTERNAL_IPS = ('127.0.0.1:8000',)
 def custom_show_toolbar(request):
     return True # Always show toolbar, for example purposes only.
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-}"""
+}
