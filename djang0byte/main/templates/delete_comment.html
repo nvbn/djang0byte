@@ -1,0 +1,12 @@
+{% extends extend %}
+{% load i18n %}
+{% block title %}
+{% trans "Delete comment" %}
+{% endblock %}
+{% block content %}
+<p>{% trans "Are you sure to delete this comment" %}?</p>
+<form action="/action/delete_comment/{{ comment.id }}/" method="POST">
+    <input type="submit" value='{% trans "Yes!" %}' name='yes' />
+    <input type="submit" value='{% trans "No!" %}' name='no' onclick='$.modal.close(); return false;' />
+</form>
+{% endblock %}

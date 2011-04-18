@@ -433,3 +433,46 @@ def delete_post(request, id):
         elif not request.POST.get('no'):
             return ({'extend': extend, 'post': post})
     return HttpResponseRedirect('/post/%d/' % (int(id)))
+
+@render_to('delete_comment.html')
+@login_required
+def delete_comment(request, id):
+    extend = 'base.html'
+    if request.GET.get('json', 0):
+        extend = 'json.html'
+    if request.user.has_perm('main.delete_comment'):
+        comment = Comment.objects.select_related('post').get(id=id)
+        if request.POST.get('yes'):
+            post = comment.post
+            comment.delete()
+            return HttpResponseRedirect('/post/%d/' % (post.id))
+        elif not request.POST.get('no'):
+            return ({'extend': extend, 'comment': comment})
+    return HttpResponseRedirect('/post/%d/#cmnt%d' % (comment.post.id, int(id)))
+
+@never_cache
+@render_to('new_comment.html')
+@login_required
+def edit_comment(request, id):
+    if request.user.has_perm('main.edit_comment'):
+        comment = Comment.objects.select_related('post').get(id=id)
+        if request.method == 'POST':
+            form = CreateCommentForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                comment.text = utils.parse(data['text'])
+                comment.save()
+                return HttpResponseRedirect('/post/%d/' % (comment.post.id))
+        else:
+            text = utils.unparse(comment.text)
+            data = {
+                'post': comment.post.id,
+                'text': text
+            }
+            form = CreateCommentForm(data)
+    return({
+        'edit': True,
+        'form': form,
+        'cid': id,
+        'extend': 'base.html'
+    })

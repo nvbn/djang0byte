@@ -10,7 +10,6 @@
         {% endif %}
         <div class="comment_rate" title="{% trans 'Count of raters' %}: {{ comment.rate_count }}">
             <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
-
                 <span
                 {% if comment.rate > 0 %}
                     class='plus_rate'
@@ -29,5 +28,11 @@
     </div>
 {% if request.user.is_authenticated and not post.disable_reply %}
     <a class='comment_reply' href='/newcomment/{{ post.id }}/{{ comment.id}}/'><img src="/media/style/speech_bubble.gif" alt="" />{% trans "Reply" %}</a>
+{% endif %}
+{% if PERM_EDIT_COMMENT %}
+    <a class='edit_comment' href='/action/edit_comment/{{ comment.id}}/'>{% trans "Edit comment" %}</a>
+{% endif %}
+{% if PERM_DELETE_COMMENT %}
+    <a class='delete_comment' href='/action/delete_comment/{{ comment.id}}/'>{% trans "Delete comment" %}</a>
 {% endif %}
 </div>

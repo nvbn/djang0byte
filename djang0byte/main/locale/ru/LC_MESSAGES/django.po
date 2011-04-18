@@ -864,3 +864,12 @@ msgstr "Запрет комментирования"
 
 msgid "Disable rate"
 msgstr "Запрет голосования"
+
+msgid "Are you sure to delete this comment"
+msgstr "Вы уверены, что хотите удалить этот комментарий"
+
+msgid "Edit comment"
+msgstr "Редактировать"
+
+msgid "Delete comment"
+msgstr "Удалить"

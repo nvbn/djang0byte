@@ -17,4 +17,5 @@ function initModal(id) {
 $(document).ready(function(){
     initModal('#post_options');
     initModal('#delete_post');
+    initModal('.delete_comment');
 });
