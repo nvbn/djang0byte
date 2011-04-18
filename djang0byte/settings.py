@@ -151,7 +151,10 @@ COMPRESS = True
 COMPRESS_YUI_BINARY = '/usr/bin/yui-compressor'
 COMPRESS_CSS_FILTERS = ['compressor.filters.yui.YUICSSFilter',]
 API_KEY = "API_KEY"
-
+MAN_IN_BLACKLIST = (
+'main_spy',
+'main_favourite',
+)
 INTERNAL_IPS = ('127.0.0.1:8000',)
 def custom_show_toolbar(request):
     return True # Always show toolbar, for example purposes only.

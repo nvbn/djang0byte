@@ -178,7 +178,7 @@ def action(request, type, id, action = None):
             favourite.save()
     elif type == 'spy':
         try:
-            spy = Spy.objects.filter(post=post, user=request.user)
+            spy = Spy.objects.get(post=post, user=request.user)
             spy.delete()
         except Spy.DoesNotExist:
             spy = Spy()
