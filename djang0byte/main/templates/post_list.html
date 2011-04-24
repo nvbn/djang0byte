@@ -13,7 +13,7 @@
 <div class="post_list_head">
     {% if type == 'auth' %}
         <span class="left">{% trans "Posts by " %}<a href='/user/{{ subject.user }}/'><img src='{{ subject.user.get_profile.get_avatar }}' class='mini_av' /> {{ subject.user }}</a></span>
-            {% if request.user.is_authenticated %}
+            {% if request.user.is_authenticated and subject.user != request.user %}
                 <span class="right">{% if option == 0 %}
                 <a id='add_friend' href="/action/friend/{{ subject.user }}/">{% trans "Add to friends!" %}</a>
                 {% endif %}
