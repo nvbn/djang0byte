@@ -332,7 +332,7 @@ function initCommentReply(context) {
     if (context == -1) {
         context = ".comment_reply";
     } else {
-        context = context + ">.comment_reply";   
+        context = context + " .comment_reply";
     }
     $(context).each(function(){
         lnk = $(this).attr('href')
