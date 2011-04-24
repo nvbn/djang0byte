@@ -271,6 +271,7 @@ li.blog, li.user, li.post, li.comment, li.draft, li.spy, li.favourite {
     bottom: 0;
     top: 100%;
     border-top: 1px solid #a6a6a6 !important;
+    border-bottom: 1px solid #a6a6a6 !important;
     background: none !important;
     height: 25px !important;
 }
