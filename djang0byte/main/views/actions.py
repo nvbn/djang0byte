@@ -40,6 +40,7 @@ from django.utils.translation import gettext as _
 from annoying.decorators import ajax_request
 import simplejson as json
 
+@never_cache
 def rate_comment(request, profile, comment_id, json, action):
     """Rate post
 
@@ -72,6 +73,7 @@ def rate_comment(request, profile, comment_id, json, action):
         return jsend({'error': _('For their comments can not vote!')})
     return HttpResponseRedirect('/post/%d/#cmnt%d' % (int(comment.post.id), comment.id))
 
+@never_cache
 def rate_post(request, profile, post, json, action):
     """Rate post
 
@@ -101,6 +103,7 @@ def rate_post(request, profile, post, json, action):
         return jsend({'error': _('For their post can not vote!')})
     return HttpResponseRedirect('/post/%d/' % (int(post.id)))
 
+@never_cache
 def rate_blog(request, profile, blog_id, json, action):
     """Rate post
 
@@ -377,6 +380,7 @@ def get_last_comments(request, post, comment_id = None):
               'count': comments.count(),
          })
 
+@never_cache
 def get_users(request, users):
     out = []
     for username in users.split(','):
@@ -420,6 +424,7 @@ def post_options(request, id):
         form = PostOptions(data)
     return({'form': form, 'extend': extend, 'id': post.id})
 
+@never_cache
 @render_to('delete_post.html')
 @login_required
 def delete_post(request, id):
@@ -435,6 +440,7 @@ def delete_post(request, id):
             return ({'extend': extend, 'post': post})
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 
+@never_cache
 @render_to('delete_comment.html')
 @login_required
 def delete_comment(request, id):

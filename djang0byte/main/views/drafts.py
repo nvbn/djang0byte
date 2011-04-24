@@ -3,11 +3,13 @@ from annoying.decorators import render_to
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
+from django.views.decorators.cache import never_cache
 from simplepagination import paginate
 from main.forms import CreatePostTranslateForm, CreatePostLinkForm, CreatePostForm
 from main.models import *
 from parser.utils import unparse
 
+@never_cache
 @login_required
 @render_to('drafts.html')
 @paginate(style='digg', per_page=10)
@@ -15,6 +17,7 @@ def draft(request):
     drafts = Draft.objects.filter(author=request.user, is_draft=True).order_by('-id')
     return({'object_list': drafts})
 
+@never_cache
 @login_required
 def edit_draft(request, id):
     draft = Draft.objects.get(author=request.user, id=id)

@@ -23,7 +23,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from main.forms import *
 from main.models import *
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
@@ -35,6 +35,7 @@ from django.views.decorators.vary import vary_on_cookie
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
+@never_cache
 @transaction.commit_on_success
 @login_required
 def newpost(request, type = 'post'):
@@ -262,6 +263,7 @@ def post_list_with_param(request, type, param = None):
     """
     return post_list(request, type, param)
 
+@never_cache
 @login_required
 def new_comment(request, post = 0, comment = 0):
     """New comment form
