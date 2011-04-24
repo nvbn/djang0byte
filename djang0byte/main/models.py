@@ -136,7 +136,7 @@ class Blog(models.Model):
         
         """
         if self.check_user(user):
-            UserInBlog.objects.get(user=user).delete()
+            UserInBlog.objects.get(user=user, blog=self).delete()
         else:
             uib = UserInBlog()
             uib.blog = self
