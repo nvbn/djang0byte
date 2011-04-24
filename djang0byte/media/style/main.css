@@ -415,9 +415,12 @@ img {
     overflow: hidden;
 }
 
-.mini_av {
+.mini_av, .user_tag img {
     max-height: 15px;
     border: none;
+}
+
+.mini_av {
     margin-right: 5px;
 }
 
