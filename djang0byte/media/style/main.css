@@ -141,14 +141,14 @@ a.plus_rate:hover {
 
 #content {
     float: left;
-    width: 75%;
+    width: 70%;
     padding: 20px;
     position: relative;
 }
 
 #sidebar {
     float: right;
-    width: 20%;
+    width: 25%;
 }
 
 #tag, .top {
