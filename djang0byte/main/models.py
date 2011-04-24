@@ -24,7 +24,7 @@ from tagging.models import Tag
 from timezones.fields import TimeZoneField
 from main.utils import new_notify_email
 from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR, PUSH_HUB, FEED_URL, RATEBLOG_RATE
-from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, PUBSUB
+from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, PUBSUB, ONLINE_TIME
 from utils import file_upload_path, Access, get_status, new_notify_email
 from parser import utils
 from django.utils.translation import gettext as _
@@ -606,7 +606,7 @@ class Profile(models.Model):
     reply_spy = models.BooleanField(default=True, verbose_name=_('Send notify about spy?'))
     about = models.TextField(blank=True, verbose_name=_('About'))
     other = models.TextField(blank=True, verbose_name=_('Field for addition'))
-    
+
     def get_posts(self):
         """Get posts by user"""
         return Post.objects.filter(author=self.user)
@@ -739,6 +739,25 @@ class Profile(models.Model):
         else:
             is_my_friend = -1
         return(is_my_friend)
+
+    def update_last_visit(self):
+        try:
+            view = LastVisit.objects.get(user=self.user)
+            view.date = datetime.datetime.now()
+            view.save()
+        except LastVisit.DoesNotExist:
+            view = LastVisit(user=self.user)
+            view.save()
+
+
+    def is_online(self):
+        try:
+            LastVisit.objects.get(user=self.user, date__gt=datetime.datetime.now() - datetime.timedelta(seconds=ONLINE_TIME))
+            return True
+        except LastVisit.DoesNotExist:
+            return False
+
+
 
     def __unicode__(self):
         """Return username"""
@@ -1144,3 +1163,14 @@ class LastView(models.Model):
     def update(self):
         self.date = datetime.datetime.now()
         self.save()
+
+class LastVisit(models.Model):
+    date = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User)
+
+    @staticmethod
+    def get_online(time=ONLINE_TIME):
+        return LastVisit.objects.filter(date__gt=datetime.datetime.now() - datetime.timedelta(seconds=time)).select_related('user')
+
+    def __unicode__(self):
+        return self.user.username

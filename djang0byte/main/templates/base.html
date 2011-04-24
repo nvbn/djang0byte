@@ -146,6 +146,14 @@
                 </td>
                 </tr>
             </table>
+            <div class='top now_online'>
+                {% trans 'Now online:' %} {% for user in ONLINE %}
+                    <a href='/user/{{ user }}/'>{{ user }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}<br/><br />
+                {% trans 'Last registered:' %} {% for user in LAST_USERS %}
+                    <a href='/user/{{ user }}/'>{{ user }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+            </div>
         </div>
         {% endcache %}
         {% cache MENU_CACHE_TIME bottom_menu %}

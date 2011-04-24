@@ -152,9 +152,11 @@ COMPRESS_YUI_BINARY = '/usr/bin/yui-compressor'
 COMPRESS_CSS_FILTERS = ['compressor.filters.yui.YUICSSFilter',]
 API_KEY = "API_KEY"
 FULLNAME = 'Full site name'
+ONLINE_TIME = 600
 MAN_IN_BLACKLIST = (
 'main_spy',
 'main_favourite',
+'main_lastvisit',
 )
 """
 INTERNAL_IPS = ('127.0.0.1:8000',)

@@ -3,6 +3,7 @@ td.linenos, td.code {
 }
 td.linenos {
     font-size: 12px;
+    color: #A6A6A6;
 }
 td.code {
     font-size: 12px;

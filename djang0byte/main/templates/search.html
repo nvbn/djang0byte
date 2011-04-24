@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Search' %}
+{% endblock %}
+{% block content %}
+    <div id="yandex-results-outer" onclick="return {encoding: '', language: 'ru'}"></div><script type="text/javascript" src="http://site.yandex.net/load/site.js" charset="utf-8"></script>
+{% endblock %}

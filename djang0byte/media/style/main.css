@@ -632,3 +632,8 @@ hr {
     color: #A6A6A6;
     height: 0;
 }
+
+.now_online {
+    padding: 15px;
+    text-align: left;
+}

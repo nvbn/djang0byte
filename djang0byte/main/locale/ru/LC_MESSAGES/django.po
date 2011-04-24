@@ -873,3 +873,9 @@ msgstr "Редактировать"
 
 msgid "Delete comment"
 msgstr "Удалить"
+
+msgid "Now online:"
+msgstr "Сейчас на сайте"
+
+msgid "Last registered:"
+msgstr "Новые пользователи:"
