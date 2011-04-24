@@ -150,9 +150,12 @@ class Blog(models.Model):
             return(False)
 
     @staticmethod
-    def create_list(profile, selected = None):
+    def create_list(profile, selected = None, append=None):
         blogs = [uib.blog for uib in profile.get_blogs()]
         blogs += Blog.objects.filter(default=True)
+        if append:
+            append.selected = True
+            blogs.append(append)
         d = {}
         for x in blogs:
             if selected == x.id:
