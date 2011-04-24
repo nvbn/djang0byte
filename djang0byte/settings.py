@@ -151,6 +151,7 @@ COMPRESS = True
 COMPRESS_YUI_BINARY = '/usr/bin/yui-compressor'
 COMPRESS_CSS_FILTERS = ['compressor.filters.yui.YUICSSFilter',]
 API_KEY = "API_KEY"
+FULLNAME = 'Full site name'
 MAN_IN_BLACKLIST = (
 'main_spy',
 'main_favourite',

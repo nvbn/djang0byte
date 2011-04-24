@@ -30,7 +30,7 @@ from tagging.models import TaggedItem
 from main.utils import Access, jsend
 from django.template import RequestContext
 from actions import  get_last_comments
-from settings import DEFAULT_CACHE_TIME, POST_RATE_TO_MAIN
+from settings import DEFAULT_CACHE_TIME, POST_RATE_TO_MAIN, FULLNAME
 from django.views.decorators.vary import vary_on_cookie
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
@@ -197,7 +197,7 @@ def post_list(request, type = None, param = None):
     option = None
     rss = None
     if type == None:
-        title = ''
+        title = FULLNAME
         blog_types = BlogType.objects.filter(display_default=False)
         blogs = Blog.objects.filter(type__in=blog_types)
         posts = Post.objects.exclude(blog__in=blogs).filter(rate__gt=POST_RATE_TO_MAIN)
