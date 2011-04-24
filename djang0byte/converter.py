@@ -10,7 +10,7 @@ import settings
 from datetime import datetime
 import memcache
 mc = memcache.Client(['127.0.0.1:11211'], debug=0)
-
+"""
 from django.db.utils import IntegrityError, DatabaseError
 try:
     usr = ndb.User.objects.get(username='nvbn')
@@ -291,3 +291,22 @@ if 'other' in sys.argv:
             pass
 
     print('drafts converted')
+"""
+db= MySQLdb.connect(host='127.0.0.1', user='root', passwd='qazwsx',
+                    db='welinux', charset = "utf8", use_unicode = True)
+cursor = db.cursor()
+cursor.execute('SELECT * FROM users')
+for user in cursor.fetchall():
+    try:
+        profile = ndb.User.objects.get(username=user[1]).get_profile()
+        for name in user[12].split(','):
+            name = name.replace(' ','')
+            try:
+                friend = ndb.User.objects.get(username=name)
+                f = ndb.Friends(friend=friend, user=profile)
+                f.save()
+            except ndb.User.DoesNotExist:
+                print 'suck'
+    except (ndb.User.DoesNotExist, ndb.Profile.DoesNotExist):
+        pass
+print('friends converted')

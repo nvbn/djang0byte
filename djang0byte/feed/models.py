@@ -14,19 +14,39 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-
-
 from django_push.publisher.feeds import Feed
-from main.models import Post
+from tagging.models import TaggedItem
+from main.models import *
 from settings import SITENAME
+from django.utils.translation import ugettext as _
 
 class PostFeed(Feed):
     title = SITENAME
     link = "/rss/"
-    description = ""
 
-    def items(self):
-        return Post.objects.order_by('-id')[:50]
+    def get_object(self, request, type = None, value = None):
+        if BlogType.check(type):
+            blog_type = BlogType.objects.get(name=type)
+            self.description = _('Posts in %s') % (blog_type.name)
+            return Post.objects.filter(blog__in=blog_type.get_blogs())
+        if type == 'auth':
+            self.description = _('Posts by %s') % (value)
+            return Post.objects.filter(
+                author=User.objects.get(username=value)
+            )
+        elif type == 'blog':
+            self.description = _('Posts in blog %s') % (value)
+            return Post.objects.filter(
+                blog=Blog.objects.get(id=value)
+            )
+        elif type == 'tag':
+            self.description = _('Posts with tag %s') % (value)
+            return TaggedItem.objects.get_by_model(Post, value)
+        else:
+            return Post.objects.all()
+
+    def items(self, obj):
+        return obj.order_by('-id')[:50]
 
     def item_link(self, item):
         return "/post/%d/" % item.id
@@ -35,5 +55,5 @@ class PostFeed(Feed):
         return "/post/%s/" % item.id
 
     def item_description(self, item):
-        return item.text
+        return item.preview
         

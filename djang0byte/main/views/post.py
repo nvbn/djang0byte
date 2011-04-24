@@ -195,6 +195,7 @@ def post_list(request, type = None, param = None):
     posts = None
     subject = None
     option = None
+    rss = None
     if type == None:
         title = ''
         blog_types = BlogType.objects.filter(display_default=False)
@@ -204,6 +205,7 @@ def post_list(request, type = None, param = None):
         blog_type = BlogType.objects.get(name=type)
         title = blog_type.name
         posts = Post.objects.filter(blog__in=blog_type.get_blogs())
+        rss = '/rss/%s/' % (type)
     elif type == 'pers':
         title = _('Presonal posts')
         posts = Post.objects.filter(blog=None)
@@ -213,10 +215,12 @@ def post_list(request, type = None, param = None):
         posts = blog.get_posts()
         subject = blog
         option = request.user.is_authenticated() and blog.check_user(request.user)
+        rss = '/rss/blog/%d/' % (param)
     elif type == 'tag':
         title = _(u'Posts with tag %s') % unicode(param)
         posts = TaggedItem.objects.get_by_model(Post, param)
         subject = param
+        rss = '/rss/tag/%s/' % (param)
         #posts = [post.post for post in posts_with_tag]
     elif type == 'auth':
         title = _('Posts by %s') % param
@@ -225,6 +229,7 @@ def post_list(request, type = None, param = None):
         posts = profile.get_posts()
         subject = profile
         option = request.user.is_authenticated() and profile.is_my_friend(request.user)
+        rss = '/rss/auth/%s/' % (param)
     elif type == 'favourite':
         title = _('Favourite posts')
         #TODO: rewrite favorite to ManyToMany
@@ -234,7 +239,15 @@ def post_list(request, type = None, param = None):
     except AttributeError:
         pass
     #TODO: fix answer result in post list
-    return {'object_list': posts, 'single': False, 'type': type, 'subject': subject, 'option': option, 'title': title}
+    return {
+            'object_list': posts,
+            'single': False,
+            'type': type,
+            'subject': subject,
+            'option': option,
+            'title': title,
+            'rss': rss,
+            }
 
 def post_list_with_param(request, type, param = None):
     """Wrapper for post_list

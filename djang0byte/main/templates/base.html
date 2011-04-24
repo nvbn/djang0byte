@@ -25,6 +25,9 @@
         <script type="text/javascript" src="/media/script/main.js"></script>
         <script type="text/javascript" src="/media/script/admin.js"></script>
     {% endcompress %}
+    {% block rss %}
+        <link rel="alternate" href="{{ FEED_URL }}" type="application/rss+xml" title="">
+    {% endblock %}
     <title>{{ SITENAME }} {% block title %}{% endblock %}</title>
 </head>
 <body>
