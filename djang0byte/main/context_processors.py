@@ -45,7 +45,6 @@ def djbyte(request):
     blogs = Blog.objects.order_by('-rate')[0:][:10]
     try:
         type = request.session['right_panel']
-        print "fast_funcs['%s']()" % (type)
         right_panel_js = "fast_funcs['%s']()" % (type)
     except KeyError:
         right_panel_js = None

@@ -82,9 +82,19 @@
                 <ul>
                     {% for object in top_post_comment %}
                         {% if object.type == 'post' %}
-                            <li class="post"><a href="/post/{{ object.object.id }}/">{{ object.object.title }}</a></li>
+                            <li class="post"><a href="/post/{{ object.object.id }}/">{% if object.object.blog %}
+                                    {{ object.object.blog }}
+                                {% else %}
+                                    {{ object.object.author }}
+                                {% endif %} &ndash; {{ object.object.title }}</a></li>
                         {% else %}
-                            <li class="comment"><a href="/post/{{ object.object.post.id }}/#cmnt{{ object.object.id }}">{{ object.object.author }} — {{ object.object.post.title }}</a></li>
+                            <li class="comment"><a href="/post/{{ object.object.post.id }}/#cmnt{{ object.object.id }}">{{ object.object.author }} /
+                                {% if object.object.post.blog %}
+                                    {{ object.object.post.blog }}
+                                {% else %}
+                                    {{ object.object.post.author }}
+                                {% endif %} &ndash; 
+                                {{ object.object.post.title }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul></td>

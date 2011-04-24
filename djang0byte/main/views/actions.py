@@ -258,7 +258,8 @@ def get_val(request, type, count=20):
         comments = Comment.objects.exclude(depth=1).select_related('post', 'post.blog', 'post.author').order_by('-id')[:count]
         for comment in comments:
             out.append({
-                           'title': u"%s — %s" % (
+                           'title': u"%s / %s &ndash; %s" % (
+                               comment.author.username,
                                comment.post.blog and comment.post.blog.name or comment.post.author.username,
                                comment.post.title,
                            ),
@@ -274,7 +275,7 @@ def get_val(request, type, count=20):
         posts = Post.objects.select_related('blog', 'author').order_by('-id')[:count]
         for post in posts:
             out.append({
-                'title': u"%s — %s" % (
+                'title': u"%s &ndash; %s" % (
                     post.blog and post.blog.name or post.author.username,
                     post.title,
                 ),
