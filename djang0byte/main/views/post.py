@@ -215,7 +215,7 @@ def post_list(request, type = None, param = None):
         posts = blog.get_posts()
         subject = blog
         option = request.user.is_authenticated() and blog.check_user(request.user)
-        rss = '/rss/blog/%d/' % (param)
+        rss = '/rss/blog/%s/' % (param)
     elif type == 'tag':
         title = _(u'Posts with tag %s') % unicode(param)
         posts = TaggedItem.objects.get_by_model(Post, param)
