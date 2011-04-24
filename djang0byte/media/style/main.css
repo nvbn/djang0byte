@@ -646,4 +646,5 @@ hr {
     padding: 7px;
     background: url('/media/style/ds.jpg') no-repeat;
     min-height: 40px;
+    text-align: left;
 }
