@@ -641,3 +641,9 @@ hr {
     padding: 15px;
     text-align: left;
 }
+.advert {
+    border-left:1px solid #a6a6a6;
+    padding: 7px;
+    background: url('/media/style/ds.jpg') no-repeat;
+    min-height: 40px;
+}

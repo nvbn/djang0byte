@@ -112,6 +112,11 @@
             <div class='top search'>
                 <div class="yandexform" onclick="return {type: 3, logo: 'rb', arrow: false, webopt: false, websearch: false, bg: '#D8DBDE', fg: '#000000', fontsize: 12, suggest: true, site_suggest: true, encoding: '', language: 'ru'}"><form action="http://188.127.239.11/search/" method="get"><input type="hidden" name="searchid" value="1065792"/><input name="text"/><input type="submit" value="Найти"/></form></div><script type="text/javascript" src="http://site.yandex.net/load/form/1/form.js" charset="utf-8"></script>
             </div>
+
+            <div class='top advert'>
+                {% include 'advert.html' %}
+            </div>
+
             <div id="tag">
                 {% load tagging_tags %}
                 {% tag_cloud_for_model main.Post as tags with steps=9 distribution=log min_count=20 %}
@@ -119,6 +124,7 @@
                    <a class='tag_{{tag.font_size }}' href='/tag/{{ tag|urlencode }}/'>{{ tag }}</a>
                 {% endfor %}
             </div>
+
             <table class="top">
                 <tr><td id='fast_list_area'>
                 <span><a href='/list/users/'>{{ profiles_count }}
