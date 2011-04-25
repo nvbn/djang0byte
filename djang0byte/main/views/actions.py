@@ -365,7 +365,7 @@ def get_last_comments(request, post, comment_id = None):
         last_view = LastView(post=post, user=request.user)
         last_view_date = 1
         last_view.save()
-    comments = Comment.objects.filter(created__gt=last_view_date).order_by('created')
+    comments = Comment.objects.filter(created__gt=last_view_date, post=post).order_by('created')
     return jsend({
               'comments': [{
                            'content': render_to_string('single_comment.html', {
