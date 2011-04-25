@@ -158,7 +158,6 @@ MAN_IN_BLACKLIST = (
 'main_favourite',
 'main_lastvisit',
 )
-
 INTERNAL_IPS = ('127.0.0.1:8000',)
 """def custom_show_toolbar(request):
     return True # Always show toolbar, for example purposes only.

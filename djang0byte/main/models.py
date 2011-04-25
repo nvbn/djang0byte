@@ -398,7 +398,7 @@ class Post(Draft):
             rate.save()
             profile = self.author.get_profile()
             profile.posts_rate += value
-            profile.save()
+            profile.save(rate=True)
             return(True)
             
     def get_tags(self):
@@ -419,8 +419,10 @@ class Post(Draft):
         Tag.objects.update_tags(self, tag_list)
         
         
-    def save(self, edit=True, convert=False, retry=False):
+    def save(self, edit=True, convert=False, retry=False, rate=False):
         """Parse html and save"""
+        if rate:
+            return super(Post, self).save()
         self.is_draft = False
         if self.type < 3 and not convert and not retry:
             self.preview, self.text = utils.cut(self.text)
