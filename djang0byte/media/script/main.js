@@ -317,7 +317,7 @@ function commentReplyForm(url) {
             initCommentPreview(form);
             $('#cmnt' + id).append(form);
             document.location.hash = 'cmnt' + id;
-            initCommentSubmit('#cmnt' + id);
+            initCommentSubmit('#comment_reply_form_' + id + ">#id_text");
             initEditor();
         }});
     } else {
@@ -535,8 +535,10 @@ function initClicks() {
     clickAction('Вступить!', 'join_blog', "leave_blog");
 }
 
-function initEditor() {
-    $('#id_text').markItUp(mySettings);
+function initEditor(where) {
+    if (!where)
+        where = '#id_text';
+    $(where).markItUp(mySettings);
 }
 
 function loginForm() {
