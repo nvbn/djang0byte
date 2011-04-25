@@ -263,7 +263,7 @@ class Draft(models.Model):
             self.set_blog(0)
         self.raw_tags = data['tags']
 
-    def save(self, edit=False):
+    def save(self, edit=False, rate=False):
         """Save function wrapper
 
         Keyword arguments:
@@ -272,9 +272,10 @@ class Draft(models.Model):
         Returns: None
 
         """
-        if not self.title:
-            self.title = _('No name')
-        self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
+        if not rate:
+            if not self.title:
+                self.title = _('No name')
+            self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         super(Draft, self).save()
 
 class Post(Draft):
@@ -389,16 +390,19 @@ class Post(Draft):
             PostRate.objects.get(post=self, user=user)
             return(False)
         except PostRate.DoesNotExist:
+            print self.get_tags()
             self.rate = self.rate + value
             self.rate_count = self.rate_count + 1
-            self.save()
+
+            self.save(rate=True)
+            print self.get_tags()
             rate = PostRate()
             rate.post = self
             rate.user = user
             rate.save()
             profile = self.author.get_profile()
             profile.posts_rate += value
-            profile.save(rate=True)
+            profile.save()
             return(True)
             
     def get_tags(self):
@@ -422,7 +426,10 @@ class Post(Draft):
     def save(self, edit=True, convert=False, retry=False, rate=False):
         """Parse html and save"""
         if rate:
-            return super(Post, self).save()
+            tags = ', '.join(x.name for x in self.get_tags())
+            super(Post, self).save(rate=True)
+            self.set_tags(tags)
+            return 0
         self.is_draft = False
         if self.type < 3 and not convert and not retry:
             self.preview, self.text = utils.cut(self.text)
