@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% if rss %}
+{% if rss != 0 %}
     {% block rss %}
         <link rel="alternate" href="{{ rss }}" type="application/rss+xml" title="">
     {% endblock %}
