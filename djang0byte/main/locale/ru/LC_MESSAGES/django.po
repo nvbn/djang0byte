@@ -879,3 +879,13 @@ msgstr "Сейчас на сайте"
 
 msgid "Last registered:"
 msgstr "Новые пользователи:"
+
+msgid "Related"
+msgstr "Похожие"
+
+#, python-format
+msgid "Posts like %s"
+msgstr "Похожие на %s"
+
+msgid "Posts like"
+msgstr "Похожие на"

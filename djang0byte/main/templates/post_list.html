@@ -50,6 +50,19 @@
     {% if type == 'favourite' %}
         <span>{% trans "Your favourite posts!" %}</span>
     {% endif %}
+    {% if type == 'like' %}
+        <span>{% trans "Posts like" %}
+            {% if post.blog %}
+            <a href="/blog/{{ subject.blog.id }}/">
+                {% if subject.blog.get_avatar %}
+                {% endif %}
+                {{ subject.blog }}</a>
+            {% else %}
+                <a href="/user/{{ subject.author }}/">
+                {{ subject.author }}</a>
+            {% endif %}  — <a href="/post/{{ subject.id }}/">{{ subject.title }}</a>
+        </span>
+    {% endif %}
 </div>
 {% for post in object_list %}
 <div class='post'>

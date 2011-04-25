@@ -231,6 +231,11 @@ def post_list(request, type = None, param = None):
         subject = profile
         option = request.user.is_authenticated() and profile.is_my_friend(request.user)
         rss = '/rss/auth/%s/' % (param)
+    elif type == 'like':
+        post = Post.objects.get(id=param)
+        posts = TaggedItem.objects.get_related(post, Post)
+        title = _(u'Posts like %s') % (post.title)
+        subject = post
     elif type == 'favourite':
         title = _('Favourite posts')
         #TODO: rewrite favorite to ManyToMany
