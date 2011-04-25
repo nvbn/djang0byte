@@ -24,6 +24,18 @@ class PostFeed(Feed):
     title = SITENAME
     link = "/rss/"
 
+
+    """def prepare(self, text):
+        for (subj, replacement) in (
+            ('&#39;', "'"),
+            ('&amp;', '&'),
+            ('&quot;', '"'),
+            ('&lt;', '<'),
+            ('&gt;', '>'),
+        ):
+            test = text.replace(subj, replacement)
+        return text"""
+
     def get_object(self, request, type = None, value = None):
         if BlogType.check(type):
             blog_type = BlogType.objects.get(name=type)
@@ -56,4 +68,7 @@ class PostFeed(Feed):
 
     def item_description(self, item):
         return item.preview
+
+    def item_title(self, item):
+        return item.title
         
