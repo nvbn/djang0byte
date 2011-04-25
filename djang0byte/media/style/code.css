@@ -10,7 +10,7 @@ td.code {
 }
 .highlight {
     width: 600px;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 .hll { background-color: #ffffcc }
 .c { color: #408080; font-style: italic } /* Comment */
