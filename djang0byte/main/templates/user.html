@@ -14,6 +14,7 @@
             {{ status.text }}</a>
         </p>
     {% endfor %}
+<div class='user_info'>
 {% if profile_user.get_city%}<a href='/list/users/city/{{ profile_user.get_city }}/'><img src='/media/style/city.png' /> {{ profile_user.city }}</a>, {% endif %}
 <a href='/pm/compose/{{ profile_user }}/'><img src='/media/style/envelope.gif' /> PM</a>
 {% if profile_user.hide_mail %}, <a href='mailto:{{ user_user.email }}'><img src='/media/style/mailing.gif' /> {{ user_user.email }}</a>{% endif %}
@@ -25,6 +26,7 @@
         , <a href="{{ site.url }}"><img class='site_favicon' src="{{ site.favicon }}" /> {{ site.title }}</a>
     {% endfor %}
 {% endif %}
+</div>
 <br /><br />
 {% if profile_user.about %}
 {% trans "About user:" %}<br />
