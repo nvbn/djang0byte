@@ -70,5 +70,8 @@ class PostFeed(Feed):
         return item.preview
 
     def item_title(self, item):
-        return item.title
-        
+        if item.blog:
+            return u"%s — %s" % (item.blog.name, item.title)
+        else:
+            return  u"%s — %s" % (item.author.username, item.title)
+
