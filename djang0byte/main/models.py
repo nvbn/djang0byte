@@ -228,7 +228,7 @@ class Draft(models.Model):
     raw_tags = models.CharField(max_length=500, blank=True, null=True, default='')
     is_draft = models.BooleanField(default=True)
 
-    def set_blog(self, blog):
+    def set_blog(self, blog, force=False):
         """Set blog to post
 
         Keyword arguments:
@@ -241,7 +241,7 @@ class Draft(models.Model):
             self.blog = None
         else:
             self.blog = Blog.objects.get(id=blog)
-            if not (self.blog.default or self.blog.check_user(self.author)):
+            if not (self.blog.default or self.blog.check_user(self.author) or force):
                  self.blog = None
         return(self.blog)
 
