@@ -464,7 +464,7 @@ class Post(Draft):
             try:
                 answer = Answer.objects.filter(post=self).all()
                 sum = answer.order_by('-count')[0].count
-                action = lambda count: int(300 * float(count)/float(sum))
+                action = lambda count: int(300 * float(count)/float(sum or 1))
                 self._is_answer = [{'count': answ.count, 'value': answ.value, 'width': action(answ.count), 'id': answ.id} for answ in answer]
                 if user is not None:
                     self.is_result = user.is_authenticated() and not Answer.check(self, user)
