@@ -120,8 +120,11 @@ def unparse(value):
     value = value.replace('<br />','\n')
     soup = BeautifulSoup(value)
     for code in soup.findAll('table', {'class': 'highlighttable'}):
-        new_code = Code.objects.get(id=int(code['id']))
-        code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
+        try:
+            new_code = Code.objects.get(id=int(code['id']))
+            code.replaceWith('<code lang="%s">%s</code>' % (new_code.lang, new_code.code))
+        except Code.DoesNotExist:
+            pass
     for user in soup.findAll('a'):
         try:
             if 'user_tag' in user['class'].split(' '):
