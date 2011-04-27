@@ -516,9 +516,6 @@ function initRegistrationChecker() {
     $("#id_password2").keyup(function(){
         check_register('password', $(this).val());
     });
-    if ($(".new_comment").length){
-        $('#updated_count').html($(".new_comment").length);
-    }
     $("#register_btn").click(function(){
        check_register_all();
     });
@@ -691,6 +688,9 @@ $(document).ready(function(){
         }});
     }
     initPostPreview();
+    if ($(".new_comment").length){
+        $('#updated_count').html($(".new_comment").length);
+    }
     $('#login_btn').click(function(event){
        event.preventDefault();
        loginForm();
