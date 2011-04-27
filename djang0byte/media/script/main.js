@@ -696,4 +696,10 @@ $(document).ready(function(){
        loginForm();
         return false;
     });
+    $('#share_opener').click(function(event){
+        event.preventDefault();
+        $('#share_buttons').css('display', 'inline');
+        $('#share_opener').css('display', 'none');
+        return false;
+    });
 });

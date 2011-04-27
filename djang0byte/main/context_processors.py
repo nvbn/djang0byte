@@ -1,3 +1,4 @@
+from django.contrib.sites.models import Site
 from main.models import *
 from main.utils import Access
 from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, MENU_CACHE_TIME, SIDEBAR_CACHE_TIME, LANGUAGE_CODE, SITENAME, TIME_ZONE, KEYWORD_MIN_COUNT, API_KEY, FEED_URL
@@ -55,7 +56,7 @@ def djbyte(request):
             'city_count': City.objects.count(), 'MENU_CACHE_TIME': MENU_CACHE_TIME, 'SIDEBAR_CACHE_TIME': SIDEBAR_CACHE_TIME,
             'LANGUAGE_CODE': LANGUAGE_CODE, 'SITENAME': SITENAME, 'RIGHT_PANEL_JS': right_panel_js, 'API_KEY': API_KEY,
             'keywords': ', '.join(x.__unicode__() for x in Tag.objects.cloud_for_model(Post, min_count=KEYWORD_MIN_COUNT)[:10]),
-            'FEED_URL': FEED_URL, 'ONLINE': online, 'LAST_USERS': last_users,
+            'FEED_URL': FEED_URL, 'ONLINE': online, 'LAST_USERS': last_users, 'SITE_DOMAIN': Site.objects.get_current().domain,
            })
 
 @login_required

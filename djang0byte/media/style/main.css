@@ -658,3 +658,15 @@ hr {
 .user_info a {
     text-decoration: none !important;
 }
+
+#share_buttons {
+    display: none;
+}
+
+#share_buttons a {
+    margin-right: 0;
+}
+
+.yashare-auto-init {
+    display: inline;
+}
