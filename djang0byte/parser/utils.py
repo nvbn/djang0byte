@@ -44,9 +44,9 @@ def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table
         if tag.name == 'user':
             tag.replaceWith('<a class="user_tag user_tag_%s" href="/user/%s/">%s</a>' % (tag.string, tag.string, tag.string))
         if tag.name == 'quote':
-            tag.replaceWith('<div class="quote">%s</div>' % (tag.__unicode__(), ))
+            tag.replaceWith('<div class="quote">%s</div>' % (tag.__unicode__().replace('<quote>', ' ').replace('</quote>', ' '), ))
         if tag.name == 'spoiler':
-            tag.replaceWith('<div class="spoiler">%s</div>' % (tag.__unicode__(), ))
+            tag.replaceWith('<div class="spoiler">%s</div>' % (tag.__unicode__().replace('<spoiler>',' ').replace('</spoiler>',' '), ))
         for attr, val in tag.attrs:
             if attr in ('src', 'href') and val.find('javascript') == 0:
                 tag.hidden = True
@@ -132,9 +132,13 @@ def unparse(value):
         except:
             pass
     for quote in soup.findAll('div', {'class': 'quote'}):
-        quote.replaceWith("<quote>%s</quote>" % (quote.__unicode__()))
+        text = quote.__unicode__().replace('<div class="quote">','')
+        text = ''.join(text.split('</div>')[:-1])
+        quote.replaceWith("<quote>%s</quote>" % (text))
     for quote in soup.findAll('div', {'class': 'spoiler'}):
-        quote.replaceWith("<spoiler>%s</spoiler>" % (quote.__unicode__()))
+        text = quote.__unicode__().replace('<div class="spoiler">','')
+        text = ''.join(text.split('</div>')[:-1])
+        quote.replaceWith("<spoiler>%s</spoiler>" % (text))
     return soup.renderContents().decode('utf8').replace('</fcut>','').replace('</cut>', '')
 
 def cut(text):
