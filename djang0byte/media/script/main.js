@@ -586,9 +586,7 @@ function createMap(points, id) {
 function initSpoilers(context) {
     if (context == -1)
         context = '';
-    else
-        context = context + '>';
-    $(context + 'div.spoiler').each(function(){
+    $(context + ' div.spoiler').each(function(){
         opener = $('<a>Показать</a>');
         opener.click(function(){
             if ($(this).next().css('display') == 'none')
