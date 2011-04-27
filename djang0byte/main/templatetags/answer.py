@@ -26,5 +26,9 @@ def print_answer(context):
     post = context['post']
     user = context['request'].user
     post.is_answer(user, True)
-    return {'post': post}
+
+    return {
+        'post': post,
+        'request': context['request']
+    }
     
