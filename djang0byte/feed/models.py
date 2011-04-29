@@ -17,7 +17,7 @@
 from django_push.publisher.feeds import Feed
 from tagging.models import TaggedItem
 from main.models import *
-from settings import SITENAME
+from settings import SITENAME, POST_RATE_TO_MAIN
 from django.utils.translation import ugettext as _
 
 class PostFeed(Feed):
@@ -55,7 +55,9 @@ class PostFeed(Feed):
             self.description = _('Posts with tag %s') % (value)
             return TaggedItem.objects.get_by_model(Post, value)
         else:
-            return Post.objects.all()
+            blog_types = BlogType.objects.filter(display_default=False)
+            blogs = Blog.objects.filter(type__in=blog_types)
+            return Post.objects.exclude(blog__in=blogs).filter(rate__gt=POST_RATE_TO_MAIN)
 
     def items(self, obj):
         return obj.order_by('-id')[:50]
