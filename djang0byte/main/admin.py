@@ -20,8 +20,12 @@ from django.contrib import admin
 import models
 from main.models import Post, Blog, Profile, Comment, Answer, AnswerVote, UserInBlog, Notify, BlogType, TextPage, MeOn, Statused
 
+class ProfileAdmin(admin.ModelAdmin):
+    search_fields = ['user__username']
+
 
 for stuff in ('Post', 'UserInBlog', 'Notify', 'TextPage', 'MeOn', 'Statused', 'Blog',
-              'Profile', 'Comment', 'Answer', 'AnswerVote', 'BlogType', 'Draft'):
+               'Comment', 'Answer', 'AnswerVote', 'BlogType', 'Draft'):
     admin.site.register(getattr(models, stuff))
 
+admin.site.register(Profile, ProfileAdmin)

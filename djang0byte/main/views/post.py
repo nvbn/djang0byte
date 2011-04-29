@@ -305,7 +305,7 @@ def new_comment(request, post = 0, comment = 0):
                     last = root.id
                 no_notify = root.author == request.user
             comment = root.add_child(post=post,
-            author=request.user, text=utils.parse(data['text']),
+            author=request.user, text=utils.parse(data['text'], VALID_TAGS, VALID_ATTRS),
             created=datetime.datetime.now())
             comment.save()
             if not no_notify:

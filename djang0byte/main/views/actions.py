@@ -25,7 +25,7 @@ from django.template.loader import render_to_string
 from main.forms import *
 from main.models import *
 from parser.utils import unparse, unparse, remove_code
-from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT
+from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, VALID_TAGS, VALID_ATTRS
 from django.views.decorators.cache import cache_page, never_cache
 from simplepagination import paginate
 from annoying.decorators import render_to
@@ -136,7 +136,7 @@ def rate_blog(request, profile, blog_id, json, action):
 
 @login_required
 def preview_comment(request):
-    return jsend({'text':utils.parse(request.POST.get('text'))})
+    return jsend({'text':utils.parse(request.POST.get('text'), VALID_TAGS, VALID_ATTRS)})
 
 @never_cache
 def action(request, type, id, action = None):
@@ -469,7 +469,7 @@ def edit_comment(request, id):
             form = CreateCommentForm(request.POST)
             if form.is_valid():
                 data = form.cleaned_data
-                comment.text = utils.parse(data['text'])
+                comment.text = utils.parse(data['text'], VALID_TAGS, VALID_ATTRS)
                 comment.save()
                 return HttpResponseRedirect('/post/%d/' % (comment.post.id))
         else:

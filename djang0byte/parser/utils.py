@@ -21,9 +21,9 @@ from pygments.lexers import get_lexer_by_name, PhpLexer
 from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
 from parser.models import Code
+from settings import VALID_TAGS, VALID_ATTRS
 
-def parse(value, valid_tags = 'p i strong b em u a h3 pre br img cut fcut  table tr td div pre span spoiler iframe user quote spoiler',
-    valid_attrs = 'href src lang class name id style'):
+def parse(value, valid_tags = VALID_TAGS, valid_attrs = VALID_ATTRS):
     """Cleans non-allowed HTML from the input.
 
     Keyword arguments:
