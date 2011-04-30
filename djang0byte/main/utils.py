@@ -20,6 +20,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from pytils.translit import slugify, translify
 from time import strftime
+from sendmail.models import Mails
 import urllib
 import xml.dom.minidom
 import simplejson
@@ -62,7 +63,6 @@ def get_status(url):
 
 def new_notify_email(comment, type, recipient):
     default_protocol = getattr(settings, 'DEFAULT_HTTP_PROTOCOL', 'http')
-
     try:
         current_domain = Site.objects.get_current().domain
         templates = {
@@ -83,10 +83,10 @@ def new_notify_email(comment, type, recipient):
             'site_url': '%s://%s' % (default_protocol, current_domain),
             'comment': comment,
         })
-        send_mail(subject['type'], message, settings.DEFAULT_FROM_EMAIL,
-            [recipient.email,])
+        mail = Mails(subject=subject[type], message=message, recipient=recipient.email)
+        mail.save()
     except Exception, e:
-        #print e
+        print e
         pass #fail silently
 
 

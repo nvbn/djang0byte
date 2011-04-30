@@ -112,7 +112,7 @@ INSTALLED_APPS = (
 'pytils',
 'django_push',
 'compressor',
-'debug_toolbar',
+'sendmail',
 'johnny',
 )
 KEYWORD_MIN_COUNT = 50
