@@ -769,6 +769,17 @@ class Profile(models.Model):
         except LastVisit.DoesNotExist:
             return False
 
+    def get_block(self):
+        """Get bans and blocks"""
+        try:
+            block = Blocks.objects.get(who=self.user)
+            if block.check():
+                return block
+            else:
+                return None
+        except Blocks.DoesNotExist:
+            return None
+
 
 
     def __unicode__(self):
@@ -1186,3 +1197,22 @@ class LastVisit(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+class Blocks(models.Model):
+    who = models.ForeignKey(User, verbose_name=_("Enemy"))
+    date = models.DateTimeField(verbose_name=_('End date'))
+    reason = models.TextField(verbose_name=_("Reason"))
+
+    def check(self):
+        if datetime.datetime.now() > self.date:
+            self.delete()
+            return False
+        else:
+            return True
+
+    def __unicode__(self):
+        return "%s: %s" % (self.who.username, self.reason)
+
+    class Meta:
+        verbose_name = _("Ban")
+        verbose_name_plural = _("Bans")

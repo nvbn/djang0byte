@@ -1,4 +1,5 @@
 from django.contrib.sites.models import Site
+from django.shortcuts import redirect
 from main.models import *
 from main.utils import Access
 from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, MENU_CACHE_TIME, SIDEBAR_CACHE_TIME, LANGUAGE_CODE, SITENAME, TIME_ZONE, KEYWORD_MIN_COUNT, API_KEY, FEED_URL

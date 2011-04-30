@@ -889,3 +889,33 @@ msgstr "Похожие на %s"
 
 msgid "Posts like"
 msgstr "Похожие на"
+
+msgid "Enemy"
+msgstr "Жертва"
+
+msgid "End date"
+msgstr "Дато окончания"
+
+msgid "Reason"
+msgstr "Причина"
+
+msgid "Ban"
+msgstr "Блокировка"
+
+msgid "Bans"
+msgstr "Блокировки"
+
+msgid "Sorry, not now!"
+msgstr "Извини, сейчас это не получится!"
+
+msgid "Sorry"
+msgstr "Извини"
+
+msgid "your banned!"
+msgstr "ты заблокирован!"
+
+msgid "Reason:"
+msgstr "Причина:"
+
+msgid "Block end date:"
+msgstr "Дата окончания блокировки:"

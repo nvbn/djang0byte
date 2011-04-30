@@ -25,7 +25,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 for stuff in ('Post', 'UserInBlog', 'Notify', 'TextPage', 'MeOn', 'Statused', 'Blog',
-               'Comment', 'Answer', 'AnswerVote', 'BlogType', 'Draft'):
+               'Comment', 'Answer', 'AnswerVote', 'BlogType', 'Draft', 'Blocks'):
     admin.site.register(getattr(models, stuff))
 
 admin.site.register(Profile, ProfileAdmin)
