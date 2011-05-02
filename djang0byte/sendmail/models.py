@@ -10,7 +10,7 @@ class Mails(models.Model):
 
     def send(self):
         try:
-            send_mail(self.subject, self.message, settings.DEFAULT_FROM_EMAIL, self.recipient)
+            send_mail(self.subject, self.message, settings.DEFAULT_FROM_EMAIL, [self.recipient,])
         except:
             pass
 
