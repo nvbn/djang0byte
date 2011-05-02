@@ -17,5 +17,6 @@ class Mails(models.Model):
     @staticmethod
     def send_all():
         for mail in Mails.objects.all():
+            print mail.subject
             mail.send()
             mail.delete()
