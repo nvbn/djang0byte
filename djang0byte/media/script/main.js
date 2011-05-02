@@ -539,7 +539,7 @@ function initEditor(where) {
 }
 
 function loginForm() {
-    $.ajax({ url:'/accounts/login/js/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+    $.ajax({ url:'/accounts/login/js/?next=' + location.pathname, context: document.body, success: function(data, textStatus, XMLHttpRequest) {
            $.modal(data, {
                overlayClose:true,
                opacity: 80,

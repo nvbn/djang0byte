@@ -65,7 +65,7 @@
                 
                 {% else %}
                     <span class="left"><a href='/accounts/register/'>{% trans "Register" %}</a></span>
-                    <span class="right"><a id='login_btn' href='/accounts/login/'>{% trans "Log in" %}</a></span>
+                    <span class="right"><a id='login_btn' href='/accounts/login/?next={{ request.path }}'>{% trans "Log in" %}</a></span>
                 {% endif %}
             </div>
         </div>
