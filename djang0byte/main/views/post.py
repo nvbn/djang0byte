@@ -323,7 +323,7 @@ def new_comment(request, post = 0, comment = 0):
                             (comment.post.id, comment.id))
     else:
         form = CreateCommentForm({'post': post, 'comment': comment})
-    return render_to_response('new_comment.html', {'form': form, 'extend': extend, 'pid': post, 'cid': comment},
+    return render_to_response('new_comment.html', {'form': form, 'extend': extend, 'pid': post, 'cid': comment, 'json': json},
                               context_instance=RequestContext(request))
 
 

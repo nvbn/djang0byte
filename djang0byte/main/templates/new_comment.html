@@ -8,7 +8,7 @@
     {% endif %}
 {% endblock %}
 {% block content %}
-<form {% if not edit %}id="/newcomment/{{ pid }}/{{ cid }}/"{% endif %} action="{% if edit  %}/action/edit_comment/{{ cid }}/{% else %}/newcomment/?json=1{% endif %}" method="POST">
+<form {% if not edit %}id="/newcomment/{{ pid }}/{{ cid }}/"{% endif %} action="{% if edit  %}/action/edit_comment/{{ cid }}/{% else %}/newcomment/{% if json %}?json=1{% endif %}{% endif %}" method="POST">
     {{ form.text }}
     {{ form.comment }}
     {{ form.post }}<br />
