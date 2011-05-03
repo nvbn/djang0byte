@@ -16,7 +16,7 @@
     {% endfor %}
 <div class='user_info'>
 {% if profile_user.get_city%}<a href='/list/users/city/{{ profile_user.get_city }}/'><img src='/media/style/city.png' /> {{ profile_user.city }}</a>, {% endif %}
-<a href='/pm/compose/{{ profile_user }}/'><img src='/media/style/envelope.gif' /> PM</a>
+<a href='/pm/compose/{{ profile_user }}/'><img src='/media/style/envelope.gif' /> {% trans "PM's" %}</a>
 {% if profile_user.hide_mail %}, <a href='mailto:{{ user_user.email }}'><img src='/media/style/mailing.gif' /> {{ user_user.email }}</a>{% endif %}
 {% if profile_user.icq %}, <img src='/media/style/icq.png' /> {{ profile_user.icq }}{% endif %}
 {% if profile_user.jabber %}, <a href='xmpp:{{ profile_user.jabber }}'><img src='/media/style/jabber.png' /> {{ profile_user.jabber }}</a>{% endif %}
