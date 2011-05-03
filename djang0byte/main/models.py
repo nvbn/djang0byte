@@ -522,6 +522,14 @@ class Comment(NS_Node):
 
     @staticmethod
     def get_last(obj, date):
+        """Get lasts comment
+
+        Keyword arguments:
+        obj -- Comment
+        date -- datetime
+
+        Returns: Comment QuerySet
+        """
         while True:
             try:
                 obj = obj.get_children().filter(created__lt=date).order_by('-created')[0]
@@ -530,10 +538,12 @@ class Comment(NS_Node):
 
 
     def get_placceholder(self):
+        """Get comment holder"""
         return Comment.get_last(self.get_parent(), self.created)
         #return self.get_parent()
 
     def get_parent_id(self):
+        """Get parent comment id"""
         try:
             return self.get_parent().id
         except:
@@ -580,6 +590,7 @@ class UserInBlog(models.Model):
         return self.blog.name
 
     def id(self):
+        """Over write id method"""
         return self.blog.id
 
     class Meta:
@@ -624,6 +635,7 @@ class Profile(models.Model):
         return Post.objects.filter(author=self.user)
 
     def get_city(self):
+        """Get user city"""
         if self.city:
             return self.city.name
         else:
@@ -742,6 +754,13 @@ class Profile(models.Model):
             return(self._status)
 
     def is_my_friend(self, user):
+        """Check friends
+
+        Keyword arguments:
+        user -- User
+
+        Returns: Integer
+        """
         if user.is_authenticated():
             try:
                 Friends.objects.get(user=user,friend=self.user)
@@ -753,6 +772,7 @@ class Profile(models.Model):
         return(is_my_friend)
 
     def update_last_visit(self):
+        """Update last site visit time"""
         try:
             view = LastVisit.objects.get(user=self.user)
             view.date = datetime.datetime.now()
@@ -763,6 +783,7 @@ class Profile(models.Model):
 
 
     def is_online(self):
+        """Check online status"""
         try:
             LastVisit.objects.get(user=self.user, date__gt=datetime.datetime.now() - datetime.timedelta(seconds=ONLINE_TIME))
             return True
@@ -1040,6 +1061,15 @@ class Notify(models.Model):
 
     @staticmethod
     def new_mention_notify(user, post = None, comment = None):
+        """Create notify when user mentioned
+
+        Keyword arguments:
+        user -- User
+        post -- Post
+        comment - Comment
+
+        Returns: Boolean
+        """
         try:
             if post.author.username == user:
                 return False
@@ -1074,9 +1104,11 @@ class Notify(models.Model):
             return('comment')
 
     def get_post(self):
+        """Posts by notify iterator"""
         yield (self.post)
 
     def get_comment(self):
+        """Comments by notify iterator"""
         yield (self.comment)
 
     def __unicode__(self):
@@ -1131,7 +1163,13 @@ class MeOn(models.Model):
         return(False)
 
     def parse(self, show):
-        """Check type and save"""
+        """Check type and save
+
+        Keyword arguments:
+        show -- Boolean
+
+        Returns: Boolean
+        """
         type = self.is_statused()
         if 'http' not in self.url:
             self.url = 'http://' + self.url
@@ -1180,31 +1218,43 @@ class Statused(MeOn):
             return(get_status('http://rss.juick.com/%s/blog' % (self.name)))
 
 class LastView(models.Model):
+    """Post last view time, for checking new comments"""
     date = models.DateTimeField(auto_now=True)
     post = models.ForeignKey(Post)
     user = models.ForeignKey(User)
 
     def update(self):
+        """Update view time"""
         self.date = datetime.datetime.now()
         self.save()
 
 class LastVisit(models.Model):
+    """User visit time model"""
     date = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
 
     @staticmethod
     def get_online(time=ONLINE_TIME):
+        """Get online users by specified time
+
+        Keyword arguments:
+        time -- Integer
+
+        Returns: LastVisit QuerySet        
+        """
         return LastVisit.objects.filter(date__gt=datetime.datetime.now() - datetime.timedelta(seconds=time)).select_related('user')
 
     def __unicode__(self):
         return self.user.username
 
 class Blocks(models.Model):
+    """Bans and blocks model"""
     who = models.ForeignKey(User, verbose_name=_("Enemy"))
     date = models.DateTimeField(verbose_name=_('End date'))
     reason = models.TextField(verbose_name=_("Reason"))
 
     def check(self):
+        """Check if ban ended"""
         if datetime.datetime.now() > self.date:
             self.delete()
             return False
