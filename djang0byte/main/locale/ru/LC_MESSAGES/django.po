@@ -919,3 +919,34 @@ msgstr "Причина:"
 
 msgid "Block end date:"
 msgstr "Дата окончания блокировки:"
+
+msgid "reply your comment in post"
+msgstr "ответил на ваш комментарий в посте"
+
+msgid "mention your in comment for post"
+msgstr "упомянул вас в комментарии к посту"
+
+msgid "mention your in post"
+msgstr "упомянул вас в посте"
+
+msgid "write reply for your post"
+msgstr "ответил на ваш пост"
+
+msgid "write reply for your spy post"
+msgstr "написал комментарий в отслеживаемом ваме посте"
+
+#, python-format
+msgid "User %s mention your on %s"
+msgstr "Пользователь %s упомянул вас на %s"
+
+#, python-format
+msgid "User %s write reply to your post on %s"
+msgstr "Пользователь %s прокомментировал ваш пост на %s"
+
+#, python-format
+msgid "User %s write reply to your spy post on %s"
+msgstr "Пользователь %s прокомментировал отслеживаемый вами пост на %s"
+
+#, python-format
+msgid "User %s write reply to your comment on %s"
+msgstr "Пользователь %s ответил на ваш комментарий на %s"

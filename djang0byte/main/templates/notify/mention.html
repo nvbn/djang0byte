@@ -1,3 +1,5 @@
+<html><body>
 {% load i18n %}
 {% trans "User" %} <a href='{{ site_url }}/user/{{ comment.author }}/'>{{ comment.author }}</a>
 {% trans "mention your in comment for post" %} <a href='{{ site_url }}/post/{{ comment.post.id }}/#cmnt{{ comment.id }}'>{{ comment.post.title }}</a>
+</body></html>
