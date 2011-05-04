@@ -393,6 +393,7 @@ def get_users(request, users):
                 'name': username,
                 'is_active': user.is_active,
                 'avatar': profile.get_avatar(),
+                'rate': profile.get_rate(),
             })
         except User.DoesNotExist:
             pass
