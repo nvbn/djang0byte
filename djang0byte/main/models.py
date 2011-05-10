@@ -737,8 +737,20 @@ class Profile(models.Model):
             statused = Statused.objects.filter(user=self.user).all()
             for site in statused:
                 meon = meon.exclude(url=site.url)
-            action = lambda site: num.inc() and {'url': site.url, 'title': site.title, 'statused': False, 'show': False, 'num': num.val }
-            action_statused = lambda site: site.get_status() and num.inc() and {'url': site.url, 'title': site.title, 'statused': True, 'show': site.show, 'num': num.val}
+            action = lambda site: num.inc() and {
+                'url': site.url,
+                'title': site.title,
+                'statused': False,
+                'show': False,
+                'num': num.val
+            }
+            action_statused = lambda site: site.get_status() and num.inc() and {
+                'url': site.url,
+                'title': site.title,
+                'statused': True,
+                'show': site.show,
+                'num': num.val
+            }
             self._getmeon = ([action(site) for site in meon] +
                    [action_statused(site) for site in statused])
             return(self._getmeon)
@@ -1156,7 +1168,7 @@ class MeOn(models.Model):
         parsed = urlparse(self.url)
         for name in Statused.SERVICE_TYPE:
             if name[1] in parsed.netloc.split('.'):
-                if name == 'lastfm':
+                if name in ('lastfm', 'last'):
                     return({'service': name[0], 'username': parsed.path.split('/')[2]})
                 else:
                     return({'service': name[0], 'username': parsed.path.split('/')[1]})

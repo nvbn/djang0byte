@@ -20,6 +20,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.cache import never_cache
 from main.forms import LoginForm, RegisterForm, EditUserForm, EditUserPick, EditUserPick
 from main.models import *
@@ -189,14 +190,18 @@ def edit_user(request):
             MeOn.objects.filter(user=request.user).delete()
             Statused.objects.filter(user=request.user).delete()
             for i in range(count):
-                meon = MeOn()
-                meon.url = request.POST['meon_url[%d]' % (i)]
-                meon.title = request.POST['meon[%d]' % (i)]
-                meon.user = request.user
                 try:
-                    meon.parse(request.POST['meon_status[%d]' % (i)])
-                except:
-                    meon.parse(False)
+                    meon = MeOn()
+                    meon.url = request.POST['meon_url[%d]' % (i)]
+                    meon.title = request.POST['meon[%d]' % (i)]
+                    meon.user = request.user
+                    try:
+                        meon.parse(request.POST['meon_status[%d]' % (i)])
+                    except:
+                        meon.parse(False)
+                    print meon.user
+                except MultiValueDictKeyError:
+                    pass
             return HttpResponseRedirect('/user/%s/' % (request.user))
     else:
         profile = request.user.get_profile()
