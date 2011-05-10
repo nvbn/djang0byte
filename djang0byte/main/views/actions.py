@@ -207,8 +207,16 @@ def action(request, type, id, action = None):
 @never_cache
 @login_required
 def edit_post(request, id):
+    """Edit post
+
+    Keyword arguments:
+    request -- request
+    id -- int -- post.id
+
+    Returns: HttpResponse
+    """
     try:
-        if request.user.has_perm('main.edit_post'):
+        if request.user.has_perm('main.change_post'):
             post = Post.objects.get(id=id, type__lt='3')
         else:
             post = Post.objects.get(id=id, author=request.user, type__lt='3')
@@ -464,7 +472,15 @@ def delete_comment(request, id):
 @render_to('new_comment.html')
 @login_required
 def edit_comment(request, id):
-    if request.user.has_perm('main.edit_comment'):
+    """Edit comment view
+
+    Keyword arguments:
+    request - -request
+    id -- int -- comment.id
+
+    Returns: HttpResponse
+    """
+    if request.user.has_perm('main.change_comment'):
         comment = Comment.objects.select_related('post').get(id=id)
         if request.method == 'POST':
             form = CreateCommentForm(request.POST)

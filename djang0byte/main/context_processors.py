@@ -68,7 +68,7 @@ def permission(request):
         'PERM_EDIT_POST': request.user.has_perm('main.change_post'),
         'PERM_CREATE_POST': profile.check_access(Access.new_post),
         'PERM_DELETE_COMMENT': request.user.has_perm('main.delete_comment'),
-        'PERM_EDIT_COMMENT': request.user.has_perm('main.edit_comment'),
+        'PERM_EDIT_COMMENT': request.user.has_perm('main.change_comment'),
         'PERM_CREATE_COMMENT': profile.check_access(Access.new_comment),
         'PERM_DELETE_BLOG': request.user.has_perm('main.delete_blog'),
         'PERM_EDIT_BLOG': request.user.has_perm('main.change_blog'),
