@@ -390,12 +390,9 @@ class Post(Draft):
             PostRate.objects.get(post=self, user=user)
             return(False)
         except PostRate.DoesNotExist:
-            print self.get_tags()
             self.rate = self.rate + value
             self.rate_count = self.rate_count + 1
-
             self.save(rate=True)
-            print self.get_tags()
             rate = PostRate()
             rate.post = self
             rate.user = user
@@ -570,7 +567,7 @@ class Comment(NS_Node):
             rate.user = user
             rate.save()
             user = self.author.get_profile()
-            user.comments_rate += 1
+            user.comments_rate += value
             user.save()
             self.save()
             return(True)
