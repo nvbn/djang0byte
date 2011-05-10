@@ -78,9 +78,12 @@ def profile(request, name):
     user = User.objects.get(username=name)
     profile = user.get_profile()
     meon = profile.get_me_on()
-    for site in meon:
-        parsed = urlparse(site['url'])
-        site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'
+    for (id, site) in enumerate(meon):
+        try:
+            parsed = urlparse(site['url'])
+            site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'
+        except TypeError:
+            meon.pop(id)
     return({'profile_user': profile, 'user_user': user, 'is_my_friend': profile.is_my_friend(request.user),
            'mine': user == request.user, 'meon': meon})
 
