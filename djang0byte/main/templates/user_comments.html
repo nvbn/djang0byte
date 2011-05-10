@@ -11,7 +11,15 @@
                 <div class='comment_top'>
                     <a href="/user/{{ user }}/" class="comment_author"><img src='{{ user.get_profile.get_avatar }}' class='mini_av' />{{ user }}</a>
                     <span class="date">{{ comment.created|localtime:TIMEZONE   }}</span>
-                    <a href="/post/{{ comment.post.id }}/#cmnt{{ comment.id }}">#</a>
+                    <a href="/post/{{ comment.post.id }}/#cmnt{{ comment.id }}">
+                        {% if comment.post.blog %}
+                            {{ comment.post.blog }}
+                        {% else %}
+                            {{ comment.post.author }}
+                        {% endif %}
+                        —
+                        {{ comment.post.title }}
+                    </a>
                     <div class="comment_rate">
 
                             <span
