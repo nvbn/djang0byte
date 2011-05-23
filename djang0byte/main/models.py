@@ -439,6 +439,7 @@ class Post(Draft):
                         ping_hub(FEED_URL, hub_url=PUSH_HUB)
                 except:
                     pass
+                self.date = datetime.datetime.now()
                 Notify.new_post_notify(self)
         super(Post, self).save() # Call the "real" save() method
 
