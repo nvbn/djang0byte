@@ -349,11 +349,11 @@ function rate(url, type) {
                 $.jGrowl(data.error);
             } else {
                 if (parseInt(data.rate) > 0) {
-                    class = 'plus_rate';
+                    class_name = 'plus_rate';
                 } else if (parseInt(data.rate) < 0) {
-                    class = 'minus_rate';
+                    class_name = 'minus_rate';
                 } else {
-                    class = '';
+                    class_name = '';
                 }
                 if (type == 'comment') {
                     hash = '#cmnt' + data.id + '>div.comment_top>div.comment_rate>span';
@@ -361,7 +361,7 @@ function rate(url, type) {
                     hash = '#prate' + data.id + '>span';
                 } else if (type == 'blog')
                     hash = 'span#blog_rate>span';
-                $(hash).html(data.rate).attr('class', class);
+                $(hash).html(data.rate).attr('class', class_name);
             }
     }});
 }
