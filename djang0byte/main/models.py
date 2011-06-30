@@ -308,7 +308,7 @@ class Post(Draft):
         cls.save()
         draft.delete()
         return(cls)
-
+    
     def set_data(self, data):
         """Set data to post
 
