@@ -27,7 +27,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 class PostAdmin(admin.ModelAdmin):
     search_fields = ['__unicode__']
-    list_display = ('title', 'rate', 'favourite_count')
+    list_display = ('title', 'blog', 'author', 'rate', 'favourite_count')
 
     def favourite_count(self, obj):
         return models.Favourite.objects.filter(post=obj).count()
