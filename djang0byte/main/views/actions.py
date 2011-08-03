@@ -68,9 +68,13 @@ def rate_comment(request, profile, comment_id, json, action):
             else:
                 return HttpResponseRedirect('/post/%d/#cmnt%d' % (comment.post.id, int(id)))
         else:
-            return jsend({'error': _('Not allow this action!')})
+            return jsend({
+                'error': _('Not allow this action!')
+            })
     elif json:
-        return jsend({'error': _('For their comments can not vote!')})
+        return jsend({
+            'error': _('For their comments can not vote!')
+        })
     return HttpResponseRedirect('/post/%d/#cmnt%d' % (int(comment.post.id), comment.id))
 
 @never_cache
@@ -96,11 +100,19 @@ def rate_post(request, profile, post, json, action):
             if not rate:
                 error = _('Second vote is forbidden!')
             if json:
-                return jsend({'error': error, 'rate': post.rate, 'id': post.id })
+                return jsend({
+                    'error': error,
+                    'rate': post.rate,
+                    'id': post.id
+                })
         elif json:
-            return jsend({'error': _('Not allow this action!')})
+            return jsend({
+                'error': _('Not allow this action!')
+            })
     elif json:
-        return jsend({'error': _('For their post can not vote!')})
+        return jsend({
+            'error': _('For their post can not vote!')
+        })
     return HttpResponseRedirect('/post/%d/' % (int(post.id)))
 
 @never_cache
@@ -127,11 +139,19 @@ def rate_blog(request, profile, blog_id, json, action):
             if not rate:
                 error = _('Second vote is forbidden!')
             if json:
-                return jsend({'error': error, 'rate': blog.rate, 'id': blog.id })
+                return jsend({
+                    'error': error,
+                    'rate': blog.rate,
+                    'id': blog.id
+                })
         elif json:
-            return jsend({'error': _('Not allow this action!')})
+            return jsend({
+                'error': _('Not allow this action!')
+            })
     elif json:
-        return jsend({'error': _('For their blog can not vote!')})
+        return jsend({
+            'error': _('For their blog can not vote!')
+        })
     return HttpResponseRedirect('/blog/%d/' % (int(blog_id)))
 
 @login_required
@@ -157,7 +177,9 @@ def action(request, type, id, action = None):
         json = True
     if not request.user.is_authenticated():
         if json:
-            return jsend({'error': _('Please register for this action!')})
+            return jsend({
+                'error': _('Please register for this action!')
+            })
         else:
             return HttpResponseRedirect('/')
     try:
@@ -241,21 +263,32 @@ def edit_post(request, id):
             post.set_tags(data['tags'])
             return HttpResponseRedirect('/post/%d/' % (post.id))
         else:
-            return render_to_response('newpost.html',
-                    {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), post.blog == None or post.blog.id, append=post.blog),
-                     'type': post.type, 'extend': 'base.html', 'edit': True},
-                    context_instance=RequestContext(request))
+            return render_to_response('newpost.html', {
+                'form': form,
+                'blogs': Blog.create_list(request.user.get_profile(), post.blog == None or post.blog.id, append=post.blog),
+                'type': post.type,
+                'extend': 'base.html',
+                'edit': True
+            }, context_instance=RequestContext(request))
     else:
         if post.text.find('<fcut>') >= 0:
             post.text = post.preview + post.text
         #TODO: stay fcut and cut tag in editor
-        data = {'tags': ', '.join(map(lambda x: x.__unicode__(), post.get_tags())), #ejebaka
-                'title': post.title, 'text': unparse(post.text), 'addition': post.addition}
+        data = {
+            'tags': ', '.join(map(lambda x: x.__unicode__(), post.get_tags())),
+            'title': post.title,
+            'text': unparse(post.text),
+            'addition': post.addition
+        }
         form = form(data)
-        return render_to_response('newpost.html',
-                    {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), post.blog == None or post.blog.id, append=post.blog),
-                     'type': post.type, 'extend': 'base.html', 'edit': True, 'id': post.id},
-                     context_instance=RequestContext(request))
+        return render_to_response('newpost.html', {
+            'form': form,
+            'blogs': Blog.create_list(request.user.get_profile(), post.blog == None or post.blog.id, append=post.blog),
+            'type': post.type,
+            'extend': 'base.html',
+            'edit': True,
+            'id': post.id
+        }, context_instance=RequestContext(request))
 
 @never_cache
 def get_val(request, type, count=20):
@@ -268,20 +301,21 @@ def get_val(request, type, count=20):
     if type == 'comments':
         request.session['right_panel'] = type
         print request.session['right_panel']
-        comments = Comment.objects.exclude(depth=1).select_related('post', 'post.blog', 'post.author').order_by('-id')[:count]
+        comments = Comment.objects.exclude(depth=1).select_related('post', 'post.blog', 'post.author').order_by('-id')[
+                   :count]
         for comment in comments:
             out.append({
-                           'title': u"%s / %s &ndash; %s" % (
-                               comment.author.username,
-                               comment.post.blog and comment.post.blog.name or comment.post.author.username,
-                               comment.post.title,
-                           ),
-                           'url': "/post/%d/#cmnt%d" % (
-                               comment.post.id,
-                               comment.id,
-                           ),
-                           'rate': comment.rate,
-                           'type': 'comment',
+                'title': u"%s / %s &ndash; %s" % (
+                    comment.author.username,
+                    comment.post.blog and comment.post.blog.name or comment.post.author.username,
+                    comment.post.title,
+                ),
+                'url': "/post/%d/#cmnt%d" % (
+                    comment.post.id,
+                    comment.id,
+                ),
+                'rate': comment.rate,
+                'type': 'comment',
             })
     elif type == 'posts':
         request.session['right_panel'] = type
@@ -377,18 +411,19 @@ def get_last_comments(request, post, comment_id = None):
         last_view.save()
     comments = Comment.objects.filter(created__gt=last_view_date, post=post).order_by('created')
     return jsend({
-              'comments': [{
-                           'content': render_to_string('single_comment.html', {
-                               'post': post,
-                               'comment': comment,
-                               'last_view': last_view_date,
-                            }, RequestContext(request)),
-                           'placeholder': comment.get_placceholder().id,
-                           'id': comment.id,
-                           'own': comment_id == comment.id,
-                           } for comment in comments],
-              'count': comments.count(),
-         })
+        'comments': [{
+            'content': render_to_string('single_comment.html', {
+                'post': post,
+                'comment': comment,
+                'last_view': last_view_date,
+            }, RequestContext(request)),
+            'placeholder': comment.get_placceholder().id,
+            'id': comment.id,
+            'own': comment_id == comment.id,
+        } for comment in comments],
+        'count': comments.count(),
+    })
+
 
 @never_cache
 def get_users(request, users):
@@ -433,7 +468,11 @@ def post_options(request, id):
             'pinch': post.pinch
         }
         form = PostOptions(data)
-    return({'form': form, 'extend': extend, 'id': post.id})
+    return {
+        'form': form,
+        'extend': extend,
+        'id': post.id
+    }
 
 @never_cache
 @render_to('delete_post.html')
@@ -448,7 +487,10 @@ def delete_post(request, id):
             post.delete()
             return HttpResponseRedirect('/')
         elif not request.POST.get('no'):
-            return ({'extend': extend, 'post': post})
+            return {
+                'extend': extend,
+                'post': post
+            }
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 
 @never_cache
@@ -463,9 +505,12 @@ def delete_comment(request, id):
         if request.POST.get('yes'):
             post = comment.post
             comment.delete()
-            return HttpResponseRedirect('/post/%d/' % (post.id))
+            return HttpResponseRedirect('/post/%d/' % (post.id,))
         elif not request.POST.get('no'):
-            return ({'extend': extend, 'comment': comment})
+            return {
+                'extend': extend,
+                'comment': comment
+            }
     return HttpResponseRedirect('/post/%d/#cmnt%d' % (comment.post.id, int(id)))
 
 @never_cache

@@ -97,13 +97,19 @@ def newpost(request, type = 'post'):
                         return HttpResponseRedirect('/draft/%d/' % (draft.id))
                     else:
                         return HttpResponseRedirect('/draft/')
-                return render_to_response('newpost.html',
-                                    {'form': form, 'blogs': Blog.create_list(profile), 'type': _type, 'extend': extend},
-                                     context_instance=RequestContext(request))
+                return render_to_response('newpost.html', {
+                        'form': form,
+                        'blogs': Blog.create_list(profile),
+                        'type': _type,
+                        'extend': extend
+                    }, context_instance=RequestContext(request))
         else:
-            return render_to_response('newpost.html',
-                                  {'form': form(), 'blogs': Blog.create_list(profile), 'type': _type, 'extend': extend},
-                                   context_instance=RequestContext(request))
+            return render_to_response('newpost.html', {
+                'form': form(),
+                'blogs': Blog.create_list(profile),
+                'type': _type,
+                'extend': extend
+            }, context_instance=RequestContext(request))
     else:
         if request.method == 'POST':
             post = Post()
@@ -125,9 +131,12 @@ def newpost(request, type = 'post'):
             return HttpResponseRedirect('/post/%d/' % (post.id))
         multi = False
         count = 2
-        return render_to_response('newanswer.html', {'answers_count': range(count),
-        'count': count, 'blogs': Blog.create_list(profile), 'multi': multi, 'extend': extend},
-                                    context_instance=RequestContext(request))
+        return render_to_response('newanswer.html', {
+            'answers_count': range(count),
+            'count': count,
+            'blogs': Blog.create_list(profile),
+            'multi': multi, 'extend': extend
+        }, context_instance=RequestContext(request))
 
 @cache_page(DEFAULT_CACHE_TIME)
 @render_to('post.html')
@@ -174,9 +183,18 @@ def post(request, id):
             last_view = LastView(post=post, user=request.user)
             last_view_date = 1
             last_view.save()
-    return({'post': post, 'author': author, 'comments': comments, 'comment_form': form, "options": options,
-        'single': True, 'PERM_EDIT_POST': post.type < 3 and (request.user.has_perm('main.change_post') or request.user == post.author),
-           'last_view': last_view_date})
+    return({
+        'post': post,
+        'author': author,
+        'comments': comments,
+        'comment_form': form,
+        "options": options,
+        'single': True,
+        'PERM_EDIT_POST': post.type < 3 and (
+            request.user.has_perm('main.change_post') or request.user == post.author
+        ),
+        'last_view': last_view_date
+    })
 
 
 @cache_page(DEFAULT_CACHE_TIME)
@@ -246,14 +264,14 @@ def post_list(request, type = None, param = None):
         pass
     #TODO: fix answer result in post list
     return {
-            'object_list': posts,
-            'single': False,
-            'type': type,
-            'subject': subject,
-            'option': option,
-            'title': title,
-            'rss': rss,
-            }
+        'object_list': posts,
+        'single': False,
+        'type': type,
+        'subject': subject,
+        'option': option,
+        'title': title,
+        'rss': rss,
+    }
 
 def post_list_with_param(request, type, param = None):
     """Wrapper for post_list
@@ -322,9 +340,17 @@ def new_comment(request, post = 0, comment = 0):
                 return HttpResponseRedirect('/post/%d/#cmnt%d' %
                             (comment.post.id, comment.id))
     else:
-        form = CreateCommentForm({'post': post, 'comment': comment})
-    return render_to_response('new_comment.html', {'form': form, 'extend': extend, 'pid': post, 'cid': comment, 'json': json},
-                              context_instance=RequestContext(request))
+        form = CreateCommentForm({
+            'post': post,
+            'comment': comment
+        })
+    return render_to_response('new_comment.html', {
+        'form': form,
+        'extend': extend,
+        'pid': post,
+        'cid': comment,
+        'json': json
+    }, context_instance=RequestContext(request))
 
 
 
@@ -344,5 +370,7 @@ def lenta(request):
 
     """
     notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user).order_by("-id")
-    return {'object_list': notifs}
+    return {
+        'object_list': notifs
+    }
 

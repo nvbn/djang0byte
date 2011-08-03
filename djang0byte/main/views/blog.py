@@ -52,7 +52,9 @@ def newblog(request):
             return HttpResponseRedirect('/newpost/')
     else:
         form = CreateBlogForm()
-    return({'form': form})
+    return {
+        'form': form
+    }
     
 @login_required
 def join(request, blog_id):

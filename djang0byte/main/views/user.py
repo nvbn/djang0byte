@@ -62,7 +62,10 @@ def register(request, next = None):
             return HttpResponseRedirect('/login/' + next)
     else:
         form = RegisterForm()
-    return({'form': form, 'next': next})
+    return {
+        'form': form,
+        'next': next
+    }
     
 @render_to('user.html')
 def profile(request, name):
@@ -84,8 +87,13 @@ def profile(request, name):
             site['favicon'] = 'http://' + unicode(parsed.netloc) + '/favicon.ico'
         except TypeError:
             meon.pop(id)
-    return({'profile_user': profile, 'user_user': user, 'is_my_friend': profile.is_my_friend(request.user),
-           'mine': user == request.user, 'meon': meon})
+    return {
+        'profile_user': profile,
+        'user_user': user,
+        'is_my_friend': profile.is_my_friend(request.user),
+        'mine': user == request.user,
+        'meon': meon
+    }
 
 
 @render_to('login.html')
@@ -116,7 +124,10 @@ def login(request, next = None):
                 return HttpResponseRedirect(next)
     else:
         form = LoginForm()
-    return({'form': form, 'next': next})
+    return {
+        'form': form,
+        'next': next
+    }
 
 @never_cache
 @login_required
@@ -141,7 +152,7 @@ def friend(request, name):
             friend.user = request.user.get_profile()
             friend.friend = user
             friend.save()
-    return(HttpResponseRedirect('/user/%s/' % (name)))
+    return HttpResponseRedirect('/user/%s/' % (name))
     
 def logout(request):
     """Getting out from here!
@@ -208,22 +219,27 @@ def edit_user(request):
             return HttpResponseRedirect('/user/%s/' % (request.user))
     else:
         profile = request.user.get_profile()
-        data = {'mail': request.user.email,
-                'about': profile.about,
-                'icq': profile.icq,
-                'jabber': profile.jabber,
-                'timezone': profile.timezone,
-                'show_mail': profile.hide_mail,
-                'notify_comment_reply': profile.reply_comment,
-                'notify_post_reply': profile.reply_post,
-                'notify_pm': profile.reply_pm,
-                'notify_mention': profile.reply_mention,
-                'notify_spy': profile.reply_spy,
-                'city': profile.city,
-                'site': profile.site,
+        data = {
+            'mail': request.user.email,
+            'about': profile.about,
+            'icq': profile.icq,
+            'jabber': profile.jabber,
+            'timezone': profile.timezone,
+            'show_mail': profile.hide_mail,
+            'notify_comment_reply': profile.reply_comment,
+            'notify_post_reply': profile.reply_post,
+            'notify_pm': profile.reply_pm,
+            'notify_mention': profile.reply_mention,
+            'notify_spy': profile.reply_spy,
+            'city': profile.city,
+            'site': profile.site,
         }
         form = EditUserForm(data)
-    return({'form': form, 'user': request.user, 'profile': request.user.get_profile()})
+    return {
+        'form': form,
+        'user': request.user,
+        'profile': request.user.get_profile()
+    }
 
 @never_cache
 @login_required
@@ -248,7 +264,10 @@ def change_userpic(request):
             return HttpResponseRedirect('/user/%s/' % (request.user))
     else:
         form = EditUserPick()
-    return {'form': form, 'profile': profile}
+    return {
+        'form': form,
+        'profile': profile
+    }
 
 @render_to("user_comments.html")
 @paginate(style='digg', per_page=50)
@@ -264,4 +283,8 @@ def comments(request, user):
     """
     user = User.objects.get(username=user)
     comments = Comment.objects.filter(author=user).order_by('-created')
-    return {'user': user, 'object_list': comments, 'profile': user.get_profile()}
+    return {
+        'user': user,
+        'object_list': comments,
+        'profile': user.get_profile()
+    }

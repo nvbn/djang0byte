@@ -67,8 +67,7 @@ def list_users(request, order = None, param = None, param_value = None):
         items = items.order_by('-user__username')
     else:
         items = items.order_by('user__username')
-    map = [
-        {
+    map = [{
             'point': city.name,
             'title': _("%d users from this city") % (city.get_count()),
             'count': city.get_count(),
@@ -77,15 +76,21 @@ def list_users(request, order = None, param = None, param_value = None):
     ]
     if param == 'city':
         city = City.objects.get(name=param_value)
-        map = [
-            {
+        map = [{
                 'point': city.name,
                 'title': _("%d users from this city") % (city.get_count()),
                 'count': city.get_count(),
             }
         ]
-    return({'object_list': items, 'type': 'users', 'param': param, "map": map,
-            'param_value': param_value, 'order': order, 'url': url})
+    return({
+        'object_list': items,
+        'type': 'users',
+        'param': param,
+        "map": map,
+        'param_value': param_value,
+        'order': order,
+        'url': url
+    })
 
 
 @cache_page(0)
@@ -117,8 +122,14 @@ def list_blogs(request, order = None, param = None, param_value = None):
         url = '/myblogs/'
     else:
         url = '/list/blogs/'
-    return({'object_list': blogs, 'type': 'blogs', 'param': param,
-            'param_value': param_value, 'order': order, 'url': url})
+    return({
+        'object_list': blogs,
+        'type': 'blogs',
+        'param': param,
+        'param_value': param_value,
+        'order': order,
+        'url': url
+    })
 
 @cache_page(0)
 @render_to('list.html')
@@ -144,16 +155,22 @@ def list_city(request, order = None):
     elif order == 'rate':
         cities = sorted(cities.all(), key=lambda element: element.get_count(), reverse=True)
 
-    map = [
-        {
+    map = [{
             'point': city.name,
             'title': _("%d users from this city") % (city.get_count()),
             'count': city.get_count(),
         }
         for city in City.objects.all()
     ]
-    return({'object_list': cities, 'type': 'cities', 'param': None, 'map': map,
-            'param_value': None, 'order': order, 'url': '/list/city/'})
+    return {
+        'object_list': cities,
+        'type': 'cities',
+        'param': None,
+        'map': map,
+        'param_value': None,
+        'order': order,
+        'url': '/list/city/'
+    }
 
 @login_required
 def myblogs(request, order = None):
@@ -166,4 +183,4 @@ def myblogs(request, order = None):
     Returns: Array
 
     """
-    return(list_blogs(request, order, 'my'))
+    return list_blogs(request, order, 'my')

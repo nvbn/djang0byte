@@ -8,15 +8,27 @@ def check(request, type, value, value_2 = None):
     if type == 'mail':
         try:
             User.objects.get(email=value)
-            return {'value': False, 'type': type}
+            return {
+                'value': False,
+                'type': type
+            }
         except User.DoesNotExist:
-            return {'value': True, 'type': type}
+            return {
+                'value': True,
+                'type': type
+            }
     elif type == 'username':
         try:
             User.objects.get(username=value)
-            return {'value': False, 'type': type}
+            return {
+                'value': False,
+                'type': type
+            }
         except User.DoesNotExist:
-            return {'value': True, 'type': type}
+            return {
+                'value': True,
+                'type': type
+            }
     elif type == 'all':
         try:
             User.objects.get(email=value_2)
@@ -28,7 +40,10 @@ def check(request, type, value, value_2 = None):
             username = False
         except User.DoesNotExist:
             username = True
-        return {'username': username, 'mail': mail}
+        return {
+            'username': username,
+            'mail': mail
+        }
 
 @login_required
 def logout(request):

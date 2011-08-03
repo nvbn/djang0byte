@@ -15,7 +15,9 @@ from parser.utils import unparse
 @paginate(style='digg', per_page=10)
 def draft(request):
     drafts = Draft.objects.filter(author=request.user, is_draft=True).order_by('-id')
-    return({'object_list': drafts})
+    return {
+        'object_list': drafts
+    }
 
 @never_cache
 @login_required
@@ -55,21 +57,33 @@ def edit_draft(request, id):
                     blog = draft.blog.id
                 except AttributeError:
                     blog = None
-                return render_to_response('newpost.html',
-                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), blog), 'type': draft.type, 'extend': 'base.html'},
-                         context_instance=RequestContext(request))
+                return render_to_response('newpost.html', {
+                    'form': form,
+                    'blogs': Blog.create_list(request.user.get_profile(), blog),
+                    'type': draft.type,
+                    'extend': 'base.html'
+                }, context_instance=RequestContext(request))
         else:
-            data = {'tags': draft.raw_tags, 'title': draft.title, 'text': unparse(draft.text), 'addition':draft.addition}
+            data = {
+                'tags': draft.raw_tags,
+                'title': draft.title,
+                'text': unparse(draft.text),
+                'addition':draft.addition
+            }
             form = form(data)
             try:
                 blog = draft.blog.id
             except AttributeError:
                 blog = None
-            return render_to_response('newpost.html',
-                        {'form': form, 'blogs': Blog.create_list(request.user.get_profile(), blog),
-                         'preview': utils.parse(draft.text, VALID_TAGS, VALID_ATTRS),
-                         'type': draft.type, 'extend': 'base.html', 'draft': True, 'id': draft.id},
-                         context_instance=RequestContext(request))
+            return render_to_response('newpost.html', {
+                'form': form,
+                'blogs': Blog.create_list(request.user.get_profile(), blog),
+                'preview': utils.parse(draft.text, VALID_TAGS, VALID_ATTRS),
+                'type': draft.type,
+                'extend': 'base.html',
+                'draft': True,
+                'id': draft.id
+            }, context_instance=RequestContext(request))
     if preview:
         return HttpResponseRedirect('/draft/%d/' %(draft.id))
     else:
