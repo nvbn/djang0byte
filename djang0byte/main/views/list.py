@@ -57,12 +57,12 @@ def list_users(request, order = None, param = None, param_value = None):
         items = items.extra(select={'fullrate':
                 'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
                 % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
-                order_by=['-fullrate',])
+                order_by=['fullrate',])
     elif order == 'rate_desc':
         items = items.extra(select={'fullrate':
                'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
                 % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
-                order_by=['fullrate',])
+                order_by=['-fullrate',])
     elif order == 'name_desc':
         items = items.order_by('-user__username')
     else:
