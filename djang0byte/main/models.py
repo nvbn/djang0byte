@@ -93,9 +93,9 @@ class Blog(models.Model):
         """
         try:
             userInBlog = UserInBlog.objects.get(user=user, blog=self)
-            return(True)
+            return True
         except UserInBlog.DoesNotExist:
-            return(False)
+            return False
         
     def get_posts(self):
         """Get posts in blog"""
@@ -111,20 +111,21 @@ class Blog(models.Model):
         Returns: Boolean
         
         """
-        try:
-            br = BlogRate.objects.get(blog=self, user=user)
-            return(False)
-        except BlogRate.DoesNotExist:
+        if BlogRate.objects.filter(blog=self, user=user).count():
+            return False
+        else:
             self.rate += value
             self.rate_count += 1
-            rate = BlogRate()
-            rate.blog = self
-            rate.user = user
-            rate.save()
-            user = self.owner.get_profile()
-            user.blogs_rate += 1
-            user.save()
-            return(True)
+            BlogRate.objects.create(
+                blog=self,
+                user=user,
+            )
+            Profile.objects.filter(
+                user=self.owner
+            ).update(
+                blogs_rate=models.F('blogs_rate') + value
+            )
+            return True
                 
     def add_or_remove_user(self, user):
         """add or remove user from blog
@@ -135,19 +136,18 @@ class Blog(models.Model):
         Returns: None
         
         """
-        if self.check_user(user):
-            UserInBlog.objects.get(user=user, blog=self).delete()
-        else:
-            uib = UserInBlog()
-            uib.blog = self
-            uib.user = user
-            uib.save()
+        created, user_in_blog = UserInBlog.objects.get_or_create(
+            user=user,
+            blog=self,
+        )
+        if created:
+            user_in_blog.delete()
 
     def get_avatar(self):
         try:
-            return(self.avatar.url)
+            return self.avatar.url
         except ValueError:
-            return(False)
+            return False
 
     @staticmethod
     def create_list(profile, selected = None, append=None):
@@ -162,7 +162,7 @@ class Blog(models.Model):
                 x.selected = True
             d[x]=x
         blogs = d.values()
-        return(blogs)
+        return blogs
                 
     def __unicode__(self):
         """Return blog name"""
@@ -188,17 +188,13 @@ class City(models.Model):
         Returns: City
 
         """
-        try:
-            self = City.objects.get(name=name)
-            self.count = Profile.objects.filter(city=self).count()
-            self.save()
-        except City.DoesNotExist:
-            self = City()
-            self.name = name
-            self.count = Profile.objects.filter(city=self).count()
-            self.save()
-        return(self)
-    
+        created, city = City.objects.get_or_create(
+            name=name,
+        )
+        city.count += 1
+        city.save()
+        return city
+
     def __unicode__(self):
         """Return name"""
         return self.name
@@ -328,13 +324,13 @@ class Post(Draft):
             comments = Comment.objects.filter(post=self, depth=1)[0]
             return comments.get_descendants().select_related('author', 'post', 'post__author')
         except IndexError:
-            return(None)
+            return None
 
 
     def create_comment_root(self):
         """Create comment root for post"""
         comment_root = Comment.add_root(post=self, created=datetime.datetime.now())
-        return(comment_root)
+        return comment_root
         
     def _get_content(self, type=0):
         """Return post content, 0 - preview, 1 - post
@@ -347,10 +343,10 @@ class Post(Draft):
         """
         if self.type > 2:
             return Answer.objects.filter(post=self)
-        elif type == 0:
-            return(self.preview)
+        elif type is None:
+            return self.preview
         else:
-            return(self.text)
+            return self.text
 	  
     def get_content(self, type=0):
         """_get_content wrapper
@@ -385,13 +381,13 @@ class Post(Draft):
         
         """
         if self.disable_rate:
-            return(False)
+            return False
         try:
             PostRate.objects.get(post=self, user=user)
-            return(False)
+            return False
         except PostRate.DoesNotExist:
             self.rate = self.rate + value
-            self.rate_count = self.rate_count + 1
+            self.rate_count += 1
             self.save(rate=True)
             rate = PostRate()
             rate.post = self
@@ -400,7 +396,7 @@ class Post(Draft):
             profile = self.author.get_profile()
             profile.posts_rate += value
             profile.save()
-            return(True)
+            return True
             
     def get_tags(self):
         """Return post tags"""
@@ -457,30 +453,35 @@ class Post(Draft):
         try:
             if force:
                 raise
-            return(self._is_answer)
+            return self._is_answer
         except:
             try:
                 answer = Answer.objects.filter(post=self).all()
                 sum = answer.order_by('-count')[0].count
                 action = lambda count: int(300 * float(count)/float(sum or 1))
-                self._is_answer = [{'count': answ.count, 'value': answ.value, 'width': action(answ.count), 'id': answ.id} for answ in answer]
+                self._is_answer = [{
+                    'count': answ.count,
+                    'value': answ.value,
+                    'width': action(answ.count),
+                    'id': answ.id
+                } for answ in answer]
                 if user is not None:
                     self.is_result = user.is_authenticated() and not Answer.check(self, user)
-                return(self._is_answer)
+                return self._is_answer
             except (Answer.DoesNotExist, IndexError):
                 self._is_answer = False
                 self.is_result = False
-                return(False)
+                return False
 
 
     def have_cut(self):
         """Check if 'cut' exsisted"""
-        return(self.text != self.preview)
+        return self.text != self.preview
 
 
     def __unicode__(self):
         """Return post title"""
-        return(self.title)
+        return self.title
 
     class Meta:
         verbose_name = _("Post")
@@ -571,7 +572,7 @@ class Comment(NS_Node):
             user.comments_rate += value
             user.save()
             self.save()
-            return(True)
+            return True
 
     class Meta:
         ordering = ['id']
@@ -687,41 +688,41 @@ class Profile(models.Model):
         """
         rate = self.get_rate()
         if type == Access.new_blog and rate >= NEWBLOG_RATE:
-            return(True)
+            return True
         elif type == Access.new_comment and rate >= NEWCOMMENT_RATE:
-            return(True)
+            return True
         elif type == Access.new_post and rate >= NEWPOST_RATE:
-            return(True)
+            return True
         elif type == Access.rate_comment and rate >= RATECOM_RATE:
-            return(True)
+            return True
         elif type == Access.rate_blog and rate >= RATEBLOG_RATE:
-            return(True)
+            return True
         elif type == Access.rate_post and rate >= RATEPOST_RATE:
-            return(True)
+            return True
         elif type == Access.rate_user and rate >= RATEUSER_RATE:
-            return(True)
+            return True
         else:
-            return(False)
+            return False
 
     def post_count(self):
         """Return post count"""
-        return(int(Post.objects.filter(author=self.user).count() or 0))
+        return int(Post.objects.filter(author=self.user).count() or 0)
 
     def comment_count(self):
         """Return comment count"""
-        return(int(Comment.objects.filter(author=self.user).count()))
+        return int(Comment.objects.filter(author=self.user).count())
 
     def get_avatar(self):
         """Get url of user avatar"""
         try:
-            return(self.avatar.url)
+            return self.avatar.url
         except ValueError:
-            return(DEFAULT_AVATAR)
+            return DEFAULT_AVATAR
 
     def get_me_on(self):
         """Return array of sites, where user is registered"""
         try:
-            return(self._getmeon)
+            return self._getmeon
         except:
             pass
         try:
@@ -729,7 +730,7 @@ class Profile(models.Model):
                 val = -1
                 def inc(self):
                     self.val += 1
-                    return(True)
+                    return True
             num = num()
             meon = MeOn.objects.filter(user=self.user)
             statused = Statused.objects.filter(user=self.user).all()
@@ -751,17 +752,20 @@ class Profile(models.Model):
             }
             self._getmeon = ([action(site) for site in meon] +
                    [action_statused(site) for site in statused])
-            return(self._getmeon)
+            return self._getmeon
         except MeOn.DoesNotExist:
-            return(False)
+            return False
 
     def get_status(self):
         """Get array of user statuses from other sites"""
         try:
-            return(self._status)
+            return self._status
         except:
-            self._status = [{'obj': service , 'text': service.get_status()} for service in Statused.objects.filter(user=self.user, show=True)]
-            return(self._status)
+            self._status = [{
+                'obj': service ,
+                'text': service.get_status()
+            } for service in Statused.objects.filter(user=self.user, show=True)]
+            return self._status
 
     def is_my_friend(self, user):
         """Check friends
@@ -779,7 +783,7 @@ class Profile(models.Model):
                 is_my_friend = 0
         else:
             is_my_friend = -1
-        return(is_my_friend)
+        return is_my_friend
 
     def update_last_visit(self):
         """Update last site visit time"""
@@ -791,11 +795,13 @@ class Profile(models.Model):
             view = LastVisit(user=self.user)
             view.save()
 
-
     def is_online(self):
         """Check online status"""
         try:
-            LastVisit.objects.get(user=self.user, date__gt=datetime.datetime.now() - datetime.timedelta(seconds=ONLINE_TIME))
+            LastVisit.objects.get(
+                user=self.user,
+                date__gt=datetime.datetime.now() - datetime.timedelta(seconds=ONLINE_TIME)
+            )
             return True
         except LastVisit.DoesNotExist:
             return False
@@ -829,7 +835,7 @@ class Friends(models.Model):
 
     def __unicode__(self):
         """Return friend name"""
-        return(self.friend.username)
+        return self.friend.username
 
     class Meta:
         verbose_name = _("Friend")
@@ -866,9 +872,9 @@ class Answer(models.Model):
         Returns: Boolean
         
         """
-        if multiple == False:
+        if not multiple:
             self.fix(user)
-        self.count = self.count + 1
+        self.count += 1
         self.save()
         
     @staticmethod
@@ -884,9 +890,9 @@ class Answer(models.Model):
         """
         try:
             vote = AnswerVote.objects.filter(answer=post, user=user)[0]     
-            return(False)
+            return False
         except 	IndexError:
-            return(True)
+            return True
 	    
     def vote(self, user, multiple=False):
         """Vote to answer
@@ -900,13 +906,13 @@ class Answer(models.Model):
         """
         if Answer.check(self.post, user) or multiple:
             self._vote(user)
-            return(True)
+            return True
         else:
-            return(False)
+            return False
             
     def __unicode__(self):
         """Return value"""
-        return(self.value)
+        return self.value
 
     class Meta:
         verbose_name = _("Answer variant")
@@ -1007,7 +1013,7 @@ class Notify(models.Model):
         else:
             self.comment = alien
         self.save()
-        return(self)
+        return self
             
     @staticmethod
     def new_post_notify(post):
@@ -1108,25 +1114,25 @@ class Notify(models.Model):
 
     def get_type(self):
         """Return notify type"""
-        if self.post != None:
-            return('post')
+        if self.post is not None:
+            return 'post'
         else:
-            return('comment')
+            return 'comment'
 
     def get_post(self):
         """Posts by notify iterator"""
-        yield (self.post)
+        yield self.post
 
     def get_comment(self):
         """Comments by notify iterator"""
-        yield (self.comment)
+        yield self.comment
 
     def __unicode__(self):
         """Return notify description"""
-        if self.post != None:
-            return("post %s -- %s" % (self.post, self.user))
+        if self.post is not None:
+            return "post %s -- %s" % (self.post, self.user)
         else:
-            return("comment %s -- %s" % (self.comment, self.user))
+            return "comment %s -- %s" % (self.comment, self.user)
 
     class Meta:
         verbose_name = _("Notify")
@@ -1152,7 +1158,7 @@ class TextPage(models.Model):
         Returns: String
 
         """
-        return(self.name)
+        return self.name
 
 
 class MeOn(models.Model):
@@ -1167,10 +1173,16 @@ class MeOn(models.Model):
         for name in Statused.SERVICE_TYPE:
             if name[1] in parsed.netloc.split('.'):
                 if name in ('lastfm', 'last'):
-                    return({'service': name[0], 'username': parsed.path.split('/')[2]})
+                    return {
+                        'service': name[0],
+                        'username': parsed.path.split('/')[2]
+                    }
                 else:
-                    return({'service': name[0], 'username': parsed.path.split('/')[1]})
-        return(False)
+                    return {
+                        'service': name[0],
+                        'username': parsed.path.split('/')[1]
+                    }
+        return False
 
     def parse(self, show):
         """Check type and save
@@ -1195,10 +1207,10 @@ class MeOn(models.Model):
             else:
                 service.show = False
             service.save()
-            return(True)
+            return True
         else:
             self.save()
-            return(False)
+            return False
 
 
     class Meta:
@@ -1220,12 +1232,12 @@ class Statused(MeOn):
 
     def get_status(self):
         """Get status"""
-        if self.type == 0:
-            return(get_status('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (self.name)))
+        if not self.type:
+            return get_status('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.rss' % (self.name))
         elif self.type == 1:
-            return(get_status('http://twitter.com/statuses/user_timeline/%s.rss' % (self.name)))
+            return get_status('http://twitter.com/statuses/user_timeline/%s.rss' % (self.name))
         else:
-            return(get_status('http://rss.juick.com/%s/blog' % (self.name)))
+            return get_status('http://rss.juick.com/%s/blog' % (self.name))
 
 class LastView(models.Model):
     """Post last view time, for checking new comments"""
