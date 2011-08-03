@@ -18,6 +18,9 @@
 from django import forms
 from timezones.forms import TimeZoneField
 from tagging_autocomplete.widgets import TagAutocomplete
+from main.models import Comment, Post
+from django.conf import settings
+from parser import utils
 
 class RegisterForm(forms.Form):
     """Registration form"""
@@ -56,6 +59,30 @@ class CreateCommentForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea)
     post = forms.IntegerField(widget=forms.HiddenInput)
     comment = forms.IntegerField(widget=forms.HiddenInput, required=False)
+
+    def clean(self):
+        """Clean and receive data"""
+        data = self.cleaned_data
+        try:
+            data['post_obj'] = Post.objects.get(
+                id=data['post'],
+                disable_reply=False,
+            )
+        except Post.DoesNotExist:
+            raise forms.ValidationError("Post not found")
+        try:
+            data['root'] = Comment.objects.select_related('author').get(
+                id=data['comment'],
+                post=data['post_obj'],
+            )
+        except Comment.DoesNotExist:
+            data['root'] = Comment.objects.select_related('author').get(
+                post=data['post_obj'],
+                depth=1.
+            )
+        data['raw_text'] = data['text']
+        data['text'] = utils.parse(data['text'], settings.VALID_TAGS, settings.VALID_ATTRS)
+        return data
     
 class EditUserForm(forms.Form):
     """Edit user settings form"""

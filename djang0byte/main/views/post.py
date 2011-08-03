@@ -288,7 +288,7 @@ def post_list_with_param(request, type, param = None):
 
 @never_cache
 @login_required
-def new_comment(request, post = 0, comment = 0):
+def new_comment(request, post=0, comment=0):
     """New comment form
 
     Keyword arguments:
@@ -308,34 +308,19 @@ def new_comment(request, post = 0, comment = 0):
         form = CreateCommentForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            post = Post.objects.get(id=data['post'])
-            if post.disable_reply:
-                return HttpResponseRedirect('/post/%d/' % (post.id, ))
-            if data['comment'] == 0:
-                root = Comment.objects.get(post=post, depth=1)
-                last = 0
-                no_notify = post.author == request.user
-            else:
-                root = Comment.objects.get(id=data['comment'])
-                try:
-                    last = root.get_last_child().id
-                except:
-                    last = root.id
-                no_notify = root.author == request.user
-            comment = root.add_child(post=post,
-            author=request.user, text=utils.parse(data['text'], VALID_TAGS, VALID_ATTRS),
-            created=datetime.datetime.now())
+            comment = data['root'].add_child(
+                post=data['post_obj'],
+                author=request.user,
+                text=data['text'],
+                created=datetime.datetime.now()
+            )
             comment.save()
-            if not no_notify:
+            if request.user not in (data['root'].author, comment.post.author):
                 Notify.new_comment_notify(comment)
-            for mention in utils.find_mentions(data['text']):
+            for mention in utils.find_mentions(data['raw_text']):
                 Notify.new_mention_notify(mention, comment=comment)
             if json:
-                return get_last_comments(request, post.id, comment.id)
-                
-                """return(render_to_response('comment.html',
-                                          ,
-                                          context_instance=RequestContext(request)))"""
+                return get_last_comments(request, comment.post.id, comment.id)
             else:
                 return HttpResponseRedirect('/post/%d/#cmnt%d' %
                             (comment.post.id, comment.id))
@@ -351,8 +336,6 @@ def new_comment(request, post = 0, comment = 0):
         'cid': comment,
         'json': json
     }, context_instance=RequestContext(request))
-
-
 
 
 @cache_page(DEFAULT_CACHE_TIME)

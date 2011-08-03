@@ -49,17 +49,17 @@ class BlogType(models.Model):
         """
         try:
             bt = BlogType.objects.get(name=name)
-            return(True)
+            return True
         except BlogType.DoesNotExist:
-            return(False)
+            return False
 
     def get_blogs(self):
         """Return blogs in type"""
-        return(Blog.objects.filter(type=self))
+        return Blog.objects.filter(type=self)
 
     def __unicode__(self):
         """Return self name"""
-        return(self.name)
+        return self.name
 
     class Meta:
         verbose_name = _("Blog type")
@@ -233,13 +233,13 @@ class Draft(models.Model):
         Returns: Blog
 
         """
-        if int(blog) == 0:
+        if not int(blog):
             self.blog = None
         else:
             self.blog = Blog.objects.get(id=blog)
             if not (self.blog.default or self.blog.check_user(self.author) or force):
                  self.blog = None
-        return(self.blog)
+        return self.blog
 
     def set_data(self, data):
         """Set data to drfat
@@ -303,7 +303,7 @@ class Post(Draft):
             setattr(cls, attr, getattr(draft, attr))
         cls.save()
         draft.delete()
-        return(cls)
+        return cls
     
     def set_data(self, data):
         """Set data to post
@@ -380,22 +380,21 @@ class Post(Draft):
         Returns: Integer
         
         """
-        if self.disable_rate:
+        if self.disable_rate or  PostRate.objects.filter(post=self, user=user).count():
             return False
-        try:
-            PostRate.objects.get(post=self, user=user)
-            return False
-        except PostRate.DoesNotExist:
-            self.rate = self.rate + value
+        else:
+            self.rate += value
             self.rate_count += 1
             self.save(rate=True)
-            rate = PostRate()
-            rate.post = self
-            rate.user = user
-            rate.save()
-            profile = self.author.get_profile()
-            profile.posts_rate += value
-            profile.save()
+            PostRate.objects.create(
+                post=self,
+                user=user,
+            )
+            Profile.objects.filter(
+                user=self.author
+            ).update(
+                posts_rate=models.F('posts_rate') + value
+            )
             return True
             
     def get_tags(self):
@@ -558,19 +557,20 @@ class Comment(NS_Node):
         Returns: Boolean
         
         """
-        try:
-            CommentRate.objects.get(comment=self, user=user)
-            return(False)
-        except CommentRate.DoesNotExist:
+        if CommentRate.objects.filter(comment=self, user=user).count():
+            return False
+        else:
             self.rate += value
             self.rate_count += 1
-            rate = CommentRate()
-            rate.comment = self
-            rate.user = user
-            rate.save()
-            user = self.author.get_profile()
-            user.comments_rate += value
-            user.save()
+            CommentRate.objects.create(
+                user=user,
+                comment=self,
+            )
+            Profile.objects.filter(
+                user=self.author
+            ).update(
+                comments_rate=models.F('comments_rate') + value
+            )
             self.save()
             return True
 
