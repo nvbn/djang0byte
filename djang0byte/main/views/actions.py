@@ -221,6 +221,11 @@ def action(request, type, id, action = None):
                 if request.POST.get('answ_' + str(answer.id), 0):
                     answer.vote(request.user, True)
                 answer.fix(request.user)
+    elif type == 'refrain':
+        vote = AnswerVote()
+        vote.answer = post
+        vote.user = request.user
+        vote.save()
 
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 

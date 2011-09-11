@@ -1,4 +1,5 @@
 
+{% load i18n %}
 {% if post.is_result or not request.user.is_authenticated %}
     <table>
     {% for answ in post.is_answer %}
@@ -21,7 +22,7 @@
     <label><input type='checkbox' name='answ_{{ answ.id }}' value='{{ answ.id }}' />{{ answ.value }}</label><br />
     {% endfor %}
 {% endif %}
-<input type='submit' />
+<input type='submit' /> <a href='/action/refrain/{{ post.id }}/'>{% trans "Refrain" %}</a>
 </form>
 {% endif %}
 
