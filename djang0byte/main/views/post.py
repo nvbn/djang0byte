@@ -64,13 +64,13 @@ def newpost(request, type = 'post'):
     if type != 'answer':
         _type = type
         if type == 'post':
-            type = 0
+            type = Post.TYPE_POST
             form = CreatePostForm
         elif type == 'link':
-            type = 1
+            type = Post.TYPE_LINK
             form = CreatePostLinkForm
         else:
-            type = 2
+            type = Post.TYPE_TRANSLATE
             form = CreatePostTranslateForm
         if request.method == 'POST':
             form = form(request.POST)
@@ -117,9 +117,9 @@ def newpost(request, type = 'post'):
             post.author = request.user
             post.set_blog(request.POST.get('blog'))
             if request.POST.get('multi', 0):
-                post.type = 4#'Multiple Answer'
+                post.type = Post.TYPE_MULTIPLE_ANSWER
             else:
-                post.type = 3#post.type = 'Answer'
+                post.type = Post.TYPE_ANSWER
             post.save(edit=False)
             post.create_comment_root()
             post.set_tags(request.POST.get('tags'))

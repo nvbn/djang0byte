@@ -22,6 +22,9 @@
     {% load answer %}
     {% print_answer %}
 {% else %}
+    {% if post.type == 2 %}
+    <a href="{{ post.addition }}" rel='nofollow'>Оригинал</a><br />
+    {% endif %}
     {% autoescape off %}
         {{ post.get_content }}
     {% endautoescape %}
