@@ -7,7 +7,7 @@ sys.path.append(os.getcwd())
 if __name__ == '__main__':
     deps = open('deps', 'r')
     for dep in deps.readlines():
-        if not os.system('pip install %s' % (dep,)):
+        if os.system('pip install %s' % (dep,)): # Returns 0 on success
             sys.exit("Unable to install dependency: %s "
                 "consider logging in as a superuser." % dep)
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     from django.contrib.auth.models import User
     from treemenus.models import Menu
 
-    if not os.system('python manage.py syncdb'):
+    if os.system('python manage.py syncdb'): # Returns 0 on success
         sys.exit("Unable to execute syncdb")
 
     Profile.objects.create(
