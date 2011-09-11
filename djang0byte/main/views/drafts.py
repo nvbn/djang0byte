@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.decorators.cache import never_cache
 from simplepagination import paginate
-from main.forms import CreatePostTranslateForm, CreatePostLinkForm, CreatePostForm
+from main.forms import post_forms
 from main.models import *
 from parser.utils import unparse
 
@@ -30,13 +30,8 @@ def edit_draft(request, id):
     if request.POST.get('preview'):
         preview = True
         is_draft = True
-    if draft.type < 3:
-        if draft.type == 0:
-            form = CreatePostForm
-        elif draft.type == 1:
-            form = CreatePostLinkForm
-        elif draft.type == 2:
-            form = CreatePostTranslateForm
+    if draft.type not in (Post.TYPE_ANSWER, Post.TYPE_MULTIPLE_ANSWER):
+        form = post_forms[draft.type]
         if request.method == 'POST':
             form = form(request.POST)
             if form.is_valid():

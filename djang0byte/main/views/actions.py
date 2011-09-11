@@ -214,9 +214,9 @@ def action(request, type, id, action = None):
         return(rate_post(request, profile, post, json, action))
     elif type == 'answer':
         answers = Answer.objects.filter(post=post)
-        if post.type == 3:
+        if post.type is Post.TYPE_ANSWER:
             answers.get(id=request.POST.get('answ')).vote(request.user)
-        elif post.type == 4:
+        elif post.type is Post.TYPE_MULTIPLE_ANSWER:
             for answer in answers:
                 if request.POST.get('answ_' + str(answer.id), 0):
                     answer.vote(request.user, True)
@@ -244,12 +244,7 @@ def edit_post(request, id):
             post = Post.objects.get(id=id, author=request.user, type__lt='3')
     except Post.DoesNotExist:
         return HttpResponseRedirect('/post/%d/' % (int(id)))
-    if post.type == 0:
-        form = CreatePostForm
-    elif post.type == 1:
-        form = CreatePostLinkForm
-    elif post.type == 2:
-        form = CreatePostTranslateForm
+    form = post_forms[post.type]
     if request.method == 'POST':
         form = form(request.POST)
         if form.is_valid():

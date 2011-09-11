@@ -50,6 +50,12 @@ class CreatePostLinkForm(CreatePostForm):
     """Create post link form"""
     addition = forms.URLField()
 
+post_forms = {
+    Post.TYPE_POST: CreatePostForm,
+    Post.TYPE_LINK: CreatePostLinkForm,
+    Post.TYPE_TRANSLATE: CreatePostLinkForm,
+}
+
 class CreatePostTranslateForm(CreatePostForm):
     """Create post link form"""
     addition = forms.URLField()

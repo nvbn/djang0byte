@@ -208,13 +208,20 @@ class City(models.Model):
 
 
 class Draft(models.Model):
+    """Drafts model"""
+    TYPE_POST = 0
+    TYPE_LINK = 1
+    TYPE_TRANSLATE = 2
+    TYPE_ANSWER = 3
+    TYPE_MULTIPLE_ANSWER = 4
     POST_TYPE = (
-                 (0, 'Post'),
-                 (1, 'Link'),
-                 (2, 'Translate'),
-                 (3, 'Answer'),
-                 (4, 'Multiple Answer')
-                 )
+        (TYPE_POST, _('Post')),
+        (TYPE_LINK, _('Link')),
+        (TYPE_TRANSLATE, _('Translate')),
+        (TYPE_ANSWER, _('Answer')),
+        (TYPE_MULTIPLE_ANSWER, _('Multiple Answer')),
+    )
+
     author = models.ForeignKey(User, verbose_name=_('Author'))
     blog = models.ForeignKey(Blog, blank=True, null=True, verbose_name=_('Blog'))
     title = models.CharField(max_length=300, verbose_name=_('Post title'), default=_('No name'))
