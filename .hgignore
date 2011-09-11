@@ -1,0 +1,4 @@
+syntax: glob
+
+*.pyc
+*pip-delete-this-directory.txt
