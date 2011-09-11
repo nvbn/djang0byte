@@ -52,7 +52,6 @@ def edit_draft(request, id):
                     post.set_tags(data['tags'])
                     return HttpResponseRedirect('/post/%d/' % (post.id))
             else:
-                draft.set_data(form.cleaned_data)
                 try:
                     blog = draft.blog.id
                 except AttributeError:
