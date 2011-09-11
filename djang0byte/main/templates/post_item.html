@@ -4,6 +4,7 @@
     <a href="/user/{{ post.author }}/">{{ post.author }}</a>
 {% endif %}
 {% load timezone_filters %}
+{% load i18n %}
 <span class="date">{{ post.date|localtime:TIMEZONE  }}</span>
 </div>
 <h2>{% if post.pinch %}<img src='/media/style/chain.gif' />{% endif %}{% if post.blog %}
@@ -23,7 +24,7 @@
     {% print_answer %}
 {% else %}
     {% if post.type == 2 %}
-    <a href="{{ post.addition }}" rel='nofollow'>Оригинал</a><br />
+    <a href="{{ post.addition }}" rel='nofollow'>{% trans 'Original' %}</a><br />
     {% endif %}
     {% autoescape off %}
         {{ post.get_content }}
