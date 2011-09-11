@@ -1,9 +1,9 @@
+pytz
 django-timezones
 django-tagging
 django-treebeard
 django-treemenus
 django-annoying
-django-simplepagination
 django-messages
 django-registration
 django-recaptcha
@@ -15,3 +15,5 @@ johnny-cache
 django_compressor
 pygments
 -e hg+https://bitbucket.org/offline/django-simplepagination#egg=simplepagination
+BeautifulSoup
+south
