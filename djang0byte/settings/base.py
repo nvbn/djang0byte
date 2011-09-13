@@ -88,10 +88,21 @@ INSTALLED_APPS = (
     'compressor',
     'sendmail',
     'johnny',
-    )
+    'loginza'
+)
 
 MAN_IN_BLACKLIST = (
     'main_spy',
     'main_favourite',
     'main_lastvisit',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'loginza.authentication.LoginzaBackend',
+)
+
+LOGINZA_AMNESIA_PATHS = (
+    '/accounts/login/',
+    '/accounts/login/js/'
 )

@@ -116,7 +116,6 @@ class Blog(models.Model):
         else:
             self.rate += value
             self.rate_count += 1
-            self.save()
             BlogRate.objects.create(
                 blog=self,
                 user=user,
@@ -141,7 +140,7 @@ class Blog(models.Model):
             user=user,
             blog=self,
         )
-        if created:
+        if not created:
             user_in_blog.delete()
 
     def get_avatar(self):
@@ -177,7 +176,7 @@ class Blog(models.Model):
 class City(models.Model):
     """All of cities"""
     name = models.CharField(max_length=60, verbose_name=_('Name of city'))
-    count = models.IntegerField(verbose_name=_('Users from this city'), default=0)
+    count = models.IntegerField(verbose_name=_('Users from this city'), null=True)#wtf?
 
     @staticmethod
     def get_city(name):
@@ -189,7 +188,7 @@ class City(models.Model):
         Returns: City
 
         """
-        city, created = City.objects.get_or_create(
+        created, city = City.objects.get_or_create(
             name=name,
         )
         city.count += 1

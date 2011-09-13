@@ -3,6 +3,12 @@ from django.contrib.auth.views import password_reset, login
 from registration.views import register
 from views import *
 from forms import RegistrationFormProfile
+import inspect
+from functools import partial
+from django.contrib.auth.backends import ModelBackend
+
+if 'backend' in inspect.getargs(register.func_code): #hack for new django-registartion
+    register = partial(register, backend=ModelBackend)
 
 urlpatterns = patterns('',
     url(r'^register/$', register,
