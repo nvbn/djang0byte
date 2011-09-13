@@ -116,6 +116,7 @@ class Blog(models.Model):
         else:
             self.rate += value
             self.rate_count += 1
+            self.save()
             BlogRate.objects.create(
                 blog=self,
                 user=user,
