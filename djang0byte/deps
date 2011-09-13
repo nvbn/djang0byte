@@ -1,3 +1,4 @@
+django==1.2.3
 pytz
 django-timezones
 django-tagging
@@ -6,7 +7,7 @@ django-treemenus
 django-annoying
 django-messages
 django-registration
-django-recaptcha
+django-recaptcha==0.0.1
 pytils
 django-push
 pygments
