@@ -31,6 +31,7 @@ from django.utils.translation import gettext as _
 import parser.utils
 from urlparse import urlparse
 import datetime
+from django.db.models import Q
 
 class BlogType(models.Model):
     """Types of blog"""
@@ -1294,18 +1295,20 @@ class LentaLastView(models.Model):
 
     def get_unseen_count(self):
         """Get count of unseen entries in lenta for specific user."""
-        return len([n for n in Notify.objects.filter(user=self.user)
-            if n.get_date() > self.date])
+        return Notify.objects.filter(
+            Q(post__date__gt=self.date) | Q(comment__created__gt=self.date),
+            user=self.user,
+        ).count()
 
     @classmethod
-    def update_last_view(self, user):
+    def update_last_view(cls, user):
         """Update last time user saw lenta"""
         try:
-            view = self.objects.get(user=user)
+            view = cls.objects.get(user=user)
             view.date = datetime.datetime.now()
             view.save()
-        except self.DoesNotExist:
-            view = self(user=user)
+        except cls.DoesNotExist:
+            view = cls(user=user)
             view.save()
 
 class Blocks(models.Model):
