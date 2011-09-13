@@ -43,7 +43,7 @@ def list_users(request, order = None, param = None, param_value = None):
     Returns: Array
 
     """
-    if order not in ('rate', 'rate_desc', 'name', 'mane_desc'):
+    if order not in ('rate', 'rate_desc', 'name', 'name_desc'):
         param_value = param
         param = order
         
