@@ -1278,7 +1278,9 @@ class LastVisit(models.Model):
 
         Returns: LastVisit QuerySet        
         """
-        return LastVisit.objects.filter(date__gt=datetime.datetime.now() - datetime.timedelta(seconds=time)).select_related('user')
+        return LastVisit.objects.filter(
+            date__gt=datetime.datetime.now() - datetime.timedelta(seconds=time)
+        ).select_related('user')
 
     def __unicode__(self):
         return self.user.username
