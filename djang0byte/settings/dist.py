@@ -31,6 +31,7 @@ FEED_URL = u'http://localhost/rss/'
 DOMAIN_NAME = 'localhost'
 COMPRESS_PARSER = 'compressor.parser.LxmlParser'
 COMPRESS = True
+COMPRESS_ROOT = "media/"
 COMPRESS_YUI_BINARY = '/usr/bin/yui-compressor'
 COMPRESS_CSS_FILTERS = ['compressor.filters.yui.YUICSSFilter',]
 API_KEY = "API_KEY"
