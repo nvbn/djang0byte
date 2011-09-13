@@ -140,7 +140,7 @@ class Blog(models.Model):
             user=user,
             blog=self,
         )
-        if created:
+        if not created:
             user_in_blog.delete()
 
     def get_avatar(self):

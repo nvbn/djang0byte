@@ -670,3 +670,7 @@ hr {
 .yashare-auto-init {
     display: inline;
 }
+
+.loginza_holder iframe {
+    height: 200px !important;
+}

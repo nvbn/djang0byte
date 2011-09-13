@@ -22,9 +22,7 @@ from django.contrib import admin
 from feed.models import PostFeed
 from django.conf.urls.defaults import *
 
-
 admin.autodiscover()
-
 
 urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'media/'}),
@@ -36,6 +34,7 @@ urlpatterns = patterns('',
     (r'^rss/(.*)/$', PostFeed()),
     (r'^rss/$', PostFeed()),
     (r'^pm/', include('messages.urls')),
+    (r'^loginza/', include('loginza.urls')),
     (r'^', include('main.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
