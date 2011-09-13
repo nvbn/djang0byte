@@ -60,6 +60,8 @@
                         <a href='/myblogs/'>{% trans "Your blogs" %}</a> {% trans "and" %} <a href='/pm/'>{% trans "PM's" %}</a>
                         {% if messages_inbox_count %}
                             {{ messages_inbox_count }}
+                        {% endif %} {% if lenta_events_count %}
+                            <a href="/lenta/">{% trans "Events in lenta:" %}</a> {{ lenta_events_count }}
                         {% endif %}</span>
                     <span class="right"><a href='/accounts/logout/'>{% trans "Log out" %}</a></span>
                 

@@ -353,6 +353,7 @@ def lenta(request):
 
     """
     notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user).order_by("-id")
+    LentaLastView.update_last_view(request.user)
     return {
         'object_list': notifs
     }

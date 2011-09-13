@@ -1134,6 +1134,13 @@ class Notify(models.Model):
         """Comments by notify iterator"""
         yield self.comment
 
+    def get_date(self):
+        """Get date of this notify."""
+        if self.post is not None:
+            return self.post.date
+        else:
+            return self.comment.created
+
     def __unicode__(self):
         """Return notify description"""
         if self.post is not None:
@@ -1275,6 +1282,28 @@ class LastVisit(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+class LentaLastView(models.Model):
+    """Last view of lenta time model"""
+
+    date = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User)
+
+    def get_unseen_count(self):
+        """Get count of unseen entries in lenta for specific user."""
+        return len([n for n in Notify.objects.filter(user=self.user)
+            if n.get_date() > self.date])
+
+    @classmethod
+    def update_last_view(self, user):
+        """Update last time user saw lenta"""
+        try:
+            view = self.objects.get(user=user)
+            view.date = datetime.datetime.now()
+            view.save()
+        except self.DoesNotExist:
+            view = self(user=user)
+            view.save()
 
 class Blocks(models.Model):
     """Bans and blocks model"""

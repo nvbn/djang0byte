@@ -10,6 +10,7 @@ def djbyte(request):
     """Get special variables into template"""
     rate = None
     timezone = TIME_ZONE
+    lenta_events_count = 0
     if request.user.is_authenticated():
         try:
             profile = Profile.objects.get(user=request.user)
@@ -17,6 +18,10 @@ def djbyte(request):
             rate = profile.get_rate()
             timezone = profile.timezone
         except Profile.DoesNotExist:
+            pass
+        try:
+            lenta_events_count = LentaLastView.objects.get(user=request.user).get_unseen_count()
+        except LentaLastView.DoesNotExist:
             pass
     posts = Post.objects.order_by('-date').select_related('author').all()[0:][:20]
     comments = Comment.objects.select_related('post', 'author').order_by('-created').exclude(depth=1).all()[0:][:20]
@@ -58,6 +63,7 @@ def djbyte(request):
             'LANGUAGE_CODE': LANGUAGE_CODE, 'SITENAME': SITENAME, 'RIGHT_PANEL_JS': right_panel_js, 'API_KEY': API_KEY,
             'keywords': ', '.join(x.__unicode__() for x in Tag.objects.cloud_for_model(Post, min_count=KEYWORD_MIN_COUNT)[:10]),
             'FEED_URL': FEED_URL, 'ONLINE': online, 'LAST_USERS': last_users, 'SITE_DOMAIN': Site.objects.get_current().domain,
+            'lenta_events_count' : lenta_events_count,
            })
 
 @login_required
