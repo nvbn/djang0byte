@@ -19,7 +19,7 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.cache import never_cache
 from main.forms import LoginForm, RegisterForm, EditUserForm, EditUserPick, EditUserPick
@@ -78,7 +78,7 @@ def profile(request, name):
     Returns: HttpResponse
 
     """
-    user = User.objects.get(username=name)
+    user =get_object_or_404(User, username=name)
     profile = user.get_profile()
     meon = profile.get_me_on()
     for (id, site) in enumerate(meon):
@@ -141,8 +141,7 @@ def friend(request, name):
     Returns: HttpResponse
 
     """
-    print name
-    user = User.objects.get(username=name)
+    user = get_object_or_404(User, username=name)
     if name != request.user.username:
         try:
             friend = Friends.objects.get(user=request.user.get_profile(),friend=user)
@@ -281,7 +280,7 @@ def comments(request, user):
     Returns: HttpResponse
 
     """
-    user = User.objects.get(username=user)
+    user = get_object_or_404(User, username=user)
     comments = Comment.objects.filter(author=user).order_by('-created')
     return {
         'user': user,

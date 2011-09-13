@@ -21,6 +21,7 @@ from django.contrib.auth.decorators import login_required
 from main.models import *
 from settings import DEFAULT_BLOG_TYPE
 from annoying.decorators import render_to
+from django.shortcuts import get_object_or_404
 
 @login_required
 @render_to('newblog.html')
@@ -67,6 +68,6 @@ def join(request, blog_id):
     Returns: HttpResponse
 
     """
-    blog = Blog.objects.get(id=blog_id)
+    blog = get_object_or_404(Blog, id=blog_id)
     blog.add_or_remove_user(request.user)
     return HttpResponseRedirect('/blog/%d/' % (int(blog_id)))

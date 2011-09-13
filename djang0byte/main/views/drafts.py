@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from annoying.decorators import render_to
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template.context import RequestContext
 from django.views.decorators.cache import never_cache
 from simplepagination import paginate
@@ -22,7 +22,7 @@ def draft(request):
 @never_cache
 @login_required
 def edit_draft(request, id):
-    draft = Draft.objects.get(author=request.user, id=id)
+    draft = get_object_or_404(Draft, author=request.user, id=id)
     preview = False
     is_draft = False
     if request.POST.get('draft'):
@@ -82,3 +82,20 @@ def edit_draft(request, id):
         return HttpResponseRedirect('/draft/%d/' %(draft.id))
     else:
         return HttpResponseRedirect('/draft/')
+
+@login_required
+def remove_draft(request, id):
+    """Remove draft
+
+    Keywords Arguments:
+    id -- int -- draft id
+
+    Returns: redirect
+    """
+    draft = get_object_or_404(
+        Draft, id=id,
+        author=request.user,
+        is_draft=True
+    )
+    draft.delete()
+    return HttpResponseRedirect('/draft/')
