@@ -501,7 +501,7 @@ a.digg_pages {
     margin-bottom: 20px;
 }
 
-a.del_msg {
+a.del_msg, a.del_draft {
     margin-left: 20px;
 }
 

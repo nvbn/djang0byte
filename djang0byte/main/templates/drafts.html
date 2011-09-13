@@ -6,7 +6,9 @@
 {% block content %}
 {% for draft in object_list %}
     <div class='post'>
-        <h2><a href="/draft/{{ draft.id }}/">{{ draft.title }}</a></h2>
+        <h2><a href="/draft/{{ draft.id }}/">{{ draft.title }}</a>
+        <a class='del_draft' href="/action/delete_draft/{{ draft.id }}/"><img alt="X" src="/media/style/cancel.png"></a>
+        </h2>
         {% autoescape off %}
             {{ draft.text }}
         {% endautoescape %}

@@ -84,7 +84,7 @@ def edit_draft(request, id):
         return HttpResponseRedirect('/draft/')
 
 @login_required
-def remove_draft(request, id):
+def delete_draft(request, id):
     """Remove draft
 
     Keywords Arguments:
