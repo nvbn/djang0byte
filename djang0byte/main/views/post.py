@@ -215,6 +215,7 @@ def post_list(request, post_type = None, param = None):
     subject = None
     option = None
     rss = FEED_URL
+    print post_type
     if not post_type:
         title = FULLNAME
         blog_types = BlogType.objects.filter(display_default=False)
@@ -225,23 +226,23 @@ def post_list(request, post_type = None, param = None):
         title = blog_type.name
         posts = Post.objects.filter(blog__in=blog_type.get_blogs())
         rss = '/rss/%s/' % (post_type)
-    elif post_type is 'pers':
+    elif post_type == 'pers':
         title = _('Presonal posts')
         posts = Post.objects.filter(blog=None)
-    elif post_type is 'blog':
+    elif post_type == 'blog':
         blog = Blog.objects.get(id=param)
         title = _('Blog in %s') % blog.name
         posts = blog.get_posts()
         subject = blog
         option = request.user.is_authenticated() and blog.check_user(request.user)
         rss = '/rss/blog/%s/' % (param)
-    elif post_type is 'tag':
+    elif post_type == 'tag':
         title = _(u'Posts with tag %s') % unicode(param)
         posts = TaggedItem.objects.get_by_model(Post, param)
         subject = param
         rss = '/rss/tag/%s/' % (param)
         #posts = [post.post for post in posts_with_tag]
-    elif post_type is 'auth':
+    elif post_type == 'auth':
         title = _('Posts by %s') % param
         user = User.objects.get(username=param)
         profile = user.get_profile()
@@ -249,19 +250,19 @@ def post_list(request, post_type = None, param = None):
         subject = profile
         option = request.user.is_authenticated() and profile.is_my_friend(request.user)
         rss = '/rss/auth/%s/' % (param)
-    elif post_type is 'like':
+    elif post_type == 'like':
         post = Post.objects.get(id=param)
         posts = TaggedItem.objects.get_related(post, Post)
         title = _(u'Posts like %s') % (post.title)
         subject = post
-    elif post_type is 'favourite':
+    elif post_type == 'favourite':
         title = _('Favourite posts')
         #TODO: rewrite favorite to ManyToMany
         posts = imap(
             lambda favourite_post: favourite_post.post,
             Favourite.objects.select_related('post').filter(user=request.user)
         )
-    if type(posts) is not imap:
+    if posts and type(posts) is not imap:
         posts = posts.order_by('-pinch', '-id').select_related('author', 'blog')
     #TODO: fix answer result in post list
     return {
