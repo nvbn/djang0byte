@@ -176,7 +176,7 @@ class Blog(models.Model):
 class City(models.Model):
     """All of cities"""
     name = models.CharField(max_length=60, verbose_name=_('Name of city'))
-    count = models.IntegerField(verbose_name=_('Users from this city'), null=True)#wtf?
+    count = models.IntegerField(verbose_name=_('Users from this city'), default=0)
 
     @staticmethod
     def get_city(name):
@@ -188,7 +188,7 @@ class City(models.Model):
         Returns: City
 
         """
-        created, city = City.objects.get_or_create(
+        city, created = City.objects.get_or_create(
             name=name,
         )
         city.count += 1
