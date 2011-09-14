@@ -6,6 +6,7 @@ var fast_panel_type = 'all';
 var fast_panel_cache = Array();
 var fast_list_type = 'list';
 var fast_funcs = Array();
+var comment_race_won = false;
 
 function createFast(type, where) {
     fast_funcs[type] = function(){
@@ -304,12 +305,18 @@ function commentReplyForm(url) {
         $('#main_form_hide').css("display", 'inline');
         $('#cmnt' + id + '>a.comment_reply').css('display', 'none');
         if ($('#comment_reply_form_' + id).length) {
+            comment_race_won = true;
             $('#comment_reply_form_' + id).css('display', 'block');
             $('#comment_reply_form_' + id).find('textarea').val(comment_text);
             document.location.hash = 'cmnt' + id;
             return(0);
         }
+        comment_race_won = false;
         $.ajax({ url: url + "?json=1", context: document.body, success: function(data, textStatus, XMLHttpRequest) {
+            if (comment_race_won) {
+                return;
+            }
+            comment_race_won = true;
             data = eval('(' + data + ')');
             id = url.split('/')[3];
             form = $('<div>').attr('class', 'comment_reply_form').attr('id', 'comment_reply_form_' + id).append(data.content);
