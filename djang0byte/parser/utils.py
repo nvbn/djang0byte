@@ -24,10 +24,14 @@ from parser.models import Code
 from settings import VALID_TAGS, VALID_ATTRS
 
 class VeryBeautifulSoup(BeautifulSoup):
-    """BeautifulSoup with attention to 'code' tag."""
+    """BeautifulSoup with attention to 'code' tag and Russian letters."""
 
     QUOTE_TAGS = BeautifulSoup.QUOTE_TAGS
     QUOTE_TAGS.update({"code" : None})
+
+    MARKUP_MASSAGE = BeautifulSoup.MARKUP_MASSAGE
+    MARKUP_MASSAGE.append((re.compile(u'<(/?[а-яА-Я]+)>'),
+                       lambda x: u"&lt" + x.group(1) + u"&gt;"))
 
 def parse(value, valid_tags = VALID_TAGS, valid_attrs = VALID_ATTRS):
     """Cleans non-allowed HTML from the input.
