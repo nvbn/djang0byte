@@ -62,9 +62,7 @@ def parse(value, valid_tags = VALID_TAGS, valid_attrs = VALID_ATTRS):
                 except ClassNotFound:
                     lexer = get_lexer_by_name('text')
                 formatter = HtmlFormatter(encoding='utf-8', style='colorful', linenos='table', cssclass='highlight', lineanchors="line")
-                print " Before", tag.__unicode__()
                 code = tag.__unicode__()
-                print " After", code
                 code_model = Code()
                 code_model.code = code
                 code_model.lang = val
