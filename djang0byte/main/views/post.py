@@ -215,7 +215,6 @@ def post_list(request, post_type = None, param = None):
     subject = None
     option = None
     rss = FEED_URL
-    print post_type
     if not post_type:
         title = FULLNAME
         blog_types = BlogType.objects.filter(display_default=False)
