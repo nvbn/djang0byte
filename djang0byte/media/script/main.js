@@ -501,6 +501,7 @@ function check_register(type, value) {
 }
 
 function clickAction(text, id, old_id) {
+        $("#" + old_id).unbind('click');
         $("#" + old_id).click(function(event){
             $(this).html(text);
             $(this).attr('id', id);
