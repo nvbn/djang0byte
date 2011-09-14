@@ -69,7 +69,7 @@ def new_notify_email(comment, type, recipient):
             'mention': "notify/mention.html",
             'post_mention': "notify/post_mention.html",
             'post_reply': "notify/post_reply.html",
-            'spy_reply': "notify/post_reply.html",
+            'spy_reply': "notify/spy_reply.html",
             'comment_reply': "notify/comment_reply.html",
         }
         subject = {
