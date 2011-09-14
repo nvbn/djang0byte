@@ -23,6 +23,12 @@ from pygments.util import ClassNotFound
 from parser.models import Code
 from settings import VALID_TAGS, VALID_ATTRS
 
+class VeryBeautifulSoup(BeautifulSoup):
+    """BeautifulSoup with attention to 'code' tag."""
+
+    QUOTE_TAGS = BeautifulSoup.QUOTE_TAGS
+    QUOTE_TAGS.update({"code" : None})
+
 def parse(value, valid_tags = VALID_TAGS, valid_attrs = VALID_ATTRS):
     """Cleans non-allowed HTML from the input.
 
@@ -36,8 +42,8 @@ def parse(value, valid_tags = VALID_TAGS, valid_attrs = VALID_ATTRS):
     """
     valid_tags = valid_tags.split()
     valid_attrs = valid_attrs.split()
-    value = value.replace('\n', '<br />').replace('&quot;', '"').replace('&amp;', '&')
-    soup = BeautifulSoup(value)
+    value = value.replace('&quot;', '"').replace('&amp;', '&')
+    soup = VeryBeautifulSoup(value)
     for tag in soup.findAll(True):
         if tag.name not in valid_tags:
             tag.hidden = True
@@ -56,7 +62,9 @@ def parse(value, valid_tags = VALID_TAGS, valid_attrs = VALID_ATTRS):
                 except ClassNotFound:
                     lexer = get_lexer_by_name('text')
                 formatter = HtmlFormatter(encoding='utf-8', style='colorful', linenos='table', cssclass='highlight', lineanchors="line")
-                code = tag.__unicode__().replace('<br />', '\n') #fix after it, sucer!
+                print " Before", tag.__unicode__()
+                code = tag.__unicode__()
+                print " After", code
                 code_model = Code()
                 code_model.code = code
                 code_model.lang = val
@@ -69,7 +77,7 @@ def parse(value, valid_tags = VALID_TAGS, valid_attrs = VALID_ATTRS):
 
 
         tag.attrs = [(attr, val) for attr, val in tag.attrs if attr in valid_attrs]
-    return soup.renderContents().decode('utf8')
+    return soup.renderContents().decode('utf8').replace('\n', '<br />')
 
 
 def remove_code(value):
