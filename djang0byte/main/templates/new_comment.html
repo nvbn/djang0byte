@@ -12,7 +12,7 @@
     {{ form.text }}
     {{ form.comment }}
     {{ form.post }}<br />
-    <input value="{% trans "Reply" %}" type="submit" />
+    <input value="{% if edit %}{% trans "Apply" %}{% else %}{% trans "Reply" %}{% endif %}" type="submit" />
     {% if not edit %}
         <input type='button' class='preview_comment_button' value="{% trans 'Preview' %}" />
     {% endif %}
