@@ -18,10 +18,13 @@
 
 
 from django.template import Library
-
+from datetime import datetime, timedelta
 from timezones.utils import localtime_for_timezone
-
+from main.models import Post
+from functools import partial
+#TODO:rewrite this hardcoded shit
 register = Library()
+
 
 @register.filter
 def menu_class(url, current_url):
@@ -44,3 +47,20 @@ def menu_class(url, current_url):
             return ''
     except ValueError:
         return url == '/' and 'current' or ''
+
+
+@register.filter
+def menu_count(url):
+    """
+        kostil =)
+    """
+    date = datetime.now() - timedelta(days=1)
+    qs_fnc = partial(Post.objects.filter, date__gte=date)
+    count_funcs = {
+        '/': qs_fnc(blog__type__display_default=True).count,
+        '/answer/': qs_fnc(blog__type__name='answer').count,
+        '/talks/': qs_fnc(blog__type__name='talks').count,
+        '/lenta/': lambda: -5,
+    }
+    print count_funcs.get(url)()
+    return  count_funcs.get(url)()
