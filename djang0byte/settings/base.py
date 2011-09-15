@@ -88,7 +88,8 @@ INSTALLED_APPS = (
     'compressor',
     'sendmail',
     'johnny',
-    'loginza'
+    'loginza',
+    'django_evolution',
 )
 
 MAN_IN_BLACKLIST = (

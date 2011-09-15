@@ -17,4 +17,4 @@ django_compressor
 pygments
 -e hg+https://bitbucket.org/offline/django-simplepagination#egg=simplepagination
 BeautifulSoup
-south
+django_evolution

@@ -43,7 +43,6 @@ class UserMapManager(models.Manager):
                 user = request.user
             else:
                 loginza_data = json.loads(identity.data)
-                print loginza_data
                 loginza_email = loginza_data.get('email', '')
                 email = loginza_email if '@' in loginza_email else settings.DEFAULT_EMAIL
 
