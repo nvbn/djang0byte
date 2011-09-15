@@ -826,8 +826,6 @@ class Profile(models.Model):
         except Blocks.DoesNotExist:
             return None
 
-
-
     def __unicode__(self):
         """Return username"""
         return self.user.username

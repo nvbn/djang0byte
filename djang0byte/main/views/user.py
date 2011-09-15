@@ -22,6 +22,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.cache import never_cache
+from loginza.models import UserMap
 from main.forms import LoginForm, RegisterForm, EditUserForm, EditUserPick, EditUserPick
 from main.models import *
 from django.db import transaction
@@ -92,7 +93,8 @@ def profile(request, name):
         'user_user': user,
         'is_my_friend': profile.is_my_friend(request.user),
         'mine': user == request.user,
-        'meon': meon
+        'meon': meon,
+        'is_social': UserMap.objects.filter(user=profile.user).count(),
     }
 
 
@@ -178,6 +180,8 @@ def edit_user(request):
     Returns: HttpResponse
 
     """
+    if UserMap.objects.filter(user=profile.user).count():
+        return HttpResponseRedirect('/user/%s/' % (request.user.username,))
     if request.method == 'POST':
         form = EditUserForm(request.POST)
         if form.is_valid():
@@ -215,7 +219,7 @@ def edit_user(request):
                     print meon.user
                 except MultiValueDictKeyError:
                     pass
-            return HttpResponseRedirect('/user/%s/' % (request.user))
+            return HttpResponseRedirect('/user/%s/' % (request.user.username,))
     else:
         profile = request.user.get_profile()
         data = {
