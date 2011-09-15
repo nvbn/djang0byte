@@ -42,9 +42,9 @@ def file_upload_path(instance, filename):
     
     """
     parts = filename.rsplit('.', 1)
-    str = "%s.%s" % (slugify(translify(parts[0])), slugify(translify(parts[1])))
+    name = "%s.%s" % (slugify(translify(parts[0])), slugify(translify(parts[1])))
     return "%s/%s/%s/%s" % (strftime('%Y'), 
-       strftime('%m'), strftime('%d'), str)
+       strftime('%m'), strftime('%d'), name)
 
 def get_status(url):
     """Parse rss and get status

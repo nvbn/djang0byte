@@ -1235,11 +1235,13 @@ class MeOn(models.Model):
 
 class Statused(MeOn):
     """Service with status users"""
-
+    TYPE_LASTFM = 0
+    TYPE_TWITTER = 1
+    TYPE_JUICK = 2
     SERVICE_TYPE = (
-        (0, 'lastfm'),
-        (1, 'twitter'),
-        (2, 'juick')
+        (TYPE_LASTFM, 'lastfm'),
+        (TYPE_TWITTER, 'twitter'),
+        (TYPE_JUICK, 'juick')
     )
 
     show = models.BooleanField(default=True)

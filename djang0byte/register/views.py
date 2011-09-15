@@ -58,11 +58,6 @@ def check(request, type, value, value_2 = None):
 def logout(request):
     return logout_then_login(request,'/')
 
-def complete_loginza_registration(user_map, **kwargs):
-    Profile.objects.create(
-        user=user_map.user
-    )
-
 def loginza_auth_handler(sender, user, identity, **kwargs):
     try:
         user_map = UserMap.objects.get(user=user)
@@ -77,4 +72,3 @@ def login(request, *args, **kwargs):
     return original_login(request, *args, **kwargs)
 
 signals.authenticated.connect(loginza_auth_handler)
-signals.created.connect(complete_loginza_registration)
