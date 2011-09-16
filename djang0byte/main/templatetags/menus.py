@@ -16,7 +16,7 @@
 
 
 
-
+from django.core.cache import cache
 from django.template import Library
 from datetime import datetime, timedelta
 from timezones.utils import localtime_for_timezone
@@ -54,6 +54,8 @@ def menu_count(url):
     """
         kostil =)
     """
+    if cache.get(url):
+        return int(cache.get(url))
     date = datetime.now() - timedelta(days=1)
     qs_fnc = partial(Post.objects.filter, date__gte=date)
     count_funcs = {
@@ -62,5 +64,6 @@ def menu_count(url):
         '/talks/': qs_fnc(blog__type__name='talks').count,
         '/lenta/': lambda: -5,
     }
-    print count_funcs.get(url)()
-    return  count_funcs.get(url)()
+    count = count_funcs.get(url)()
+    cache.set(url, str(count), 10*60)
+    return count
