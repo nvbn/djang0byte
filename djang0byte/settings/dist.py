@@ -42,7 +42,7 @@ INTERNAL_IPS = ('127.0.0.1:8000',)
 
 
 SECRET_KEY = 'r25ofx1lr43d%0yzcwfeog5nxed0^!fe4ck)w!r6et@qejhx*7'
-MEDIA_ROOT = ''
+MEDIA_ROOT = 'media'
 SITE_ID = 1
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
