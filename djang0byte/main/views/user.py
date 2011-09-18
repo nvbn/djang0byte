@@ -180,7 +180,7 @@ def edit_user(request):
     Returns: HttpResponse
 
     """
-    if UserMap.objects.filter(user=profile.user).count():
+    if UserMap.objects.filter(user=request.user).count():
         return HttpResponseRedirect('/user/%s/' % (request.user.username,))
     if request.method == 'POST':
         form = EditUserForm(request.POST)
