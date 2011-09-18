@@ -272,6 +272,23 @@ def change_userpic(request):
         'profile': profile
     }
 
+@never_cache
+@login_required
+@transaction.commit_on_success
+def delete_userpic(request):
+    """Delete user picture
+
+    Keyword arguments:
+    request -- request object
+
+    Returns: HttpResponse
+
+    """
+    profile = request.user.get_profile()
+    profile.avatar = None
+    profile.save()
+    return HttpResponseRedirect('/user/%s/' % (request.user))
+
 @render_to("user_comments.html")
 @paginate(style='digg', per_page=50)
 def comments(request, user):
