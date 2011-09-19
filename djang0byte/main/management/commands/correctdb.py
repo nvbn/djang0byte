@@ -6,7 +6,9 @@ from django.db.models import Q
 class Command(BaseCommand):
 
     def handle(self, **options):
-        Post.objects.filter(
+        qs = Post.objects.filter(
             Q(title__icontains=u'решен') | Q(title__icontains=u'решён') | Q(title__icontains=u'solv'),
             blog__type__is_qa=True,
-        ).update(solved=True)
+        )
+        print 'fix %d posts' % qs.count()
+        qs.update(solved=True)
