@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-19 20:25+0400\n"
+"POT-Creation-Date: 2011-09-19 22:34+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -318,7 +318,7 @@ msgstr "Лог ответов"
 msgid "Favourite post"
 msgstr "Любимый текст"
 
-#: models.py:945 views/post.py:258
+#: models.py:945 views/post.py:256
 msgid "Favourite posts"
 msgstr "Любимые тексты"
 
@@ -447,18 +447,19 @@ msgstr "Пользователь %(user)s прокомментировал ва�
 #: utils.py:79
 #, python-format
 msgid "User %(user)s write reply to your spy post on %(site)s"
-msgstr "Пользователь %(user)s прокомментировал отслеживаемый вами пост на %(site)s"
+msgstr ""
+"Пользователь %(user)s прокомментировал отслеживаемый вами пост на %(site)s"
 
 #: utils.py:80
 #, python-format
 msgid "User %(user)s write reply to your comment on %(site)s"
 msgstr "Пользователь %(user)s ответил на ваш комментарий на %(site)s"
 
-#: templates/answer.html:25
+#: templates/answer.html:26
 msgid "Vote"
 msgstr "Проголосовать"
 
-#: templates/answer.html:26
+#: templates/answer.html:27
 msgid "Refrain"
 msgstr "Воздеражаться"
 
@@ -498,23 +499,23 @@ msgstr "Регистрация"
 msgid "Log in"
 msgstr "Войти"
 
-#: templates/base.html:142
+#: templates/base.html:144
 msgid "users</a> from"
 msgstr "пользователей</a> из"
 
-#: templates/base.html:148
+#: templates/base.html:150
 msgid "cities."
 msgstr "городов."
 
-#: templates/base.html:159
+#: templates/base.html:161
 msgid "blogs"
 msgstr "блог"
 
-#: templates/base.html:174
+#: templates/base.html:176
 msgid "Now online:"
 msgstr "Сейчас на сайте"
 
-#: templates/base.html:177
+#: templates/base.html:179
 msgid "Last registered:"
 msgstr "Новые пользователи:"
 
@@ -605,7 +606,7 @@ msgstr "Вы на других сайтах:"
 
 #: templates/edit_user.html:50 templates/newanswer.html:25
 msgid "Add"
-msgstr ""
+msgstr "Доавить"
 
 #: templates/edit_user.html:50 templates/newanswer.html:25
 msgid "Remove"
@@ -613,7 +614,7 @@ msgstr "Удалить"
 
 #: templates/edit_user.html:51
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #: templates/lenta.html:4
 msgid "Your feed"
@@ -796,9 +797,13 @@ msgstr "Отмена"
 msgid "Registration"
 msgstr "Регистрация"
 
-#: templates/search.html:4
+#: templates/search.html:4 templates/search.html.py:9 templates/search.html:13
 msgid "Search"
 msgstr "Поиск"
+
+#: templates/search.html:18
+msgid "No search result!"
+msgstr "По вашему запросу ничего не найдено, придумайте другой."
 
 #: templates/sorry.html:4
 msgid "Sorry, not now!"
@@ -1018,7 +1023,7 @@ msgstr "Вам нельзя голосовать за этот блог!"
 msgid "Please register for this action!"
 msgstr "Для этого действия требуется регистрация!"
 
-#: views/actions.py:367 views/actions.py:393
+#: views/actions.py:365 views/actions.py:391
 msgid "Show all!"
 msgstr "Полностью."
 
@@ -1027,26 +1032,26 @@ msgstr "Полностью."
 msgid "%d users from this city"
 msgstr "%d пользователей"
 
-#: views/post.py:229
+#: views/post.py:227
 msgid "Presonal posts"
 msgstr "Личные посты"
 
-#: views/post.py:233
+#: views/post.py:231
 #, python-format
 msgid "Blog in %s"
 msgstr "Посты в блоге %s"
 
-#: views/post.py:239
+#: views/post.py:237
 #, python-format
 msgid "Posts with tag %s"
 msgstr "Посты с тегом %s"
 
-#: views/post.py:245
+#: views/post.py:243
 #, python-format
 msgid "Posts by %s"
 msgstr "Посты от %s"
 
-#: views/post.py:255
+#: views/post.py:253
 #, python-format
 msgid "Posts like %s"
 msgstr "Похожие на %s"
