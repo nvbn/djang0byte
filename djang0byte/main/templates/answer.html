@@ -22,7 +22,8 @@
     <label><input type='checkbox' name='answ_{{ answ.id }}' value='{{ answ.id }}' />{{ answ.value }}</label><br />
     {% endfor %}
 {% endif %}
-<input type='submit' /> <a href='/action/refrain/{{ post.id }}/'>{% trans "Refrain" %}</a>
+<input type='submit' value='{% trans "Vote" %}' />
+<input type='button' onclick="document.location='/action/refrain/{{ post.id }}/'" value='{% trans "Refrain" %}' />
 </form>
 {% endif %}
 

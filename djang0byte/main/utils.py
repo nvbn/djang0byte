@@ -73,17 +73,20 @@ def new_notify_email(comment, type, recipient):
             'comment_reply': "notify/comment_reply.html",
         }
         subject = {
-            'mention': _("User %s mention your on %s") % (comment.author.username, current_domain),
-            'post_mention': _("User %s mention your on %s") % (comment.author.username, current_domain),
-            'post_reply': _("User %s write reply to your post on %s") % (comment.author.username, current_domain),
-            'spy_reply': _("User %s write reply to your spy post on %s") % (comment.author.username, current_domain),
-            'comment_reply': _("User %s write reply to your comment on %s") % (comment.author.username, current_domain),
+            'mention': _("User %(user)s mention your on %(site)s"),
+            'post_mention': _("User %(user)s mention your on %(site)s"),
+            'post_reply': _("User %(user)s write reply to your post on %(site)s"),
+            'spy_reply': _("User %(user)s write reply to your spy post on %(site)s"),
+            'comment_reply': _("User %(user)s write reply to your comment on %(site)s"),
         }
         message = render_to_string(templates[type], {
             'site_url': '%s://%s' % (default_protocol, current_domain),
             'comment': comment,
         })
-        mail = Mails(subject=subject[type], message=message, recipient=recipient.email)
+        mail = Mails(subject=subject[type] % {
+                'user': comment.author.username,
+                'site': current_domain
+            }, message=message, recipient=recipient.email)
         mail.save()
     except Exception, e:
         print e
