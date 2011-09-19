@@ -352,7 +352,7 @@ class Post(Draft):
         """
         if self.type > 2:
             return Answer.objects.filter(post=self)
-        elif type is None:
+        elif not type:
             return self.preview
         else:
             return self.text

@@ -33,7 +33,7 @@ class VeryBeautifulSoup(BeautifulSoup):
     MARKUP_MASSAGE.append((re.compile(u'<(/?[а-яА-Я]+)>'),
                        lambda x: u"&lt" + x.group(1) + u"&gt;"))
 
-def parse(value, valid_tags = VALID_TAGS, valid_attrs = VALID_ATTRS):
+def parse(value, valid_tags=VALID_TAGS, valid_attrs=VALID_ATTRS):
     """Cleans non-allowed HTML from the input.
 
     Keyword arguments:
