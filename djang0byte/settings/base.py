@@ -90,6 +90,7 @@ INSTALLED_APPS = (
     'johnny',
     'loginza',
     'django_evolution',
+    'haystack',
 )
 
 MAN_IN_BLACKLIST = (
@@ -107,3 +108,6 @@ LOGINZA_AMNESIA_PATHS = (
     '/accounts/login/',
     '/accounts/login/js/'
 )
+
+HAYSTACK_SITECONF = 'search'
+HAYSTACK_SEARCH_ENGINE = 'xapian'

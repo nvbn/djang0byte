@@ -1,8 +1,33 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% block title %}
-    {% trans 'Search' %}
+    {% trans 'Search' %} {% if query %}"{{ query }}"{% endif %}
 {% endblock %}
 {% block content %}
-    <div id="yandex-results-outer" onclick="return {encoding: '', language: 'ru'}"></div><script type="text/javascript" src="http://site.yandex.net/load/site.js" charset="utf-8"></script>
+    <div class='post_list'>
+    <div class="post_list_head">
+    <span class='left'>{% trans 'Search' %} {% if query %}"{{ query }}"{% endif %}</span>
+    </div>
+    <form method="GET">
+        {{ form.query }}
+        <input type='submit' value='{% trans "Search" %}' />
+    </form>
+    <br /><br />
+    {% if not object_list %}
+        <br />
+        <span class='error'>{% trans 'No search result!' %}</span>
+    {% endif %}
+    {% for post in object_list %}
+        <div class='post_container'>
+        <h2><a href="/post/{{ post.id }}/">{{ post.author }} — {{ post.title }}</a></h2>
+        <div class='post'>
+            {{ post.preview }}
+        </div>
+            <div class='post_bottom'></div>
+        </div>
+    {% endfor %}
+    <div class='paginator'>
+        {% include "paginator_digg.html" %}
+    </div>
+    </div>
 {% endblock %}

@@ -674,3 +674,18 @@ hr {
 .loginza_holder iframe {
     height: 200px !important;
 }
+
+#search_btn {
+    border: 1px solid #a6a6a6;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+    padding: 1px;
+    vertical-align: middle;
+}
+
+#search_input {
+    vertical-align: middle;
+    width: 80%;
+}

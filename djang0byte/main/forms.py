@@ -117,3 +117,7 @@ class EditUserPick(forms.Form):
 
 class EditPostForm(CreatePostForm):
     pass
+
+class SearchForm(forms.Form):
+    """Search form"""
+    query = forms.CharField()

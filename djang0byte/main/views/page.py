@@ -24,7 +24,3 @@ def text_page(request, url):
     return {
         'page': text_page
     }
-
-@render_to('search.html')
-def search(request):
-    return {}

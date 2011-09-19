@@ -12,7 +12,7 @@
 <div class='post_list'>
 <div class="post_list_head">
     {% if post_type == 'auth' %}
-        <span class="left">{% trans "Posts by " %}<a href='/user/{{ subject.user }}/'><img src='{{ subject.user.get_profile.get_avatar }}' class='mini_av' /> {{ subject.user }}</a></span>
+        <span class="left">{% trans "Posts by " %} <a href='/user/{{ subject.user }}/'><img src='{{ subject.user.get_profile.get_avatar }}' class='mini_av' /> {{ subject.user }}</a></span>
             {% if request.user.is_authenticated and subject.user != request.user %}
                 <span class="right">{% if option == 0 %}
                 <a id='add_friend' href="/action/friend/{{ subject.user }}/">{% trans "Add to friends!" %}</a>
@@ -23,7 +23,7 @@
             {% endif %}
     {% endif %}
     {% if post_type == 'blog' %}
-        <span class="left">{% trans "Posts in " %}<a href='/blog/{{ subject.id }}/'><img src='{{ subject.get_avatar }}' class='mini_av' /> {{ subject.name }}</a></span>
+        <span class="left">{% trans "Posts in " %} <a href='/blog/{{ subject.id }}/'><img src='{{ subject.get_avatar }}' class='mini_av' /> {{ subject.name }}</a></span>
             {% if request.user.is_authenticated %}
                 <span id='blog_rate' class="right">{% if option == 0 %}
                 <a id='join_blog' href="/action/join/{{ subject.id }}/">{% trans "Invite!" %}</a>

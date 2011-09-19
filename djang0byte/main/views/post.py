@@ -15,9 +15,7 @@
 #       MA 02110-1301, USA.
 from django.core.exceptions import MultipleObjectsReturned
 from itertools import imap
-from django.template.loader import render_to_string
 from django.db import transaction
-from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
@@ -27,13 +25,13 @@ from django.views.decorators.cache import cache_page, never_cache
 from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
-from main.utils import Access, jsend
 from django.template import RequestContext
 from actions import  get_last_comments
 from settings import DEFAULT_CACHE_TIME, POST_RATE_TO_MAIN, FULLNAME, FEED_URL
 from django.views.decorators.vary import vary_on_cookie
-from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from haystack.query import SearchQuerySet
+from xapian_backend import InvalidIndexError
 
 @never_cache
 @transaction.commit_on_success
@@ -261,7 +259,7 @@ def post_list(request, post_type = None, param = None):
             lambda favourite_post: favourite_post.post,
             Favourite.objects.select_related('post').filter(user=request.user)
         )
-    if posts and type(posts) is not imap:
+    if posts and type(posts) not in (imap, list):
         posts = posts.order_by('-pinch', '-id').select_related('author', 'blog')
     #TODO: fix answer result in post list
     return {
@@ -359,3 +357,26 @@ def lenta(request):
         'object_list': notifs
     }
 
+@render_to('search.html')
+@paginate(style='digg', per_page=10)
+def search(request):
+    """New sexy search"""
+    form = SearchForm(request.GET)
+    try:
+        search_qs = SearchQuerySet().models(Post)
+    except InvalidIndexError:
+        search_qs = None
+    if not form.is_valid() or not search_qs:
+        return {
+            'form': form,
+            'query': '',
+            'object_list': Post.objects.all(),
+        }
+    q = lambda attr: models.Q(**{attr: form.cleaned_data['query']})#SHIT
+    return {
+        'object_list': search_qs.filter_or(q('text') | q('preview') | q('raw_tags') | q('title')),
+        'form': form,
+        'query': form.cleaned_data['query'],
+    }
+
+    

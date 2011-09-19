@@ -18,3 +18,4 @@ pygments
 -e hg+https://bitbucket.org/offline/django-simplepagination#egg=simplepagination
 BeautifulSoup
 django_evolution
+xapian-haystack
