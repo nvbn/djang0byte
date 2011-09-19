@@ -814,9 +814,8 @@ msgid "Posts like"
 msgstr "Похожие на"
 
 #: templates/post_list.html:68
-#, fuzzy
 msgid "Questions"
-msgstr "Описание"
+msgstr "Вопросы"
 
 #: templates/post_list.html:69
 msgid "All"
