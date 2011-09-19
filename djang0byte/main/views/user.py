@@ -31,6 +31,7 @@ from django.template.context import RequestContext
 from annoying.decorators import render_to
 from simplepagination import paginate
 from parser.utils import parse
+from random import random
 
 @render_to('register.html')
 def register(request, next = None):
@@ -262,7 +263,10 @@ def change_userpic(request):
             data = form.cleaned_data
             profile.avatar = data['userpic']
             profile.save()
-            return HttpResponseRedirect('/user/%s/' % (request.user))
+        return HttpResponseRedirect('/user/%s/?%d' % (
+            request.user,
+            int(random()*999))
+        )
     else:
         form = EditUserPick()
     return {
@@ -285,7 +289,10 @@ def delete_userpic(request):
     profile = request.user.get_profile()
     profile.avatar = None
     profile.save()
-    return HttpResponseRedirect('/user/%s/' % (request.user))
+    return HttpResponseRedirect('/user/%s/?%d' % (
+        request.user,
+        int(random()*999))
+    )
 
 @render_to("user_comments.html")
 @paginate(style='digg', per_page=50)
