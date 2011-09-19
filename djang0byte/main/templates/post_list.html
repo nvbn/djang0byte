@@ -63,6 +63,14 @@
             {% endif %}  — <a href="/post/{{ subject.id }}/">{{ subject.title }}</a>
         </span>
     {% endif %}
+    {% if is_qa %}
+        <span class='left'>
+            {% trans 'Questions' %}: 
+            <a href="/{{ post_type }}/" {% if not param %}class='selected_type'{% endif %}>{% trans "All" %}</a> /
+            <a href="/{{ post_type }}/solved/" {% if param == 'solved' %}class='selected_type'{% endif %}>{% trans "Solved" %}</a> /
+            <a href="/{{ post_type }}/unsolved/"  {% if param == 'unsolved' %}class='selected_type'{% endif %}>{% trans "Unsolved" %}</a>
+        </span>
+    {% endif %}
 </div>
 {% for post in object_list %}
 <div class='post'>

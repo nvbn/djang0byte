@@ -545,3 +545,53 @@ def edit_comment(request, id):
         'cid': id,
         'extend': 'base.html'
     })
+
+@login_required
+def mark_solved(request, post_id, mark=1):
+    """Mark or unmark Q&A post solved
+
+    Keywords Arguments:
+    post_id -- int
+    mark -- bool
+
+    Returns: redirect
+    """
+    mark = int(mark)
+    post = get_object_or_404(
+        Post,
+        id=post_id,
+        author=request.user,
+        blog__type__is_qa=True,
+    )
+    post.solved = mark
+    post.save()
+    return HttpResponseRedirect('/post/%d' % (post.id,))
+
+@login_required
+def set_right_answer(request, post_id, comment_id, reason=0):
+    """Set right answer comment
+
+    Keywords Arguments:
+    post_id -- int
+    comment_id -- int
+    reason -- bool
+
+    Returns: redirect
+    """
+    reason = int(reason)
+    post = get_object_or_404(
+        Post,
+        id=post_id,
+        author=request.user,
+    )
+    comment = get_object_or_404(
+        Comment,
+        id=comment_id,
+        post=post,
+    )
+    if reason:
+        post.right_answer = comment
+    else:
+        post.right_answer = None
+    post.save()
+    return HttpResponseRedirect('/post/%d' % (post.id,))

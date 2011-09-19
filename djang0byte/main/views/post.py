@@ -191,7 +191,9 @@ def post(request, id):
         'PERM_EDIT_POST': post.type < 3 and (
             request.user.has_perm('main.change_post') or request.user == post.author
         ),
-        'last_view': last_view_date
+        'last_view': last_view_date,
+        'is_qa': post.blog.type.is_qa,
+        'right_answer': post.right_answer,
     })
 
 
@@ -213,6 +215,7 @@ def post_list(request, post_type = None, param = None):
     subject = None
     option = None
     rss = FEED_URL
+    is_qa = False
     if not post_type:
         title = FULLNAME
         blog_types = BlogType.objects.filter(display_default=False)
@@ -220,8 +223,13 @@ def post_list(request, post_type = None, param = None):
         posts = Post.objects.exclude(blog__in=blogs).filter(rate__gt=POST_RATE_TO_MAIN)
     elif BlogType.check(post_type):
         blog_type = BlogType.objects.get(name=post_type)
+        is_qa = blog_type.is_qa
         title = blog_type.name
         posts = Post.objects.filter(blog__in=blog_type.get_blogs())
+        if param == 'solved':
+            posts = posts.filter(solved=True)
+        elif param == 'unsolved':
+            posts = posts.filter(solved=False)
         rss = '/rss/%s/' % (post_type)
     elif post_type == 'pers':
         title = _('Presonal posts')
@@ -270,6 +278,8 @@ def post_list(request, post_type = None, param = None):
         'option': option,
         'title': title,
         'rss': rss,
+        'is_qa': is_qa,
+        'param': param,
     }
 
 def post_list_with_param(request, post_type, param = None):

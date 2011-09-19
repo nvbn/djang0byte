@@ -689,3 +689,17 @@ hr {
     vertical-align: middle;
     width: 80%;
 }
+
+.right_answer {
+    border: 2px dashed #73BF60;
+}
+
+.solved_title {
+    text-decoration: underline;
+    color: #73BF60;
+}
+
+a.selected_type, a.selected_type:hover, a.selected_type:active {
+    color: #000;
+    text-decoration: none;
+}

@@ -48,11 +48,22 @@
             {% else %}
                 <a href='/action/spy/{{ post.id }}/' style='margin-right:0'><img src='/media/style/eye.gif' /></a> <a href='/action/spy/{{ post.id }}/' id="add_spy">{% trans "Add to spy!" %}</a>
             {% endif %}
+        {% else %}
+            {% if is_qa %}
+                <a href="/action/mark_solved/{{ post.id }}/{% if post.solved %}0{% else %}1{% endif %}/">
+                    <img src='/media/style/pound.gif' /> 
+                    {% if post.solved %}
+                        {% trans 'Unmark solved' %}
+                    {% else %}
+                        {% trans 'Mark solved' %}
+                    {% endif %}
+                </a> 
+            {% endif %}
         {% endif %}
 
 {% endif %}
     <a href='/like/{{ post.id }}/'><img src='/media/style/mag_glass.gif' /> {% trans "Related" %}</a>
-    <a href='#' id='share_opener'><img src='/media/style/speech_bubble.gif' /> Поделиться</a>
+    <a href='#' id='share_opener'><img src='/media/style/speech_bubble.gif' />{% trans 'Share' %}</a>
     <span id='share_buttons'>
         <script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
         <div class="yashare-auto-init" data-yashareL10n="ru" data-yashareType="none" data-yashareQuickServices="yaru,vkontakte,facebook,twitter,lj"></div>

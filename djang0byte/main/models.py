@@ -37,6 +37,7 @@ class BlogType(models.Model):
     """Types of blog"""
     name = models.CharField(max_length=30, verbose_name=_('Name'))
     display_default = models.BooleanField(default=True, verbose_name=_('Display in "all"?'))
+    is_qa = models.BooleanField(default=False, verbose_name=_('Is Q&A?'))
 
     @staticmethod
     def check(name):
@@ -293,6 +294,8 @@ class Post(Draft):
     disable_reply = models.BooleanField(default=False, verbose_name=_('Disable reply'))
     disable_rate = models.BooleanField(default=False, verbose_name=_('Disable rate'))
     pinch = models.BooleanField(default=False, verbose_name=_('Pinch post'))
+    solved = models.BooleanField(default=False, verbose_name=_('Is solved'))
+    right_answer = models.ForeignKey('Comment', blank=True, null=True, related_name='right_answer', verbose_name=_('Right answer'))
 
     class Meta:
         ordering = ('-id', )
