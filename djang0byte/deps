@@ -19,3 +19,4 @@ pygments
 BeautifulSoup
 django_evolution
 xapian-haystack
+django-haystack
