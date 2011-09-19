@@ -11,4 +11,6 @@ class Command(BaseCommand):
             blog__type__is_qa=True,
         )
         print 'fix %d posts' % qs.count()
-        qs.update(solved=True)
+        for post in qs: #Shit, update not work
+            post.solved = True
+            post.save()
