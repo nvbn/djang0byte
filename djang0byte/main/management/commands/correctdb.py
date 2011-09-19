@@ -13,4 +13,4 @@ class Command(BaseCommand):
         print 'fix %d posts' % qs.count()
         for post in qs: #Shit, update not work
             post.solved = True
-            post.save()
+            post.save(convert=True)
