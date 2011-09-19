@@ -21,7 +21,9 @@
         <div class='post_container'>
         <h2><a href="/post/{{ post.id }}/">{{ post.author }} — {{ post.title }}</a></h2>
         <div class='post'>
-            {{ post.preview }}
+            {% autoescape off %}
+                {{ post.preview }}
+            {% endautoescape %}
         </div>
             <div class='post_bottom'></div>
         </div>
