@@ -20,7 +20,7 @@ from django.db import transaction
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template.loader import render_to_string
 from main.forms import *
 from main.models import *
@@ -159,7 +159,7 @@ def preview_comment(request):
     return jsend({'text':utils.parse(request.POST.get('text'), VALID_TAGS, VALID_ATTRS)})
 
 @never_cache
-def action(request, type, id, action = None):
+def action(request, type, id, action = None):#TODO: Split and rewrite this shit!
     """Add or remove from favourite and spy, rate
 
     Keyword arguments:
@@ -211,12 +211,12 @@ def action(request, type, id, action = None):
             spy.user = request.user
             spy.save()
     elif type == 'ratepost':
-        return(rate_post(request, profile, post, json, action))
+        return rate_post(request, profile, post, json, action)
     elif type == 'answer':
         answers = Answer.objects.filter(post=post)
-        if post.type is Post.TYPE_ANSWER:
+        if post.type == Post.TYPE_ANSWER:
             answers.get(id=request.POST.get('answ')).vote(request.user)
-        elif post.type is Post.TYPE_MULTIPLE_ANSWER:
+        elif post.type == Post.TYPE_MULTIPLE_ANSWER:
             for answer in answers:
                 if request.POST.get('answ_' + str(answer.id), 0):
                     answer.vote(request.user, True)
@@ -228,8 +228,6 @@ def action(request, type, id, action = None):
         vote.save()
 
     return HttpResponseRedirect('/post/%d/' % (int(id)))
-
-
 
 @never_cache
 @login_required
