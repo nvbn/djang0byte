@@ -564,7 +564,7 @@ def mark_solved(request, post_id, mark=1):
         blog__type__is_qa=True,
     )
     post.solved = mark
-    post.save()
+    post.save(convert=True)
     return HttpResponseRedirect('/post/%d' % (post.id,))
 
 @login_required
@@ -593,5 +593,5 @@ def set_right_answer(request, post_id, comment_id, reason=0):
         post.right_answer = comment
     else:
         post.right_answer = None
-    post.save()
+    post.save(convert=True)
     return HttpResponseRedirect('/post/%d' % (post.id,))
