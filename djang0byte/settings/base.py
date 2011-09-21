@@ -81,7 +81,6 @@ INSTALLED_APPS = (
     'annoying',
     'simplepagination',
     'messages',
-    'south',
     'tagging_autocomplete',
     'pytils',
     'django_push',
