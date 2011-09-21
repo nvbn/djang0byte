@@ -5,10 +5,10 @@ from views import *
 from forms import RegistrationFormProfile
 import inspect
 from functools import partial
-from django.contrib.auth.backends import ModelBackend
 
-if 'backend' in inspect.getargs(register.func_code): #hack for new django-registartion
-    register = partial(register, backend=ModelBackend)
+if 'backend' in inspect.getargs(register.func_code).args:
+    # hack for new django-registartion, still doesn't work for 0.8.0alpha
+    register = partial(register, backend="django.contrib.auth.backends.ModelBackend")
 
 urlpatterns = patterns('',
     url(r'^register/$', register,
