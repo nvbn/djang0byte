@@ -269,7 +269,7 @@ class Draft(models.Model):
             self.set_blog(0)
         self.raw_tags = data['tags']
 
-    def save(self, edit=False, rate=False):
+    def save(self, edit=False, rate=False, parsed=False):
         """Save function wrapper
 
         Keyword arguments:
@@ -281,7 +281,8 @@ class Draft(models.Model):
         if not rate:
             if not self.title:
                 self.title = _('No name')
-            self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
+            if not parsed:
+                self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
         super(Draft, self).save()
 
 class Post(Draft):
@@ -448,7 +449,7 @@ class Post(Draft):
                     pass
                 self.date = datetime.datetime.now()
                 Notify.new_post_notify(self)
-        super(Post, self).save() # Call the "real" save() method
+        super(Post, self).save(parsed=True) # Call the "real" save() method
 
     def is_answer(self, user = None, force = False):
         """Check post type is answer and return questions
