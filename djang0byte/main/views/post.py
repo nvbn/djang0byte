@@ -192,7 +192,7 @@ def post(request, id):
             request.user.has_perm('main.change_post') or request.user == post.author
         ),
         'last_view': last_view_date,
-        'is_qa': post.blog.type.is_qa,
+        'is_qa': post.blog.type.is_qa if post.blog is not None else False,
         'right_answer': post.right_answer,
     })
 
