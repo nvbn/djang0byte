@@ -17,7 +17,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from itertools import imap
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response, get_object_or_404
 from main.forms import *
 from main.models import *
@@ -267,6 +267,9 @@ def post_list(request, post_type = None, param = None):
             lambda favourite_post: favourite_post.post,
             Favourite.objects.select_related('post').filter(user=request.user)
         )
+    else:
+        # Do not crash on unknown type
+        raise Http404(_('Address not found: %s') % post_type)
     if posts and type(posts) not in (imap, list):
         posts = posts.order_by('-pinch', '-id').select_related('author', 'blog')
     #TODO: fix answer result in post list
