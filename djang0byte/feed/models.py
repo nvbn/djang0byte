@@ -77,3 +77,5 @@ class PostFeed(Feed):
         else:
             return  u"%s — %s" % (item.author.username, item.title)
 
+    def item_author_name(self, item):
+        return item.author.username
