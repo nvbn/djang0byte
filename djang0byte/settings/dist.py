@@ -57,6 +57,7 @@ DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+PRIVATE_RATING = False
 HAYSTACK_XAPIAN_PATH = 'full path to index'
 import os
 if not os.path.isdir(HAYSTACK_XAPIAN_PATH):

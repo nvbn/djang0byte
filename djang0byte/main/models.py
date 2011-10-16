@@ -122,6 +122,7 @@ class Blog(models.Model):
             BlogRate.objects.create(
                 blog=self,
                 user=user,
+                negative=(value == -1)
             )
             Profile.objects.filter(
                 user=self.owner
@@ -151,6 +152,9 @@ class Blog(models.Model):
             return self.avatar.url
         except ValueError:
             return False
+
+    def get_rates(self):
+        return BlogRate.objects.select_related('user').filter(blog=self)
 
     @staticmethod
     def create_list(profile, selected = None, append=None):
@@ -402,6 +406,7 @@ class Post(Draft):
             PostRate.objects.create(
                 post=self,
                 user=user,
+                negative=(value == -1)
             )
             Profile.objects.filter(
                 user=self.author
@@ -485,11 +490,12 @@ class Post(Draft):
                 self.is_result = False
                 return False
 
-
     def have_cut(self):
         """Check if 'cut' exsisted"""
         return self.text != self.preview
 
+    def get_rates(self):
+        return PostRate.objects.select_related('user').filter(post=self)
 
     def __unicode__(self):
         """Return post title"""
@@ -578,6 +584,7 @@ class Comment(NS_Node):
             CommentRate.objects.create(
                 user=user,
                 comment=self,
+                negative=(value == -1)
             )
             Profile.objects.filter(
                 user=self.author
@@ -586,6 +593,9 @@ class Comment(NS_Node):
             )
             self.save()
             return True
+
+    def get_rates(self):
+        return CommentRate.objects.select_related('user').filter(comment=self)
 
     class Meta:
         ordering = ['id']
@@ -673,16 +683,17 @@ class Profile(models.Model):
         Returns: Integer
         
         """
-        if not UserRate.objects.get(user=self):
+        if not UserRate.objects.filter(user=self).count():
             self.rate += value
             self.rate_count += 1
-            rate = UserRate()
-            rate.profile = self
-            rate.user = user
-            rate.save()
-            return(True)
+            rate = UserRate.objects.create(
+                profile=self,
+                user=user,
+                negative=(value == -1)
+            )
+            return True
         else:
-            return(False)
+            return False
 
     def get_rate(self):
         """Get user rate"""
@@ -830,6 +841,9 @@ class Profile(models.Model):
         except Blocks.DoesNotExist:
             return None
 
+    def get_rates(self):
+        return UserRate.objects.select_related('user').filter(profile=self)
+
     def __unicode__(self):
         """Return username"""
         return self.user.username
@@ -963,6 +977,7 @@ class PostRate(models.Model):
     """Post rates"""
     post = models.ForeignKey(Post, verbose_name=_('Post'))
     user = models.ForeignKey(User, verbose_name=_('User'))
+    negative = models.BooleanField(default=False, verbose_name=_('is negative'))
 
     class Meta:
         verbose_name = _("Post rate log")
@@ -973,6 +988,7 @@ class CommentRate(models.Model):
     """Comment rates"""
     comment = models.ForeignKey(Comment, verbose_name=_('Comment'))
     user = models.ForeignKey(User, verbose_name=_('User'))
+    negative = models.BooleanField(default=False, verbose_name=_('is negative'))
 
     class Meta:
         verbose_name = _("Comment rate log")
@@ -983,6 +999,7 @@ class BlogRate(models.Model):
     """Blog rates"""
     blog = models.ForeignKey(Blog, verbose_name=_('Blog'))
     user = models.ForeignKey(User, verbose_name=_('User'))
+    negative = models.BooleanField(default=False, verbose_name=_('is negative'))
 
     class Meta:
         verbose_name = _("Blog rate log")
@@ -993,6 +1010,7 @@ class UserRate(models.Model):
     """User rates"""
     profile = models.ForeignKey(Profile, verbose_name=_('Profile'))#voted
     user = models.ForeignKey(User, verbose_name=_('User'))#who vote
+    negative = models.BooleanField(default=False, verbose_name=_('is negative'))
 
     class Meta:
         verbose_name = _("User rate log")

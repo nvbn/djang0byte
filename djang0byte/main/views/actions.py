@@ -539,12 +539,12 @@ def edit_comment(request, id):
                 'text': text
             }
             form = CreateCommentForm(data)
-    return({
+    return {
         'edit': True,
         'form': form,
         'cid': id,
         'extend': 'base.html'
-    })
+    }
 
 @login_required
 def mark_solved(request, post_id, mark=1):
@@ -595,3 +595,40 @@ def set_right_answer(request, post_id, comment_id, reason=0):
         post.right_answer = None
     post.save(convert=True)
     return HttpResponseRedirect('/post/%d' % (post.id,))
+
+@ajax_request
+def get_raters(request, obj_type, obj_id):
+    """Get json of raters
+
+    Keywords Arguments:
+    obj_type -- str in post, comment, blog, user
+    obj_id -- int
+
+    Returns: json
+    """
+    if getattr(settings, 'PRIVATE_RATING'. True):
+        return HttpResponseRedirect('/')
+    if obj_type == 'post':
+        type_model = Post
+    elif obj_type == 'comment':
+        type_model = Comment
+    elif obj_type == 'blog':
+        type_model = Blog
+    elif obj_type == 'user':
+        type_model = Profile
+    else:
+        return {
+            'error': True,
+        }
+    obj = get_object_or_404(type_model, id=obj_id)
+
+    return {#TODO: use json serializable class
+        'raters': map(
+            lambda rate: {
+                'avatar': rate.user.get_profile().get_avatar(),
+                'username': rate.user.username,
+                'negative': rate.negative,
+            },
+            obj.get_rates().select_related('user__profile')
+        )
+    }
