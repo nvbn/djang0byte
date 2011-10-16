@@ -263,10 +263,7 @@ def post_list(request, post_type = None, param = None):
     elif post_type == 'favourite':
         title = _('Favourite posts')
         #TODO: rewrite favorite to ManyToMany
-        posts = imap(
-            lambda favourite_post: favourite_post.post,
-            Favourite.objects.select_related('post').filter(user=request.user)
-        )
+        posts = Post.objects.filter(favourite__user=request.user)
     else:
         # Do not crash on unknown type
         raise Http404(_('Address not found: %s') % post_type)
