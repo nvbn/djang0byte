@@ -606,7 +606,7 @@ def get_raters(request, obj_type, obj_id):
 
     Returns: json
     """
-    if getattr(settings, 'PRIVATE_RATING'. True):
+    if getattr(settings, 'PRIVATE_RATING', True):
         return HttpResponseRedirect('/')
     if obj_type == 'post':
         type_model = Post

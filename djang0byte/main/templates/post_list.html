@@ -32,14 +32,14 @@
                     <a id='leave_blog' href="/action/join/{{ subject.id }}/">{% trans "Get out!" %}</a>
                 {% endif %}
                 <a class="plus_rate rate_blog" href='/action/rateblog/{{ subject.id }}/1/'>+</a>
-                <span
+                <a href='#/blog/{{ subject.id }}/'
                 {% if subject.rate > 0 %}
-                    class='plus_rate'
+                    class='raters plus_rate'
                 {% endif %}{% if subject.rate < 0 %}
-                    class='minus_rate'
+                    class='raters minus_rate'
                 {% endif %}>
                     {{ subject.rate }}
-                </span>
+                </a>
             <a class="minus_rate rate_blog" href='/action/rateblog/{{ subject.id }}/0/'>-</a>
                 </span>
             {% endif %}

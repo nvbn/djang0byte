@@ -8,6 +8,34 @@ var fast_list_type = 'list';
 var fast_funcs = Array();
 var comment_race_won = false;
 
+function get_raters(type, id) {
+    $.ajax({
+        url: "/action/get_raters/" + type + "/" + id + "/",
+        cache: false,
+        success: function(data, textStatus, XMLHttpRequest) {
+            var raters = data.raters;
+            var div = '<h2>Хронология голосов</h2>';
+            if (!raters.length)
+                div = '<h2>Ещё никто не проголосовал!</h2>';
+            else for (i in raters) {
+                div += '<a href="/user/' + raters[i].username + '/"><img src="' + raters[i].avatar +'" /> ' +
+                    raters[i].username + '</a> поставил <span class="';
+                if (raters[i].negative)
+                    div += 'minus_rate">минус';
+                else
+                    div += 'plus_rate">плюс';
+                div += '</span>!<br />';
+            }
+            $.modal(div, {
+               overlayClose:true,
+               opacity: 80,
+               minHeight:200,
+	           minWidth: 300
+            });
+        }
+    });
+}
+
 function createFast(type, where) {
     fast_funcs[type] = function(){
        if (fast_panel_type == type) {
@@ -15,7 +43,11 @@ function createFast(type, where) {
             fast_panel_type = 'list'
            else {
             fast_panel_type = 'all';
-               $.ajax({ url: "/action/get_val/all/", cache: false, success: function(data, textStatus, XMLHttpRequest) {}});
+               $.ajax({
+                   url: "/action/get_val/all/",
+                   cache: false,
+                   success: function(data, textStatus, XMLHttpRequest) {}
+               });
            }
            $(where).html(fast_panel_cache[fast_panel_type]);
        } else {
@@ -380,7 +412,7 @@ function initCommentRates(context) {
     } else {
         context = context + " .comment_rate";
     }
-    $(context + " a").each(function(){
+    $(context + " a:not(.raters)").each(function(){
         $(this).attr('href', '#' + $(this).attr('href'));
         $(this).click(function(){
             rate($(this).attr('href').split('#')[1], 'comment');
@@ -394,7 +426,7 @@ function initPostRates(context) {
     } else {
         context = context + ">.post_rate";
     }
-    $(context + ">a").each(function(){
+    $(context + ">a:not(.raters)").each(function(){
         $(this).attr('href', '#' + $(this).attr('href'));
         $(this).click(function(){
             rate($(this).attr('href').split('#')[1], 'post');
@@ -408,7 +440,7 @@ function initBlogRates(context) {
     } else {
         context = context + ">.#blog_rate";
     }
-    $(context + ">a.rate_blog").each(function(){
+    $(context + ">a.rate_blog:not(.raters)").each(function(){
         $(this).attr('href', '#' + $(this).attr('href'));
         $(this).click(function(){
             rate($(this).attr('href').split('#')[1], 'blog');
@@ -657,6 +689,12 @@ $(document).ready(function(){
         $.ajax({ url:$(this).attr('href'), context: document.body, success: function(data, textStatus, XMLHttpRequest) {
             document.location = '/pm/';
         }});
+    });
+    $('.raters').click(function(event) {
+        event.preventDefault();
+        var url = $(this).attr('href').split('#')[1];
+        var args = url.split('/');
+        get_raters(args[1], args[2]);
     });
     if (document.location.pathname == '/accounts/register/') {
         initRegistrationChecker();
