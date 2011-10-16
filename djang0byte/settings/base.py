@@ -41,8 +41,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     )
 
 MIDDLEWARE_CLASSES = (
-    'johnny.middleware.LocalStoreClearMiddleware',
-    'johnny.middleware.QueryCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.cache.CacheMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -86,7 +84,6 @@ INSTALLED_APPS = (
     'django_push',
     'compressor',
     'sendmail',
-    'johnny',
     'loginza',
     'django_evolution',
     'haystack',

@@ -46,7 +46,6 @@ MEDIA_ROOT = 'media'
 SITE_ID = 1
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-JOHNNY_MIDDLEWARE_KEY_PREFIX = 'my_project1_jonny_cache_key'
 ADMINS = (
      ('Mega Admin', 'email@email.email'),
 )
