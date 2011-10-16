@@ -9,7 +9,8 @@ Features:
 - Posts (articles) with rating and tags;
 - Notify system with last action feed;
 - Private messages;
-- Code hightlighting;
+- Full text search;
+- Code highlighting.
 
 Install
 =======
