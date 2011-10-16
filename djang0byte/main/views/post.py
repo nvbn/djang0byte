@@ -268,7 +268,7 @@ def post_list(request, post_type = None, param = None):
         # Do not crash on unknown type
         raise Http404(_('Address not found: %s') % post_type)
     if posts and type(posts) not in (imap, list):
-        posts = posts.order_by('-pinch', '-id').select_related('author', 'blog')
+        posts = posts.order_by('-pinch', '-id').select_related('author', 'blog', 'author__profile')
     #TODO: fix answer result in post list
     return {
         'object_list': posts,
@@ -361,7 +361,10 @@ def lenta(request):
     Returns: Array
 
     """
-    notifs = Notify.objects.select_related('post', 'comment').filter(user=request.user).order_by("-id")
+    notifs = Notify.objects.select_related(
+        'post', 'comment', 'post__author', 'comment__author',
+        'post__author__profile', 'comment__author__profile',
+    ).filter(user=request.user).order_by("-id")
     LentaLastView.update_last_view(request.user)
     return {
         'object_list': notifs

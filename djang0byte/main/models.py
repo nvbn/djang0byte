@@ -339,7 +339,9 @@ class Post(Draft):
         """Return first level comments in post"""
         try:
             comments = Comment.objects.filter(post=self, depth=1)[0]
-            return comments.get_descendants().select_related('author', 'post', 'post__author')
+            return comments.get_descendants().select_related(
+                'author', 'post', 'post__author', 'author__profile', 'post__author__profile'
+            )
         except IndexError:
             return None
 
