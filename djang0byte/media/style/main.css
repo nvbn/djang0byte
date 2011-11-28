@@ -106,7 +106,7 @@ a, a:hover, a:active {
     padding-right: 15px;
 }
 
-a.plust_rate, a.minus_rate {
+a.plus_rate, a.minus_rate {
     text-decoration: none !important;
     display: inline-block;
     width: 14px;
