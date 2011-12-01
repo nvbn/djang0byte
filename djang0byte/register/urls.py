@@ -6,6 +6,7 @@ from forms import RegistrationFormProfile
 import inspect
 from functools import partial
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
 if 'backend' in inspect.getargs(int_register.func_code).args:
     # hack for new django-registartion, still doesn't work for 0.8.0alpha
@@ -27,5 +28,11 @@ urlpatterns = patterns('',
     name='auth_login'),
     (r'', include('registration.urls')),
     (r'^check/(.*)/(.*)/(.*)/$', check),
-    (r'^check/(.*)/(.*)/$', check)
+    (r'^check/(.*)/(.*)/$', check),
 )
+
+if getattr(settings, 'ALLOW_MERGING', False):
+    urlpatterns += patterns('',
+        url(r'^merge_key/$', 'register.views.generate_merge_key', name='register_merge_key'),
+        url(r'^merge/$', 'register.views.merge', name='merge'),
+    )
