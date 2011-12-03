@@ -24,14 +24,14 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template.loader import render_to_string
 from main.forms import *
 from main.models import *
-from parser.utils import unparse, unparse, remove_code
+from djang0parser.utils import unparse, unparse, remove_code
 from settings import POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, VALID_TAGS, VALID_ATTRS
 from django.views.decorators.cache import cache_page, never_cache
 from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
 from main.utils import Access, jsend
-from parser import utils
+from djang0parser import utils
 from django.template import RequestContext
 from settings import DEFAULT_CACHE_TIME
 from django.views.decorators.vary import vary_on_cookie

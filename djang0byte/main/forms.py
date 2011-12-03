@@ -20,7 +20,7 @@ from timezones.forms import TimeZoneField
 from tagging_autocomplete.widgets import TagAutocomplete
 from main.models import Comment, Post
 from django.conf import settings
-from parser import utils
+from djang0parser import utils
 
 class RegisterForm(forms.Form):
     """Registration form"""

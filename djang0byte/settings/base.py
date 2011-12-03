@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'loginza',
     'django_evolution',
     'haystack',
+    'djang0parser',
 )
 
 MAN_IN_BLACKLIST = (
