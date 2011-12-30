@@ -73,7 +73,6 @@ INSTALLED_APPS = (
     'register',
     'treebeard',
     'main',
-    'parser',
     'treemenus',
     'feed',
     'annoying',

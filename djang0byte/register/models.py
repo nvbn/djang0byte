@@ -20,7 +20,7 @@ class MergeKey(models.Model):
     key = models.CharField(
         max_length=32, editable=False, unique=True, verbose_name=_('key')
     )
-    objects = MergeKeyManager
+    objects = MergeKeyManager()
 
     @staticmethod
     def generate_key(user):
