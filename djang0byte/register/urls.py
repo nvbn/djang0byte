@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from django.contrib.auth.views import password_reset, login
+from django.contrib.auth.views import *
 from registration.views import register as int_register
 from views import *
 from forms import RegistrationFormProfile
@@ -18,14 +18,13 @@ def register(request, *args, **kwargs):
     return int_register(request, *args, **kwargs)
 
 urlpatterns = patterns('',
-    url(r'^register/$', register,
-        {'form_class': RegistrationFormProfile},
-        name='registration.views.register'),
+    url(r'^register/$', register, {
+        'form_class': RegistrationFormProfile
+    }, name='registration.views.register'),
     (r'^logout/', logout),
-    url(r'^login/js/$',
-        login,
-        {'template_name': 'registration/login_form.html'},
-    name='auth_login'),
+    url(r'^login/js/$', login, {
+        'template_name': 'registration/login_form.html'
+    }, name='auth_login'),
     (r'', include('registration.urls')),
     (r'^check/(.*)/(.*)/(.*)/$', check),
     (r'^check/(.*)/(.*)/$', check),

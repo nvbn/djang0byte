@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 03:52+0400\n"
+"POT-Creation-Date: 2011-12-31 00:31+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: models.py:19
+#: models.py:21
 msgid "user"
 msgstr "пользователь"
 
-#: models.py:21
+#: models.py:23
 msgid "key"
 msgstr "ключ"
 
@@ -37,8 +37,8 @@ msgid ""
 "For merging account %(username)s with another go to this %(url)s, for "
 "merging you need to login to main user"
 msgstr ""
-"Для объединения аккаунта %(username)s с другим перейдите по ссылке %(url)s, перед "
-"этим вам поребуется зайти за ваш основной аккаунт"
+"Для объединения аккаунта %(username)s с другим перейдите по ссылке %(url)s, "
+"перед этим вам поребуется зайти за ваш основной аккаунт"
 
 #: templates/registration/activate.html:8
 msgid "Account successfully activated"
@@ -120,8 +120,7 @@ msgstr "Введите новый пароль"
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr ""
-"Пожалуйста, введите ваш новый пароль дважды "
+msgstr "Пожалуйста, введите ваш новый пароль дважды "
 
 #: templates/registration/password_reset_confirm.html:15
 msgid "New password:"
@@ -136,9 +135,8 @@ msgid "Change my password"
 msgstr "Сменить пароль"
 
 #: templates/registration/password_reset_confirm.html:23
-#, fuzzy
 msgid "Password reset unsuccessful"
-msgstr "Пароль успешно сброшен"
+msgstr "Не удалось сбросить пароль"
 
 #: templates/registration/password_reset_confirm.html:25
 msgid ""
@@ -148,7 +146,6 @@ msgstr ""
 
 #: templates/registration/password_reset_done.html:4
 #: templates/registration/password_reset_done.html:8
-#, fuzzy
 msgid "Password reset successful"
 msgstr "Пароль успешно сброшен"
 
@@ -171,12 +168,11 @@ msgstr ""
 
 #: templates/registration/password_reset_form.html:12
 msgid "E-mail address:"
-msgstr ""
+msgstr "E-mail:"
 
 #: templates/registration/password_reset_form.html:12
-#, fuzzy
 msgid "Reset my password"
-msgstr "Забыли пароль"
+msgstr "Сбросить пароль"
 
 #: templates/registration/register.html:4
 msgid "Registration"
