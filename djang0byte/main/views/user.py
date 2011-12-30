@@ -191,7 +191,8 @@ def edit_user(request):
             profile.icq = data['icq']
             profile.jabber = data['jabber']
             profile.timezone = data['timezone']
-            profile.city = City.get_city(data['city'])
+            if data['city']:
+                profile.city = City.get_city(data['city'])
             profile.hide_mail = data['show_mail']
             profile.reply_comment = data['notify_comment_reply']
             profile.reply_pm = data['notify_pm']

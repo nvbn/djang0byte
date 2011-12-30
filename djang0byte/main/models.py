@@ -194,6 +194,8 @@ class City(models.Model):
         Returns: City
 
         """
+        if not name:
+            return None
         city, created = City.objects.get_or_create(
             name=name,
         )
