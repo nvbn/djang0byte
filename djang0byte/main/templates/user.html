@@ -56,7 +56,8 @@
     {% if profile_user.avatar %}
     <a href='/action/delete_userpic/'><img src="/media/style/edit.png" /> {% trans "Delete userpic" %}</a>
     {% endif %}
-    {% if not is_social %}<a href='/accounts/password/change/'><img src="/media/style/edit.png" /> {% trans "Change password" %}</a>{% endif %}
+    <a href='/accounts/password/change/'><img src="/media/style/edit.png" /> {% trans "Change password" %}</a>
+    <a href='#' id="merge_account"><img src="/media/style/pound.gif" /> {% trans "Merge with another" %}</a>
 {% else %}
     {% if is_my_friend == 0 %}
         <br /><br />

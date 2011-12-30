@@ -737,15 +737,31 @@ $(document).ready(function(){
     if ($(".new_comment").length){
         $('#updated_count').html($(".new_comment").length);
     }
+    if ($("#merge_account").length){
+        $('#merge_account').click(function (event) {
+            alert('s');
+            event.preventDefault();
+            var div = '<div>Данные для объединения аккаунтов высланы вам на почту!</div>';
+            $.modal(div, {
+                overlayClose:true,
+                opacity:80,
+                minHeight:200,
+                minWidth:300
+            });
+            return false;
+        });
+    }
     $('#login_btn').click(function(event){
-       event.preventDefault();
-       loginForm();
+        event.preventDefault();
+        loginForm();
         return false;
     });
     $('#share_opener').click(function(event){
+        $.ajax({ url:'/merge_key/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
         event.preventDefault();
         $('#share_buttons').css('display', 'inline');
         $('#share_opener').css('display', 'none');
         return false;
     });
+
 });
