@@ -70,7 +70,7 @@ def generate_merge_key(request):
         message=_('For merging account %(username)s with another go to this %(url)s,' \
                   ' for merging you need to login to main user' % {
             'username': request.user.username,
-            'url': getattr(settings, 'SITE_URL') + '/merge_accounts/?key=' + key.key,
+            'url': getattr(settings, 'SITE_URL') + '/accounts/merge/?key=' + key.key,
         }),
         recipient=request.user,
     )

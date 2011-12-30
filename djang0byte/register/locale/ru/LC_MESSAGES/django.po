@@ -36,8 +36,7 @@ msgstr "Вы пытаетесь объеденить аккаунты"
 msgid ""
 "For merging account %(username)s with another go to this %(url)s, for "
 "merging you need to login to main user"
-msgstr ""
-"Для объединения аккаунта %(username)s с другим перейдите по ссылке %(url)s, "
+msgstr "Для объединения аккаунта %(username)s с другим перейдите по ссылке %(url)s, "
 "перед этим вам поребуется зайти за ваш основной аккаунт"
 
 #: templates/registration/activate.html:8
