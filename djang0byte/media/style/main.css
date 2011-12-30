@@ -7,6 +7,11 @@ html, body {
     background: #fff;
 }
 
+.comment_rate a, .post_rate a {
+    color: #000;
+    text-decoration: none;
+}
+
 img, a img {
     border: none;
 }
@@ -698,4 +703,9 @@ hr {
 a.selected_type, a.selected_type:hover, a.selected_type:active {
     color: #000;
     text-decoration: none;
+}
+
+.chronology {
+    overflow-y: scroll;
+    max-height: 300px;
 }

@@ -14,11 +14,11 @@ function get_raters(type, id) {
         cache: false,
         success: function(data, textStatus, XMLHttpRequest) {
             var raters = data.raters;
-            var div = '<h2>Хронология голосов</h2>';
+            var div = '<div class="chronology"><h2>Хронология голосов</h2>';
             if (!raters.length)
                 div = '<h2>Ещё никто не проголосовал!</h2>';
             else for (i in raters) {
-                div += '<a href="/user/' + raters[i].username + '/"><img src="' + raters[i].avatar +'" /> ' +
+                div += '<a href="/user/' + raters[i].username + '/"><img class="mini_av" src="' + raters[i].avatar +'" /> ' +
                     raters[i].username + '</a> поставил <span class="';
                 if (raters[i].negative)
                     div += 'minus_rate">минус';
@@ -26,10 +26,10 @@ function get_raters(type, id) {
                     div += 'plus_rate">плюс';
                 div += '</span>!<br />';
             }
-            $.modal(div, {
+            $.modal(div + '</div>', {
                overlayClose:true,
                opacity: 80,
-               minHeight:200,
+               minHeight:300,
 	           minWidth: 300
             });
         }
