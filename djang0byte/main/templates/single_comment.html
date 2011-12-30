@@ -12,7 +12,7 @@
             <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
                 <a href="#/comment/{{ comment.id }}/"
                 {% if comment.rate == 0 %}
-                    class='rate_val'
+                    class='rate_val raters'
                 {% endif %}
                 {% if comment.rate > 0 %}
                     class='rate_val raters plus_rate'

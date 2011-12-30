@@ -3,7 +3,7 @@
        <a class="plus_rate" href='/action/ratepost/{{ post.id }}/1/'>+</a>
             <a href="#/post/{{ post.id }}/"
             {% if post.rate == 0 %}
-                class='rate_val'
+                class='rate_val raters'
             {% endif %}
             {% if post.rate > 0 %}
                 class='rate_val raters plus_rate'
