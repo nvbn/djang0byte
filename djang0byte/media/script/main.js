@@ -395,9 +395,9 @@ function rate(url, type) {
                     class_name = '';
                 }
                 if (type == 'comment') {
-                    hash = '#cmnt' + data.id + '>div.comment_top>div.comment_rate>span';
+                    hash = '#cmnt' + data.id + '>div.comment_top>div.comment_rate>a.rate_val';
                 } else if (type == 'post') {
-                    hash = '#prate' + data.id + '>span';
+                    hash = '#prate' + data.id + '>a.rate_val';
                 } else if (type == 'blog')
                     hash = 'span#blog_rate>span';
                 $(hash).html(data.rate).attr('class', class_name);
