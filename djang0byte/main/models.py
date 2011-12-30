@@ -182,7 +182,7 @@ class Blog(models.Model):
 class City(models.Model):
     """All of cities"""
     name = models.CharField(max_length=60, verbose_name=_('Name of city'))
-    count = models.IntegerField(verbose_name=_('Users from this city'), default=0)
+    count = models.IntegerField(default=0, verbose_name=_('Users from this city'))
 
     @staticmethod
     def get_city(name):
@@ -199,7 +199,10 @@ class City(models.Model):
         city, created = City.objects.get_or_create(
             name=name,
         )
-        city.count += 1
+        try:
+            city.count += 1
+        except TypeError:  # fix for srv
+            city.count = 1
         city.save()
         return city
 
@@ -636,9 +639,9 @@ class Profile(models.Model):
     """User profile"""
     user = models.ForeignKey(User, unique=True, verbose_name=_('User'))
     city = models.ForeignKey(City, blank=True, null=True, verbose_name=_('City'))
-    icq = models.CharField(max_length=10, blank=True, verbose_name=_('Icq'))
-    jabber = models.EmailField(max_length=60, blank=True, verbose_name=_('Jabber'))
-    site = models.URLField(blank=True, verbose_name=_('Web site'))
+    icq = models.CharField(max_length=10, blank=True, null=True, verbose_name=_('Icq'))
+    jabber = models.EmailField(max_length=60, blank=True, null=True, verbose_name=_('Jabber'))
+    site = models.URLField(blank=True, null=True, verbose_name=_('Web site'))
     rate = models.IntegerField(default=0, verbose_name=_('Personal rate'))
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
     posts_rate = models.IntegerField(default=0, verbose_name=_('Rate earned by posts'))
@@ -652,8 +655,8 @@ class Profile(models.Model):
     reply_pm = models.BooleanField(default=True, verbose_name=_('Send notify about PM?'))
     reply_mention = models.BooleanField(default=True, verbose_name=_('Send notify about mention?'))
     reply_spy = models.BooleanField(default=True, verbose_name=_('Send notify about spy?'))
-    about = models.TextField(blank=True, verbose_name=_('About'))
-    other = models.TextField(blank=True, verbose_name=_('Field for addition'))
+    about = models.TextField(blank=True, null=True, verbose_name=_('About'))
+    other = models.TextField(blank=True, null=True, verbose_name=_('Field for addition'))
 
     def get_posts(self):
         """Get posts by user"""
