@@ -1,4 +1,4 @@
-django==1.2.3
+django
 pytz
 django-timezones
 django-tagging
@@ -10,7 +10,6 @@ django-registration
 django-recaptcha==0.0.1
 pytils
 django-push
-pygments
 django-tagging_autocomplete
 johnny-cache
 django_compressor

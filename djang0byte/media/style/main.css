@@ -1,6 +1,6 @@
 html, body {
-    font-family: dejavu-serif, Verdana;
-    font-size: 12px;
+    font-family: sans-serif, Verdana;
+    font-size: 14px;
     padding: 0 !important;
     margin: 0 !important;
     width: 100%;
@@ -23,9 +23,8 @@ img, a img {
 }
 
 h2 {
-    margin: 0;
+    margin: 0 0 15px;
     padding: 0;
-    margin-bottom: 15px;
 }
 
 .title span {
@@ -47,12 +46,9 @@ a, a:hover, a:active {
 
 .menu ol li {
     display: inline-block;
-    padding: 5px;
-    padding-right: 15px;
-    padding-left: 8px;
+    padding: 5px 15px 5px 8px;
     background: #fdfdfd url('rwt.png') no-repeat right;
-    margin: 0 !important;
-    margin-right:-5px !important;
+    margin: 0 -5px 0 0 !important;
     height: 15px;
     text-align: center;
     vertical-align: bottom;
@@ -173,7 +169,7 @@ a.plus_rate:hover {
 table.top {
     width: 100%;
     padding: 0;
-    border-spacing: 0px;
+    border-spacing: 0;
     vertical-align: top;
 }
 
@@ -594,7 +590,7 @@ a.rm_meon, a.rm_meon:hover, a.rm_meon:active {
     background-color: #E8F0FA;
     color: #666;
     padding: 10px;
-    margin: 10px 0px 5px 0px;
+    margin: 10px 0 5px 0;
     font-style: italic;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
