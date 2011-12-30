@@ -1,4 +1,4 @@
-from papyon.profile import Profile
+from main.models import Profile
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -92,7 +92,7 @@ def merge(request):
     try:
         key.merge(request.user)
         return {
-            'succes': True
+            'success': True
         }
     except (User.DoesNotExist, Profile.DoesNotExist):
         return {

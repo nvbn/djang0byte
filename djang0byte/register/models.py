@@ -1,17 +1,19 @@
+from itertools import imap, ifilter
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.db.utils import IntegrityError
 from django.utils.translation import ugettext as _
 from django.db import models
 from datetime import datetime
 import hashlib
-from main.models import Profile
+from main.models import Profile, LastView, LentaLastView, LastVisit
 
 
 class MergeKeyManager(models.Manager):
     def create(self, **kwargs):
         if not 'key' in kwargs and 'user' in kwargs:
             kwargs['key'] = MergeKey.generate_key(kwargs['user'])
-        super(MergeKeyManager, self).create(**kwargs)
+        return super(MergeKeyManager, self).create(**kwargs)
 
 
 class MergeKey(models.Model):
@@ -29,21 +31,54 @@ class MergeKey(models.Model):
         ).hexdigest()
 
     def merge(self, new_user):
-        for ct in ContentType.objects.all():
-            model = ct.model_class()
-            for field, _model in model._meta.get_fields_with_model().items():
-                if _model == User:
-                    model.objects.filter(**{
-                        field.name: self.user
-                    }).update(**{
-                        field.name: new_user
-                    })
-                elif _model == Profile:
-                    model.objects.filter(**{
-                        field.name: self.user.get_profile()
-                    }).update(**{
-                        field.name: new_user.get_profile()
-                    })
+        LastView.objects.filter(user=self.user).delete()
+        LastVisit.objects.filter(user=self.user).delete()
+        LentaLastView.objects.filter(user=self.user).delete()
+        profile = self.user.get_profile()
+        new_profile = new_user.get_profile()
+        models = ifilter(lambda model: model,
+            imap(lambda ct: ct.model_class(), ContentType.objects.all())
+        )
+        for model in models:
+            rels_vals = imap(lambda field: (field,
+                (profile, new_profile) if field.rel.to is Profile else (self.user, new_user)),
+                ifilter(lambda field:
+                    getattr(field.rel, 'to', None) in (User, Profile),
+                    model._meta.fields)
+            )
+            for field, (old_val, new_val) in rels_vals:
+                for obj in model.objects.filter(**{
+                    field.name: old_val
+                }):
+                    try:
+                        setattr(obj, field.name, new_val)
+                        obj.save()
+                    except IntegrityError:
+                        obj.delete()
+#        for ct in ContentType.objects.all():
+#            model = ct.model_class()
+#            if model:
+#                for field in model._meta.fields:
+#                    if field.rel:
+#                        _model = field.rel.to
+#                        if _model == User:
+#                            for obj in model.objects.filter(**{
+#                                field.name: self.user
+#                            }):
+#                                try:
+#                                    setattr(obj, field.name, new_user)
+#                                    obj.save()
+#                                except IntegrityError:
+#                                    obj.delete()
+#                        elif _model == Profile:
+#                            for obj in model.objects.filter(**{
+#                                field.name: self.user.get_profile()
+#                            }):
+#                                try:
+#                                    setattr(obj, field.name, new_user.get_profile())
+#                                    obj.save()
+#                                except IntegrityError:
+#                                    obj.delete()
         self.delete()
         self.user.delete()
 

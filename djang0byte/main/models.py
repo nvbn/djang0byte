@@ -1310,6 +1310,9 @@ class LastVisit(models.Model):
     def __unicode__(self):
         return self.user.username
 
+    class Meta:
+        unique_together = ('date', 'user')
+
 class LentaLastView(models.Model):
     """Last view of lenta time model"""
 
@@ -1333,6 +1336,9 @@ class LentaLastView(models.Model):
         except cls.DoesNotExist:
             view = cls(user=user)
             view.save()
+
+    class Meta:
+        unique_together = ('date', 'user')
 
 class Blocks(models.Model):
     """Bans and blocks model"""

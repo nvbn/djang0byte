@@ -739,9 +739,9 @@ $(document).ready(function(){
     }
     if ($("#merge_account").length){
         $('#merge_account').click(function (event) {
-            alert('s');
             event.preventDefault();
-            var div = '<div>Данные для объединения аккаунтов высланы вам на почту!</div>';
+            $.ajax({ url:'/accounts/merge_key/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
+            var div = '<div style="width: 280px; vertical-align: middle;margin-top: 60px;font-size: 24px;text-align: center;">Данные для объединения аккаунтов высланы вам на почту!</div>';
             $.modal(div, {
                 overlayClose:true,
                 opacity:80,
@@ -757,7 +757,6 @@ $(document).ready(function(){
         return false;
     });
     $('#share_opener').click(function(event){
-        $.ajax({ url:'/merge_key/', context: document.body, success: function(data, textStatus, XMLHttpRequest) {}});
         event.preventDefault();
         $('#share_buttons').css('display', 'inline');
         $('#share_opener').css('display', 'none');
