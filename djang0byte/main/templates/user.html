@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load pytils_numeral %}
 {% block title %}
 {{ user_user.username }}
 {% endblock %}
@@ -47,7 +48,8 @@
     {% endfor %}
     <br />
 {% endif %}
-{% trans "Writed" %} <a href="/auth/{{ profile_user }}/">{{ profile_user.post_count }} {% trans "posts</a> and" %} <a href="/comments/{{ profile_user }}/">{{ profile_user.comment_count }} {% trans "comments</a>." %}
+{% trans "Writed" %} <a href="/auth/{{ profile_user }}/">{{ profile_user.post_count }} пос{{ profile_user.post_count|choose_plural:"т,та,тов" }}</a> и
+<a href="/comments/{{ profile_user }}/">{{ profile_user.comment_count }} комментари{{ profile_user.comment_count|choose_plural:"й,я,ев" }}</a>.
 {% if mine %}
     <br />
     <hr />
