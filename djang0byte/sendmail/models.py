@@ -16,8 +16,8 @@ class Mails(models.Model):
             msg = EmailMessage(self.subject, self.message, settings.DEFAULT_FROM_EMAIL, [self.recipient,])
             msg.content_subtype = "html"  # Main content is now text/html
             msg.send()
-        except:
-            pass
+        except Exception, error:
+            print error
 
     @staticmethod
     def send_all():
