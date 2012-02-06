@@ -7,6 +7,7 @@ from django.db import models
 from datetime import datetime
 import hashlib
 from main.models import Profile, LastView, LentaLastView, LastVisit
+from pytils import translit
 
 
 class MergeKeyManager(models.Manager):
@@ -27,7 +28,7 @@ class MergeKey(models.Model):
     @staticmethod
     def generate_key(user):
         return hashlib.md5(
-            "%d_%s_%s" % (user.id, user.username, str(datetime.now()))
+            "%d_%s" % (user.id, str(datetime.now()))
         ).hexdigest()
 
     def merge(self, new_user):
