@@ -1,1 +1,0 @@
-1 * * * * root python manage.py sendmail

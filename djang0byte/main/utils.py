@@ -20,7 +20,6 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from pytils.translit import slugify, translify
 from time import strftime
-from sendmail.models import Mails
 import urllib
 import xml.dom.minidom
 import simplejson
@@ -83,10 +82,12 @@ def new_notify_email(comment, type, recipient):
             'site_url': '%s://%s' % (default_protocol, current_domain),
             'comment': comment,
         })
-        mail = Mails(subject=subject[type] % {
+        mail = send_mail(subject=subject[type] % {
                 'user': comment.author.username,
                 'site': current_domain
-            }, message=message, recipient=recipient.email)
+            }, message=message,
+            recipient_list=[recipient.email]
+        )
         mail.save()
     except Exception, e:
         print e

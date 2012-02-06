@@ -82,7 +82,6 @@ INSTALLED_APPS = (
     'pytils',
     'django_push',
     'compressor',
-    'sendmail',
     'loginza',
     'django_evolution',
     'haystack',

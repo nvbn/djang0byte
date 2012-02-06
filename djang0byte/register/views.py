@@ -10,8 +10,8 @@ from loginza import signals, models
 from loginza.models import UserMap
 from django.contrib.auth.views import login as original_login
 from register.models import MergeKey
-from sendmail.models import Mails
 from django.utils.translation import ugettext as _
+from django.core.mail import send_mail
 
 @ajax_request
 def check(request, type, value, value_2 = None):
@@ -65,14 +65,16 @@ def generate_merge_key(request):
     key = MergeKey.objects.create(
         user=request.user,
     )
-    Mails.objects.create(
+    send_mail(
         subject=_('You try to merge accounts'),
         message=_('For merging account %(username)s with another go to this %(url)s,' \
                   ' for merging you need to login to main user' % {
             'username': request.user.username,
             'url': getattr(settings, 'SITE_URL') + '/accounts/merge/?key=' + key.key,
         }),
-        recipient=request.user,
+        from_email=getattr(settings, 'DEFAULT_FROM_EMAIL'),
+        recipient_list=[request.user.email],
+        fail_silently=True
     )
     return {
         'status': True,
