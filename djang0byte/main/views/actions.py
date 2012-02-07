@@ -27,7 +27,7 @@ from django.views.decorators.cache import cache_page, never_cache
 from simplepagination import paginate
 from annoying.decorators import render_to
 from tagging.models import TaggedItem
-from main.utils import Access, jsend
+from main.utils import Access, jsend, RATE
 from djang0parser import utils
 from django.template import RequestContext
 from settings import DEFAULT_CACHE_TIME
@@ -36,6 +36,9 @@ from django.utils import simplejson
 from django.utils.translation import gettext as _
 from annoying.decorators import ajax_request
 import simplejson as json
+from django.conf import settings
+from django.core.urlresolvers import reverse
+
 
 @never_cache
 def rate_comment(request, profile, comment_id, json, action):
@@ -53,17 +56,16 @@ def rate_comment(request, profile, comment_id, json, action):
     comment = Comment.objects.select_related('post').get(id=comment_id)
     if request.user != comment.author:
         if profile.check_access(Access.rate_comment):
-            if action == '1':
-                rate = comment.rate_comment(request.user, +1)
-            elif action == '0':
-                rate = comment.rate_comment(request.user, -1)
+            rate = comment.rate_comment(request.user, RATE[action])
             error = ''
             if not rate:
                 error = _('Second vote is forbidden!')
             if json:
                 return jsend({'error': error, 'rate': comment.rate, 'id': comment.id })
             else:
-                return HttpResponseRedirect('/post/%d/#cmnt%d' % (comment.post.id, int(id)))
+                return HttpResponseRedirect('%s#cmnt%d' % (
+                    reverse('main_post', args=(comment.post.id,)),
+                int(id)))
         else:
             return jsend({
                 'error': _('Not allow this action!')
@@ -72,7 +74,9 @@ def rate_comment(request, profile, comment_id, json, action):
         return jsend({
             'error': _('For their comments can not vote!')
         })
-    return HttpResponseRedirect('/post/%d/#cmnt%d' % (int(comment.post.id), comment.id))
+    return HttpResponseRedirect('%s#cmnt%d' % (
+        reverse('main_post', args=(comment.post.id,)),
+    comment.id))
 
 @never_cache
 def rate_post(request, profile, post, json, action):
@@ -89,10 +93,7 @@ def rate_post(request, profile, post, json, action):
     """
     if request.user != post.author:
         if profile.check_access(Access.rate_post):
-            if action == '1':
-                rate = post.rate_post(request.user, +1)
-            elif action == '0':
-                rate = post.rate_post(request.user, -1)
+            rate = post.rate_post(request.user, RATE[action()])
             error = ''
             if not rate:
                 error = _('Second vote is forbidden!')
@@ -110,7 +111,9 @@ def rate_post(request, profile, post, json, action):
         return jsend({
             'error': _('For their post can not vote!')
         })
-    return HttpResponseRedirect('/post/%d/' % (int(post.id)))
+    return HttpResponseRedirect(
+        reverse('main_post', args=(post.id,))
+    )
 
 @never_cache
 def rate_blog(request, profile, blog_id, json, action):
@@ -128,10 +131,7 @@ def rate_blog(request, profile, blog_id, json, action):
     blog = Blog.objects.get(id=blog_id)
     if request.user != blog.owner:
         if profile.check_access(Access.rate_blog):
-            if action == '1':
-                rate = blog.rate_blog(request.user, +1)
-            elif action == '0':
-                rate = blog.rate_blog(request.user, -1)
+            rate = blog.rate_blog(request.user, RATE[action])
             error = ''
             if not rate:
                 error = _('Second vote is forbidden!')

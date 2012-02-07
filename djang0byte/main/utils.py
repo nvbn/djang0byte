@@ -25,6 +25,7 @@ import xml.dom.minidom
 import simplejson
 from django.utils.translation import ugettext as _
 
+
 def jsend(data):
     """Alias for sending 'jsoned' data"""
     return(HttpResponse(simplejson.dumps(data), mimetype='application/json'))
@@ -102,3 +103,11 @@ class Access:
     rate_comment = 4
     rate_user = 5
     rate_blog = 6
+
+
+RATE_PLUS = '1'
+RATE_MINUS = '0'
+RATE = {
+    RATE_PLUS: +1,
+    RATE_MINUS: -1,
+}
