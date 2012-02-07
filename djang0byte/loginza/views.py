@@ -1,16 +1,15 @@
 # -*- coding:utf-8 -*-
 from urllib2 import urlopen
-
 from django import http
 from django.utils import simplejson as json
 from django.contrib import auth
 from django.shortcuts import redirect
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-
 from loginza import models, signals
 from loginza.authentication import LoginzaError
 from loginza.templatetags.loginza_widget import _return_path
+
 
 @require_POST
 @csrf_exempt

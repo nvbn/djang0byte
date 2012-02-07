@@ -8,6 +8,7 @@ from loginza import signals
 from loginza.conf import settings
 from main.models import Profile, Statused, MeOn
 
+
 def make_username(username):
     counter = 1
     name = username
@@ -15,6 +16,7 @@ def make_username(username):
         name += str(counter)
         counter += 1
     return username
+
 
 class IdentityManager(models.Manager):
     def from_loginza_data(self, loginza_data):

@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from django.contrib.auth.models import User
 
+
 class LoginzaBackend(object):
     supports_object_permissions = False
     supports_anonymous_user = False

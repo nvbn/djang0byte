@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from main.models import Post
 from django.db.models import Q
 
+
 class Command(BaseCommand):
 
     def handle(self, **options):

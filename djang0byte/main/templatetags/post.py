@@ -13,12 +13,9 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-
-
-
 from django import template
-from django.views.decorators.cache import never_cache
 from main.models import LastView
+
 
 register = template.Library()
 
@@ -31,7 +28,9 @@ def comments_count(context):
         count = post.get_comment().count()
         if user.is_authenticated():
             try:
-                new_count = post.get_comment().filter(created__gt=LastView.objects.get(post=post, user=user).date).count()
+                new_count = post.get_comment().filter(
+                    created__gt=LastView.objects.get(post=post, user=user).date
+                ).count()
             except LastView.DoesNotExist:
                 new_count = count
         else:
@@ -39,5 +38,7 @@ def comments_count(context):
     except AttributeError:
         count = 0
         new_count = 0
-    return {'count': count, 'new_count': new_count}
-    
+    return {
+        'count': count,
+        'new_count': new_count
+    }

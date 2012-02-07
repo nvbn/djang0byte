@@ -1087,7 +1087,6 @@ class Notify(models.Model):
             try:
                 Notify.objects.get(comment=comment, user=comment.post.author)
             except Notify.DoesNotExist:
-                print 'fuckfuckdie!'
                 Notify.new_notify(False, comment, comment.post.author)
                 if comment.post.author.get_profile().reply_post:
                     new_notify_email(comment, 'post_reply', comment.post.author)

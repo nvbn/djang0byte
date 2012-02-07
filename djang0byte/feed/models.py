@@ -13,28 +13,17 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-
 from django_push.publisher.feeds import Feed
 from tagging.models import TaggedItem
-from main.models import *
-from settings import SITENAME, POST_RATE_TO_MAIN
+from django.contrib.auth.models import User
+from main.models import BlogType, Post, Blog
+from django.conf import settings
 from django.utils.translation import ugettext as _
 
+
 class PostFeed(Feed):
-    title = SITENAME
+    title = getattr(settings, 'SITENAME')
     link = "/rss/"
-
-
-    """def prepare(self, text):
-        for (subj, replacement) in (
-            ('&#39;', "'"),
-            ('&amp;', '&'),
-            ('&quot;', '"'),
-            ('&lt;', '<'),
-            ('&gt;', '>'),
-        ):
-            test = text.replace(subj, replacement)
-        return text"""
 
     def get_object(self, request, type = None, value = None):
         if BlogType.check(type):
@@ -57,7 +46,9 @@ class PostFeed(Feed):
         else:
             blog_types = BlogType.objects.filter(display_default=False)
             blogs = Blog.objects.filter(type__in=blog_types)
-            return Post.objects.exclude(blog__in=blogs).filter(rate__gt=POST_RATE_TO_MAIN)
+            return Post.objects.exclude(blog__in=blogs).filter(
+                rate__gt=getattr(settings, 'POST_RATE_TO_MAIN')
+            )
 
     def items(self, obj):
         return obj.order_by('-id')[:50]

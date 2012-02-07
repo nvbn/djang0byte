@@ -10,6 +10,7 @@ from datetime import datetime
 from django.conf import settings
 from treemenus.models import Menu
 
+
 def obtain_spring(url):
     data = urlopen('http://vesna.yandex.ru/%s' % url).read()
     soup = BeautifulSoup(data)
@@ -17,6 +18,7 @@ def obtain_spring(url):
         soup.find('h1').string[7:][:-2],
         ''.join(map(unicode, soup.find('h1').parent.findAll('p'))),
     )
+
 
 class Command(BaseCommand):
     help = """
@@ -106,5 +108,3 @@ class Command(BaseCommand):
                     rate_count=random_rate()
                 )
                 limit -= 1
-
-            

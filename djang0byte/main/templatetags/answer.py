@@ -13,10 +13,8 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-
-
-
 from django import template
+
 
 register = template.Library()
 
@@ -26,9 +24,7 @@ def print_answer(context):
     post = context['post']
     user = context['request'].user
     post.is_answer(user, True)
-
     return {
         'post': post,
         'request': context['request']
     }
-    

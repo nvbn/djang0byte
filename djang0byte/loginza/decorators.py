@@ -8,6 +8,7 @@ from django.contrib.sites.models import Site
 
 from loginza import signals
 
+
 def user_passes_test(test_func, login_url=None, fail_callback=None, redirect_field_name=REDIRECT_FIELD_NAME):
     """
     Decorator for views that checks that the user passes the given test,
