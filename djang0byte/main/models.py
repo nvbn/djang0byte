@@ -37,7 +37,7 @@ def get_profile(self):  # need hard refactoring!!!
     try:
         return Profile.objects.get(user=self)
     except User.DoesNotExist:
-        return Profile.objects.create(user=self, icq='', jabber='', site='', about='', other='')
+        return Profile.objects.create(user=self)
 User.get_profile = get_profile
 
 
