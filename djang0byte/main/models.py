@@ -32,6 +32,15 @@ from urlparse import urlparse
 import datetime
 from django.db.models import Q
 
+
+def get_profile(self):  # need hard refactoring!!!
+    try:
+        return Profile.objects.get(user=self)
+    except User.DoesNotExist:
+        return Profile.objects.create(user=self, icq='', jabber='', site='', about='', other='')
+User.get_profile = get_profile
+
+
 class BlogType(models.Model):
     """Types of blog"""
     name = models.CharField(max_length=30, verbose_name=_('Name'))
