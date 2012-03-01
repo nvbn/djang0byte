@@ -5,6 +5,7 @@ html, body {
     margin: 0 !important;
     width: 100%;
     background: #fff;
+    min-width: 850px;
 }
 
 .comment_rate a, .post_rate a {
