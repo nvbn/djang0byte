@@ -34,7 +34,7 @@ def newblog(request):
 
     """
     if request.method == 'POST':
-        form = CreateBlogForm(request.POST)
+        form = CreateBlogForm(request.user, request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/newpost/')

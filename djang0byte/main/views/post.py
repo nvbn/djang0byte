@@ -15,10 +15,11 @@
 #       MA 02110-1301, USA.
 from django.core.exceptions import MultipleObjectsReturned
 from itertools import imap
+from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from main.forms import *
 from main.models import *
 from django.views.decorators.cache import cache_page, never_cache
@@ -34,107 +35,20 @@ from haystack.query import SearchQuerySet
 from xapian_backend import InvalidIndexError
 
 @never_cache
-@transaction.commit_on_success
 @login_required
-def newpost(request, type = 'post'):
-    """Create post form and action
-
-    Keyword arguments:
-    request -- request object
-    type -- String
-
-    Returns: HttpResponse
-
-    """
-    profile = request.user.get_profile()
-    type = request.GET.get('type') or 'post'
-    preview = False
-    is_draft = False
-    if request.POST.get('draft'):
-        is_draft = True
-    if request.POST.get('preview'):
-        preview = True
-        is_draft = True
-
-    extend = 'base.html'
-    if request.GET.get('json'):
-        extend = 'json.html'
-    if type != 'answer':
-        _type = type
-        if type == 'post':
-            type = Post.TYPE_POST
-            form = CreatePostForm
-        elif type == 'link':
-            type = Post.TYPE_LINK
-            form = CreatePostLinkForm
-        else:
-            type = Post.TYPE_TRANSLATE
-            form = CreatePostTranslateForm
-        if request.method == 'POST':
-            form = form(request.POST)
-            if form.is_valid() and not (preview or is_draft):
-                data = form.cleaned_data
-                post = Post()
-                post.author = request.user
-                post.type = type
-                post.set_data(data)
-                post.save(edit=False, retry=True)
-                post.create_comment_root()
-                post.set_tags(data['tags'])
-                for mention in utils.find_mentions(data['text']):
-                    Notify.new_mention_notify(mention, post=post)
-                return HttpResponseRedirect('/post/%d/' % (post.id))
-            else:
-                if is_draft:
-                    draft = Draft()
-                    draft.author = request.user
-                    draft.set_data(form.data)
-                    draft.type = type
-                    draft.save(edit=False)
-                    if preview:
-                        return HttpResponseRedirect('/draft/%d/' % (draft.id))
-                    else:
-                        return HttpResponseRedirect('/draft/')
-                return render_to_response('newpost.html', {
-                        'form': form,
-                        'blogs': Blog.create_list(profile),
-                        'type': _type,
-                        'extend': extend
-                    }, context_instance=RequestContext(request))
-        else:
-            return render_to_response('newpost.html', {
-                'form': form(),
-                'blogs': Blog.create_list(profile),
-                'type': _type,
-                'extend': extend
-            }, context_instance=RequestContext(request))
+@render_to('new_post.html')
+def newpost(request):
+    if request.method == 'POST':
+        form = CreatePostForm(request.user, request.POST)
+        if form.is_valid():
+            post = form.save()
+            return redirect(reverse('main_post', args=(post.id,)))
     else:
-        if request.method == 'POST':
-            post = Post()
-            post.title = request.POST.get('title')
-            post.author = request.user
-            post.set_blog(request.POST.get('blog'))
-            if request.POST.get('multi', 0):
-                post.type = Post.TYPE_MULTIPLE_ANSWER
-            else:
-                post.type = Post.TYPE_ANSWER
-            post.save(edit=False)
-            post.create_comment_root()
-            post.set_tags(request.POST.get('tags'))
-            for answer_item in range(int(request.POST.get('count'))):
-                answer = Answer()
-                answer.value = request.POST.get(str(answer_item))
-                answer.post = post
-                answer.save()
-            return HttpResponseRedirect('/post/%d/' % (post.id))
-        multi = False
-        count = 2
-        return render_to_response('newanswer.html', {
-            'answers_count': range(count),
-            'count': count,
-            'blogs': Blog.create_list(profile),
-            'multi': multi, 'extend': extend
-        }, context_instance=RequestContext(request))
+        form = CreatePostForm
+    return {
+        'form': form,
+    }
+
 
 @cache_page(DEFAULT_CACHE_TIME)
 @render_to('post.html')

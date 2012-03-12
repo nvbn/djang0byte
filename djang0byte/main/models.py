@@ -250,7 +250,7 @@ class Draft(models.Model):
     blog = models.ForeignKey(Blog, blank=True, null=True, verbose_name=_('Blog'))
     title = models.CharField(max_length=300, verbose_name=_('Post title'), default=_('No name'))
     text = models.TextField(blank=True, verbose_name=_('Main text'))
-    type = models.IntegerField(choices=POST_TYPE, default=0, verbose_name=_('Type of post'))
+    type = models.SmallIntegerField(choices=POST_TYPE, default=0, verbose_name=_('Type of post'))
     addition = models.CharField(max_length=500, blank=True, verbose_name=_('Addition field'))
     raw_tags = models.CharField(max_length=500, blank=True, null=True, default='')
     is_draft = models.BooleanField(default=True)
@@ -437,43 +437,6 @@ class Post(Draft):
     def get_tags(self):
         """Return post tags"""
         return Tag.objects.get_for_object(self)
-    
-    def set_tags(self, tag_list):
-        """Set tags for post
-        
-        Keyword arguments:
-        tag_list -- Tag
-        
-        Returns: None
-        
-        """
-        if not ',' in tag_list:
-            tag_list += ','
-        Tag.objects.update_tags(self, tag_list)
-        
-        
-    def save(self, edit=True, convert=False, retry=False, rate=False):
-        """Parse html and save"""
-        if rate:
-            tags = ', '.join(x.name for x in self.get_tags())
-            super(Post, self).save(rate=True)
-            self.set_tags(tags)
-            return 0
-        self.is_draft = False
-        if self.type < 3 and not convert and not retry:
-            self.preview, self.text = utils.cut(self.text)
-            self.preview = utils.parse(self.preview, VALID_TAGS, VALID_ATTRS)
-            self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
-        if not edit:
-            if not convert:
-                try:
-                    if PUBSUB:
-                        ping_hub(FEED_URL, hub_url=PUSH_HUB)
-                except:
-                    pass
-                self.date = datetime.datetime.now()
-                Notify.new_post_notify(self)
-        super(Post, self).save(parsed=True) # Call the "real" save() method
 
     def is_answer(self, user = None, force = False):
         """Check post type is answer and return questions

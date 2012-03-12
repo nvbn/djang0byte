@@ -14,12 +14,15 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 from django import forms
+from django_push.publisher import ping_hub
+from tagging.models import Tag
 from timezones.forms import TimeZoneField
 from tagging_autocomplete.widgets import TagAutocomplete
-from main.models import Comment, Post, Blog, UserInBlog
+from main.models import Comment, Post, Blog, UserInBlog, Notify
 from django.conf import settings
 from djang0parser import utils
 from main.utils import ModelFormWithUser
+from django.utils.translation import ugettext as _
 
 
 class RegisterForm(forms.Form):
@@ -44,10 +47,49 @@ class CreateBlogForm(ModelFormWithUser):
             blog=inst,
             user=self.user,
         )
+        return inst
 
     class Meta:
         model = Blog
         fields = ('description', 'name')
+
+
+class CreatePostForm(ModelFormWithUser):
+    """Create new post form"""
+
+    def clean_blog(self):
+        blog = self.cleaned_data.get('blog', None)
+        if not blog.check_user(self.user):
+            raise forms.ValidationError(_('You not in this blog!'))
+        return blog
+
+    def clean_addition(self):
+        addition = self.cleaned_data.get('addition', None)
+        if self.cleaned_data.get('type') in (Post.TYPE_LINK, Post.TYPE_TRANSLATE) and not addition:
+            raise forms.ValidationError(_('This post type require addition!'))
+        return addition
+
+    def save(self, commit=True):
+        inst = self.instance
+        inst.author = self.user
+        inst.preview, inst.text = utils.cut(inst.text)
+        inst.preview = utils.parse(inst.preview, settings.VALID_TAGS, settings.VALID_ATTRS)
+        inst.text = utils.parse(inst.text, settings.VALID_TAGS, settings.VALID_ATTRS)
+        inst = super(CreatePostForm, self).save(commit)
+        Tag.objects.update_tags(inst, inst.raw_tags)
+        inst.create_comment_root()
+        for mention in utils.find_mentions(inst.text):
+            Notify.new_mention_notify(mention, post=inst)
+        if settings.PUBSUB:
+            ping_hub(settings.FEED_URL, hub_url=settings.PUSH_HUB)
+        return inst
+
+    class Meta:
+        model = Post
+        fields = (
+            'type', 'blog', 'addition',
+            'title', 'text', 'raw_tags',
+        )
 
 
 class CreatePostForm(forms.Form):
