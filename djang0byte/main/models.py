@@ -25,6 +25,7 @@ from timezones.fields import TimeZoneField
 from main.utils import new_notify_email
 from settings import TIME_ZONE, VALID_TAGS, VALID_ATTRS, NEWPOST_RATE, NEWBLOG_RATE, NEWCOMMENT_RATE, RATEPOST_RATE, DEFAULT_AVATAR, PUSH_HUB, FEED_URL, RATEBLOG_RATE
 from settings import RATECOM_RATE, RATEUSER_RATE, POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT, PUBSUB, ONLINE_TIME
+from settings import DEFAULT_BLOG_TYPE
 from utils import file_upload_path, Access, get_status, new_notify_email
 from djang0parser import utils
 from django.utils.translation import gettext as _
@@ -83,7 +84,10 @@ class Blog(models.Model):
     description = models.TextField(verbose_name=_('Blog description'))
     rate = models.IntegerField(default=0, verbose_name=_('Blog rate'))
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
-    type = models.ForeignKey(BlogType, verbose_name=_('Blog type'))
+    type = models.ForeignKey(
+        BlogType, verbose_name=_('Blog type'),
+        default=BlogType.objects.get(name=DEFAULT_BLOG_TYPE),
+    )
     default = models.BooleanField(default=False, verbose_name=_('Does not need join?'))
     avatar = models.ImageField(upload_to=file_upload_path, blank=True, null=True, verbose_name=_('Blog picture'))
 

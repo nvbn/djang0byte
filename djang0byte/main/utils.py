@@ -13,6 +13,7 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+from django import forms
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
@@ -95,7 +96,7 @@ def new_notify_email(comment, type, recipient):
         pass #fail silently
 
 
-class Access:
+class Access(object):
     new_post = 0
     new_blog = 1
     new_comment = 2
@@ -111,3 +112,19 @@ RATE = {
     RATE_PLUS: +1,
     RATE_MINUS: -1,
 }
+
+
+class ModelFormWithUser(forms.ModelForm):
+    """Model form with user"""
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(ModelFormWithUser, self).__init__(*args, **kwargs)
+
+
+class FormWithUser(forms.Form):
+    """Form with user"""
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(FormWithUser, self).__init__(*args, **kwargs)

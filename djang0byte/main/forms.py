@@ -13,14 +13,14 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-
-
 from django import forms
 from timezones.forms import TimeZoneField
 from tagging_autocomplete.widgets import TagAutocomplete
-from main.models import Comment, Post
+from main.models import Comment, Post, Blog, UserInBlog
 from django.conf import settings
 from djang0parser import utils
+from main.utils import ModelFormWithUser
+
 
 class RegisterForm(forms.Form):
     """Registration form"""
@@ -34,10 +34,21 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
     save = forms.CheckboxInput()
 
-class CreateBlogForm(forms.Form):
+class CreateBlogForm(ModelFormWithUser):
     """Create new blog form"""
-    name = forms.CharField()
-    description = forms.CharField(widget=forms.Textarea)
+
+    def save(self, commit=True):
+        self.instance.owner = self.user
+        inst = super(CreateBlogForm, self).save(commit)
+        UserInBlog.objects.create(
+            blog=inst,
+            user=self.user,
+        )
+
+    class Meta:
+        model = Blog
+        fields = ('description', 'name')
+
 
 class CreatePostForm(forms.Form):
     """Create new post form"""
