@@ -43,7 +43,7 @@ def register(request, next = None):
 
     Returns: HttpResponse
 
-        """
+    """
     if next == None:
         if request.GET.get('next') == None:
             next = '/'
