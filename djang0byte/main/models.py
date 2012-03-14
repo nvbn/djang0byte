@@ -255,56 +255,6 @@ class Draft(models.Model):
     raw_tags = models.CharField(max_length=500, blank=True, null=True, default='')
     is_draft = models.BooleanField(default=True)
 
-    def set_blog(self, blog, force=False):
-        """Set blog to post
-
-        Keyword arguments:
-        blog -- Blog
-
-        Returns: Blog
-
-        """
-        if not int(blog):
-            self.blog = None
-        else:
-            self.blog = Blog.objects.get(id=blog)
-            if not (self.blog.default or self.blog.check_user(self.author) or force):
-                 self.blog = None
-        return self.blog
-
-    def set_data(self, data):
-        """Set data to drfat
-
-        Keyword arguments:
-        data -- Array
-
-        Returns: None
-
-        """
-        for attr in data:
-            if attr not in ('blog', 'tags'):
-                setattr(self, attr, data[attr])
-        try:
-            self.set_blog(data['blog'])
-        except KeyError:
-            self.set_blog(0)
-        self.raw_tags = data['tags']
-
-    def save(self, edit=False, rate=False, parsed=False):
-        """Save function wrapper
-
-        Keyword arguments:
-        edit -- Boolean
-
-        Returns: None
-
-        """
-        if not rate:
-            if not self.title:
-                self.title = _('No name')
-            if not parsed:
-                self.text = utils.parse(self.text, VALID_TAGS, VALID_ATTRS)
-        super(Draft, self).save()
 
 class Post(Draft):
     """Posts table"""
@@ -338,18 +288,6 @@ class Post(Draft):
         cls.save()
         draft.delete()
         return cls
-    
-    def set_data(self, data):
-        """Set data to post
-
-        Keyword arguments:
-        data -- Array
-
-        Returns: None
-
-        """
-        Draft.set_data(self, data)
-        self.save()
 
 
     def get_comment(self):

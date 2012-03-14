@@ -18,7 +18,7 @@ from django_push.publisher import ping_hub
 from tagging.models import Tag
 from timezones.forms import TimeZoneField
 from tagging_autocomplete.widgets import TagAutocomplete
-from main.models import Comment, Post, Blog, UserInBlog, Notify
+from main.models import Comment, Post, Blog, UserInBlog, Notify, Draft
 from django.conf import settings
 from djang0parser import utils
 from main.utils import ModelFormWithUser
@@ -92,26 +92,23 @@ class CreatePostForm(ModelFormWithUser):
         )
 
 
-class CreatePostForm(forms.Form):
-    """Create new post form"""
-    title = forms.CharField()
-    blog = forms.CharField()
-    text = forms.CharField(widget=forms.Textarea())
-    tags = forms.CharField(widget=TagAutocomplete(), required=False)
+class EditDraftForm(ModelFormWithUser):
+    """Edit or create draft form"""
 
-class CreatePostLinkForm(CreatePostForm):
-    """Create post link form"""
-    addition = forms.URLField()
+    def clean_title(self):
+        return self.cleaned_data.get('title', _('Unnamed post'))
 
-post_forms = {
-    Post.TYPE_POST: CreatePostForm,
-    Post.TYPE_LINK: CreatePostLinkForm,
-    Post.TYPE_TRANSLATE: CreatePostLinkForm,
-}
+    def save(self, commit=True):
+        self.instance.author = self.user
+        return super(EditDraftForm, self).save(commit)
 
-class CreatePostTranslateForm(CreatePostForm):
-    """Create post link form"""
-    addition = forms.URLField()
+    class Meta:
+        model = Draft
+        fields = fields = (
+            'type', 'blog', 'addition',
+            'title', 'text', 'raw_tags',
+        )
+
 
 class CreateCommentForm(forms.Form):
     """Create new comment form"""

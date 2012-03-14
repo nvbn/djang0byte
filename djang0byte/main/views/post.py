@@ -16,7 +16,6 @@
 from django.core.exceptions import MultipleObjectsReturned
 from itertools import imap
 from django.core.urlresolvers import reverse
-from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response, get_object_or_404, redirect
