@@ -25,7 +25,8 @@ import urllib
 import xml.dom.minidom
 import simplejson
 from django.utils.translation import ugettext as _
-
+import pytz
+from datetime import datetime
 
 def jsend(data):
     """Alias for sending 'jsoned' data"""
@@ -128,3 +129,12 @@ class FormWithUser(forms.Form):
     def __init__(self, user, *args, **kwargs):
         self.user = user
         super(FormWithUser, self).__init__(*args, **kwargs)
+
+# Copied from timezones.zones
+
+PRETTY_TIMEZONE_CHOICES = sorted(
+    (
+        tz, "(GMT%s) %s" % (datetime.now(pytz.timezone(tz)).strftime("%z"), tz)
+    )
+    for tz in pytz.common_timezones
+)
