@@ -21,7 +21,7 @@ from tagging_autocomplete.widgets import TagAutocomplete
 from main.models import Comment, Post, Blog, UserInBlog, Notify, Draft
 from django.conf import settings
 from djang0parser import utils
-from main.utils import ModelFormWithUser
+from main.utils import ModelFormWithUser, PRETTY_TIMEZONE_CHOICES
 from django.utils.translation import ugettext as _
 
 
@@ -147,7 +147,7 @@ class EditUserForm(forms.Form):
     icq = forms.CharField(required=False)
     jabber = forms.CharField(required=False)
     city = forms.CharField(required=False)
-    timezone = TimeZoneField(required=False)
+    timezone = TimeZoneField(required=False, choices=PRETTY_TIMEZONE_CHOICES)
     site = forms.URLField(required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
     notify_post_reply = forms.BooleanField(required=False)

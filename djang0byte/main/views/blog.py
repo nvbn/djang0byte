@@ -39,7 +39,7 @@ def newblog(request):
             form.save()
             return HttpResponseRedirect('/newpost/')
     else:
-        form = CreateBlogForm()
+        form = CreateBlogForm(request.user)
     return {
         'form': form
     }

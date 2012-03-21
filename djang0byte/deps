@@ -20,3 +20,6 @@ django_evolution
 xapian-haystack
 django-haystack
 -e git://github.com/nvbn/djang0parser.git#egg=djang0parser
+simplejson
+pil
+django-json-rpc
