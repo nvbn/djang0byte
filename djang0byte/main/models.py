@@ -76,6 +76,8 @@ class BlogType(models.Model):
         verbose_name = _("Blog type")
         verbose_name_plural = _("Blogs types")
 
+def get_default_blog_type():
+    return BlogType.objects.get(name=DEFAULT_BLOG_TYPE)
 
 class Blog(models.Model):
     """Blog entrys"""
@@ -86,7 +88,7 @@ class Blog(models.Model):
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
     type = models.ForeignKey(
         BlogType, verbose_name=_('Blog type'),
-        default=BlogType.objects.get(name=DEFAULT_BLOG_TYPE),
+        default=get_default_blog_type,
     )
     default = models.BooleanField(default=False, verbose_name=_('Does not need join?'))
     avatar = models.ImageField(upload_to=file_upload_path, blank=True, null=True, verbose_name=_('Blog picture'))
