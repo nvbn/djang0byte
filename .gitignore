@@ -2,3 +2,4 @@ syntax: glob
 
 *.pyc
 *pip-delete-this-directory.txt
+djang0byte/settings/local.py
