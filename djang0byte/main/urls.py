@@ -30,7 +30,7 @@ urlpatterns = patterns('djang0byte.main.views',
   ('^action/edit_comment/(\d*)/$', 'edit_comment'),
   ('^action/change_userpic/$', 'change_userpic'),
   ('^action/delete_userpic/$', 'delete_userpic'),
-  ('^action/change_password/$', 'password_change'),
+  #('^action/change_password/$', 'password_change'), TODO: broken
   ('^action/get_val/(.*)/(.*)/$', 'get_val'),
   ('^action/get_val/(.*)/$', 'get_val'),
   ('^action/get_users/(.*)/$', 'get_users'),

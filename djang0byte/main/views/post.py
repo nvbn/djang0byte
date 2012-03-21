@@ -35,7 +35,7 @@ from xapian_backend import InvalidIndexError
 
 @never_cache
 @login_required
-@render_to('new_post.html')
+@render_to('newpost.html')
 def newpost(request):
     if request.method == 'POST':
         form = CreatePostForm(request.user, request.POST)
@@ -43,7 +43,7 @@ def newpost(request):
             post = form.save()
             return redirect(reverse('main_post', args=(post.id,)))
     else:
-        form = CreatePostForm
+        form = CreatePostForm(request.user)
     return {
         'form': form,
     }

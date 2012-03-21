@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template.context import RequestContext
 from django.views.decorators.cache import never_cache
 from simplepagination import paginate
-from main.forms import post_forms, EditDraftForm
+from main.forms import EditDraftForm
 from main.models import *
 from djang0parser.utils import unparse
 
