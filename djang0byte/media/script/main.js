@@ -18,7 +18,7 @@ function get_raters(type, id) {
             if (!raters.length)
                 div = '<h2>Ещё никто не проголосовал!</h2>';
             else for (i in raters) {
-                div += '<a href="/user/' + raters[i].username + '/"><img class="mini_av" src="' + raters[i].avatar +'" /> ' +
+                div += '<a href="/user/' + raters[i].username + '/"><img class="mini_av" src="' + raters[i].avatar +'" />' +
                     raters[i].username + '</a> поставил <span class="';
                 if (raters[i].negative)
                     div += 'minus_rate">минус';
