@@ -32,6 +32,7 @@ from django.utils.translation import gettext as _
 from urlparse import urlparse
 import datetime
 from django.db.models import Q
+from utils.json import to_json
 
 
 def get_profile(self):  # need hard refactoring!!!
@@ -81,6 +82,7 @@ def get_default_blog_type():
 
 class Blog(models.Model):
     """Blog entrys"""
+    json_fields = ['name', 'description', 'rate', 'rate_count']
     name = models.CharField(max_length=30, verbose_name=_('Blog name'))
     owner = models.ForeignKey(User, verbose_name=_('Owner of blog'))
     description = models.TextField(verbose_name=_('Blog description'))
@@ -235,6 +237,10 @@ class City(models.Model):
 
 class Draft(models.Model):
     """Drafts model"""
+    json_fields = [
+        ('author', 'author__json'), 'title',
+        ('blog', 'blog__json'),
+    ]
     TYPE_POST = 0
     TYPE_LINK = 1
     TYPE_TRANSLATE = 2
@@ -257,9 +263,21 @@ class Draft(models.Model):
     raw_tags = models.CharField(max_length=500, blank=True, null=True, default='')
     is_draft = models.BooleanField(default=True)
 
+    @property
+    def author__json(self):
+        return to_json(self.author)
+
+    @property
+    def blog__json(self):
+        return to_json(self.blog)
+
 
 class Post(Draft):
     """Posts table"""
+    json_fields = [
+        ('author', 'author__json'), 'title', 'date',
+        ('blog', 'blog__json'), 'rate', 'rate_count',
+    ]
     date = models.DateTimeField(default=datetime.datetime.now(), editable=False, verbose_name=_('Date'))
     rate = models.IntegerField(default=0, verbose_name=_('Post rate'))
     rate_count = models.IntegerField(default=0, verbose_name=_('Count of raters'))
@@ -430,6 +448,11 @@ class Post(Draft):
     
 class Comment(NS_Node):
     """Comments table"""
+    json_fields = [
+        ('post', 'post__json'), 'text',
+        ('author', 'author__json'), 'rate',
+        'rate_count', 'created',
+    ]
     post = models.ForeignKey(Post, verbose_name=_('Post'))
     author = models.ForeignKey(User, null=True, blank=True, verbose_name=_('Author'))
     text = models.TextField(blank=True, verbose_name=_('Text'))
@@ -519,6 +542,14 @@ class Comment(NS_Node):
     def get_rates(self):
         return CommentRate.objects.select_related('user').filter(comment=self)
 
+    @property
+    def post__json(self):
+        return to_json(self.post)
+
+    @property
+    def author__json(self):
+        return to_json(self.authr)
+
     class Meta:
         ordering = ['id']
         verbose_name = _("Comment")
@@ -551,8 +582,13 @@ class BlogWithUser(UserInBlog):
         abstract = True
 
 
+User.json_fields = ['username']
+
 class Profile(models.Model):
     """User profile"""
+    json_fields = [
+        ('user', 'user__json'), 'rate', 'rate_count',
+    ]
     user = models.ForeignKey(User, unique=True, verbose_name=_('User'))
     city = models.ForeignKey(City, blank=True, null=True, verbose_name=_('City'))
     icq = models.CharField(max_length=10, blank=True, null=True, verbose_name=_('Icq'))
@@ -770,6 +806,10 @@ class Profile(models.Model):
         """Return username"""
         return self.user.username
 
+    @property
+    def user__json(self):
+        return to_json(self.user)
+
     class Meta:
         verbose_name = _("User profile")
         verbose_name_plural = _("User profiles")
@@ -877,8 +917,13 @@ class AnswerVote(models.Model):
     
 class Favourite(models.Model):
     """Favourite posts table"""
+    json__fields = [('post', 'post__json')]
     post = models.ForeignKey(Post, verbose_name=_('Post'))
     user = models.ForeignKey(User, verbose_name=_('User'))
+
+    @property
+    def post__json(self):
+        return to_json(self.post)
 
     class Meta:
         verbose_name = _("Favourite post")
@@ -887,8 +932,13 @@ class Favourite(models.Model):
 
 class Spy(models.Model):
     """Spyed posts table"""
+    json_fields = [('post', 'post__json')]
     post = models.ForeignKey(Post, verbose_name=_('Post'))
     user = models.ForeignKey(User, verbose_name=_('User'))
+
+    @property
+    def post__json(self):
+        return to_json(self.post)
 
     class Meta:
         verbose_name = _("Post spying")

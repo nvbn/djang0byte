@@ -25,6 +25,7 @@ import main.rpc_views
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'media/'}),
     (r'^admin/', include(admin.site.urls)),
     (r'^accounts/', include('register.urls')),

@@ -295,7 +295,6 @@ def get_val(request, type, count=20):
         pass
     if type == 'comments':
         request.session['right_panel'] = type
-        print request.session['right_panel']
         comments = Comment.objects.exclude(depth=1).select_related('post', 'post.blog', 'post.author').order_by('-id')[
                    :count]
         for comment in comments:
@@ -328,7 +327,7 @@ def get_val(request, type, count=20):
     elif type == 'users':
         request.session['right_panel_2'] = 'users'
         users = Profile.objects.select_related('user').extra(select={'fullrate':
-            'rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate'
+            "rate+%f*posts_rate+%f*blogs_rate+%f*comments_rate"
             % (POST_RATE_COEFFICIENT, BLOG_RATE_COEFFICIENT, COMMENT_RATE_COEFFICIENT), },
             order_by=['-fullrate',])[:count]
         for user in users:
