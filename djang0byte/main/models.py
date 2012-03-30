@@ -271,6 +271,20 @@ class Draft(models.Model):
     def blog__json(self):
         return to_json(self.blog)
 
+    @property
+    def blog__form(self):
+        if self.blog:
+            return self.blog.id
+        else:
+            return ''
+
+    def to_form_data(self):
+        return to_json(self, (
+            ('blog', 'blog__form'),
+            'title', 'text', 'type',
+            'addition', 'raw_tags',
+        ))
+
 
 class Post(Draft):
     """Posts table"""

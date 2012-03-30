@@ -90,6 +90,21 @@ def edit_draft(request, draft_id=None):
 
 @never_cache
 @login_required
+@render_to('public_draft.html')
+def public_draft(request, draft_id):
+    draft = get_object_or_404(Draft, id=draft_id, author=request.user)
+    form = CreatePostForm(request.user, draft.to_form_data())
+    if form.is_valid():
+        post = form.save()
+        return redirect(reverse('main_post', args=(post.id,)))
+    else:
+        return {
+            'errors': form.errors
+        }
+
+
+@never_cache
+@login_required
 @render_to('edit_post.html')
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)

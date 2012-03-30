@@ -135,3 +135,16 @@ class PostTest(TestCase):
         changed_draft = form.save()
         self.assertEqual(draft.id, changed_draft.id, msg='new draft created')
         self.assertEqual(changed_draft.title, 'yee', msg='draft edit failed')
+
+    def text_draft_to_post(self):
+        draft = Draft.objects.create(
+            title='okok',
+            author=self.user,
+            type=Post.TYPE_POST,
+        )
+        form = CreatePostForm(self.user, draft.to_form_data())
+        self.assertTrue(form.is_valid(), msg='convert draft to post validation failed')
+        post = form.save()
+        draft.delete()
+        self.assertIsNotNone(post.id, msg='converted post saving failed')
+        self.assertEqual(post.title, 'okok', msg='post from draft data broken')
