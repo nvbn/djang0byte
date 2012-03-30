@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'django_evolution',
     'haystack',
     'djang0parser',
+    'baseutils',
 )
 
 MAN_IN_BLACKLIST = (
@@ -107,3 +108,4 @@ LOGINZA_AMNESIA_PATHS = (
 
 HAYSTACK_SITECONF = 'search'
 HAYSTACK_SEARCH_ENGINE = 'xapian'
+PUSH_HUB = ''

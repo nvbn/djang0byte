@@ -32,7 +32,7 @@ from django.utils.translation import gettext as _
 from urlparse import urlparse
 import datetime
 from django.db.models import Q
-from utils.json import to_json
+from baseutils.jrpc import to_json
 
 
 def get_profile(self):  # need hard refactoring!!!

@@ -19,7 +19,7 @@ from django.shortcuts import get_object_or_404
 from jsonrpc import jsonrpc_method
 from main.models import Post, Comment, Blog, Favourite, Spy, Profile, Draft
 from main.utils import Access
-from utils.json import to_json
+from baseutils.jrpc import to_json
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from djang0parser import utils
