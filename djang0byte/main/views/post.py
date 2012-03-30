@@ -49,6 +49,22 @@ def newpost(request):
     }
 
 
+@never_cache
+@login_required
+@render_to('newanswer.html')
+def newanswer(request):
+    if request.method == 'POST':
+        form = CreateAnswerForm(request.user, request.POST)
+        if form.is_valid():
+            post = form.save()
+            return redirect(reverse('main_post', args=(post.id,)))
+    else:
+        form = CreatePostForm(request.user)
+    return {
+        'form': form,
+    }
+
+
 @cache_page(DEFAULT_CACHE_TIME)
 @render_to('post.html')
 def post(request, id):

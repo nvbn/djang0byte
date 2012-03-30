@@ -13,12 +13,13 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+import json
 from django import forms
 from django_push.publisher import ping_hub
 from tagging.models import Tag
 from timezones.forms import TimeZoneField
 from tagging_autocomplete.widgets import TagAutocomplete
-from main.models import Comment, Post, Blog, UserInBlog, Notify, Draft
+from main.models import Comment, Post, Blog, UserInBlog, Notify, Draft, Answer
 from django.conf import settings
 from djang0parser import utils
 from main.utils import ModelFormWithUser, PRETTY_TIMEZONE_CHOICES
@@ -54,20 +55,43 @@ class CreateBlogForm(ModelFormWithUser):
         fields = ('description', 'name')
 
 
-class CreatePostForm(ModelFormWithUser):
-    """Create new post form"""
+class BasePostForm(ModelFormWithUser):
+    """Base post form"""
 
     def clean_blog(self):
         blog = self.cleaned_data.get('blog', None)
-        if not blog.check_user(self.user):
+        if blog and not blog.check_user(self.user):
             raise forms.ValidationError(_('You not in this blog!'))
         return blog
+
+    class Meta:
+        model = Post
+        fields = (
+            'type', 'blog', 'addition',
+            'title', 'text', 'raw_tags',
+        )
+
+
+class CreatePostForm(BasePostForm):
+    """Create new post form"""
+
+    def clean_text(self):
+        text = self.cleaned_data.get('text', None)
+        if not text:
+            raise forms.ValidationError(_('This post type require text!'))
+        return text
 
     def clean_addition(self):
         addition = self.cleaned_data.get('addition', None)
         if self.cleaned_data.get('type') in (Post.TYPE_LINK, Post.TYPE_TRANSLATE) and not addition:
             raise forms.ValidationError(_('This post type require addition!'))
         return addition
+
+    def clean_type(self):
+        _type = self.cleaned_data.get('type')
+        if _type not in (Post.TYPE_POST, Post.TYPE_LINK, Post.TYPE_TRANSLATE):
+            raise forms.ValidationError(_('Wrong post type!'))
+        return _type
 
     def save(self, commit=True):
         inst = self.instance
@@ -84,12 +108,36 @@ class CreatePostForm(ModelFormWithUser):
             ping_hub(settings.FEED_URL, hub_url=settings.PUSH_HUB)
         return inst
 
-    class Meta:
-        model = Post
-        fields = (
-            'type', 'blog', 'addition',
-            'title', 'text', 'raw_tags',
-        )
+
+class CreateAnswerForm(BasePostForm):
+    answers = forms.CharField(label=_('answers'))
+
+    def clean_type(self):
+        _type = self.cleaned_data.get('type')
+        if _type not in (Post.TYPE_ANSWER, Post.TYPE_MULTIPLE_ANSWER):
+            raise forms.ValidationError(_('Wrong type!'))
+        return _type
+
+    def clean_answers(self):
+        answers = self.cleaned_data.get('answers')
+        try:
+            parsed = json.loads(answers)
+        except ValueError:
+            raise forms.ValidationError(_('answers broken'))
+        if type(parsed) is not list:
+            raise forms.ValidationError(_('answers broken'))
+        if len(parsed) < 2:
+            raise forms.ValidationError(_('too little answers'))
+        return map(str, parsed)
+
+    def save(self, commit=True):
+        self.instance.author = self.user
+        post = super(CreateAnswerForm, self).save(commit)
+        for answer in self.cleaned_data.get('answers'):
+            Answer.objects.create(
+                post=post, value=answer,
+            )
+        return post
 
 
 class EditDraftForm(ModelFormWithUser):
