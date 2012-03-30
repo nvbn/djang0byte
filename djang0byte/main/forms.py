@@ -185,6 +185,23 @@ class EditPostForm(ModelFormWithUser):
 class EditDraftForm(ModelFormWithUser):
     """Edit or create draft form"""
 
+    def __init__(self, *args, **kwargs):
+        super(EditDraftForm, self).__init__(*args, **kwargs)
+        self.fields['title'].required = False
+        if 'instance' in kwargs:
+            self.fields['type'].required = False
+            self.cached_type = kwargs['instance'].type
+        else:
+            self.cached_type = ''
+
+    def clean_type(self):
+        _type = self.cleaned_data.get('type', '')
+        if _type == '':
+            _type = self.cached_type
+        if _type == '' or _type in (Post.TYPE_ANSWER, Post.TYPE_MULTIPLE_ANSWER):
+            raise forms.ValidationError(_('Not allowed type!'))
+        return _type
+
     def clean_title(self):
         return self.cleaned_data.get('title', _('Unnamed post'))
 

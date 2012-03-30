@@ -7,8 +7,8 @@ Replace these with more appropriate tests for your application.
 import json
 from django.contrib.auth.models import User
 from django.test import TestCase
-from main.forms import CreateBlogForm, CreatePostForm, CreateAnswerForm, EditPostForm
-from main.models import Profile, Post, Answer, BlogType, Blog, UserInBlog
+from main.forms import CreateBlogForm, CreatePostForm, CreateAnswerForm, EditPostForm, EditDraftForm
+from main.models import Profile, Post, Answer, BlogType, Blog, UserInBlog, Draft
 from django.conf import settings
 
 
@@ -111,3 +111,27 @@ class PostTest(TestCase):
         changed_post = form.save()
         self.assertEqual(post.id, changed_post.id, msg='new post created')
         self.assertEqual(changed_post.title, 'eeee', msg='edit failed')
+
+    def test_create_draft(self):
+        form = EditDraftForm(self.user, {
+            'type': Post.TYPE_POST,
+        })
+        self.assertTrue(form.is_valid(), msg='draft validation failed')
+        draft = form.save()
+        self.assertIsNotNone(draft.id, msg='draft saving not work')
+
+    def test_edit_draft(self):
+        draft = Draft.objects.create(
+            title='okok',
+            author=self.user,
+            type=Post.TYPE_POST,
+        )
+        form = EditDraftForm(self.user, {
+            'title': 'yee',
+            'text': 'okok',
+        }, instance=draft)
+        form.is_valid()
+        self.assertTrue(form.is_valid(), msg='edit draft validation failed')
+        changed_draft = form.save()
+        self.assertEqual(draft.id, changed_draft.id, msg='new draft created')
+        self.assertEqual(changed_draft.title, 'yee', msg='draft edit failed')

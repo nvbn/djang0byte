@@ -36,7 +36,7 @@ from xapian_backend import InvalidIndexError
 @never_cache
 @login_required
 @render_to('newpost.html')
-def newpost(request):
+def new_post(request):
     if request.method == 'POST':
         form = CreatePostForm(request.user, request.POST)
         if form.is_valid():
@@ -52,7 +52,7 @@ def newpost(request):
 @never_cache
 @login_required
 @render_to('newanswer.html')
-def newanswer(request):
+def newa_nswer(request):
     if request.method == 'POST':
         form = CreateAnswerForm(request.user, request.POST)
         if form.is_valid():
@@ -62,6 +62,29 @@ def newanswer(request):
         form = CreatePostForm(request.user)
     return {
         'form': form,
+    }
+
+
+@never_cache
+@login_required
+@render_to('edit_draft.html')
+def edit_draft(request, draft_id=None):
+    if draft_id:
+        draft = get_object_or_404(Draft, draft_id=id)
+    else:
+        draft = None
+    if request.method == 'POST':
+        form = EditDraftForm(request.user, request.POST, instance=draft)
+        if form.is_valid():
+            draft = form.save()
+            return redirect(reverse('main_draft', args=(draft.id,)))
+        elif not draft:
+            raise PermissionDenied
+    else:
+        form = EditDraftForm(request.user, instance=draft)
+    return {
+        'form': form,
+        'draft': draft,
     }
 
 
