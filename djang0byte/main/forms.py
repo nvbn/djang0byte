@@ -137,7 +137,49 @@ class CreateAnswerForm(BasePostForm):
             Answer.objects.create(
                 post=post, value=answer,
             )
+        Tag.objects.update_tags(post, post.raw_tags)
+        post.create_comment_root()
+        for mention in utils.find_mentions(post.text):
+            Notify.new_mention_notify(mention, post=post)
+        if settings.PUBSUB:
+            ping_hub(settings.FEED_URL, hub_url=settings.PUSH_HUB)
         return post
+
+
+class EditPostForm(ModelFormWithUser):
+
+    def clean_blog(self):
+        blog = self.cleaned_data.get('blog', None)
+        if blog and not (
+            blog.check_user(self.user) or
+            blog.check_user(self.instance.author)
+        ):
+            raise forms.ValidationError(_('You not in this blog!'))
+        return blog
+
+    def clean_addition(self):
+        addition = self.cleaned_data.get('addition', None)
+        if self.cleaned_data.get('type') in (Post.TYPE_LINK, Post.TYPE_TRANSLATE) and not addition:
+            raise forms.ValidationError(_('This post type require addition!'))
+        return addition
+
+    def clean(self):
+        if self.instance.type in (Post.TYPE_ANSWER, Post.TYPE_MULTIPLE_ANSWER):
+            raise forms.ValidationError(_('Edit this type not allowed!'))
+        return self.cleaned_data
+
+    def save(self, commit=True):
+        self.instance.preview, self.instance.text = utils.cut(self.instance.text)
+        self.instance.preview = utils.parse(self.instance.preview, settings.VALID_TAGS, settings.VALID_ATTRS)
+        self.instance.text = utils.parse(self.instance.text, settings.VALID_TAGS, settings.VALID_ATTRS)
+        return super(EditPostForm, self).save(commit)
+
+    class Meta:
+        model = Post
+        fields = (
+            'blog', 'text', 'title',
+            'raw_tags', 'addition',
+        )
 
 
 class EditDraftForm(ModelFormWithUser):
@@ -212,9 +254,6 @@ class PostOptions(forms.Form):
 
 class EditUserPick(forms.Form):
     userpic = forms.ImageField()
-
-class EditPostForm(CreatePostForm):
-    pass
 
 class SearchForm(forms.Form):
     """Search form"""

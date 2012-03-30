@@ -7,8 +7,8 @@ Replace these with more appropriate tests for your application.
 import json
 from django.contrib.auth.models import User
 from django.test import TestCase
-from main.forms import CreateBlogForm, CreatePostForm, CreateAnswerForm
-from main.models import Profile, Post, Answer, BlogType
+from main.forms import CreateBlogForm, CreatePostForm, CreateAnswerForm, EditPostForm
+from main.models import Profile, Post, Answer, BlogType, Blog, UserInBlog
 from django.conf import settings
 
 
@@ -80,3 +80,34 @@ class PostTest(TestCase):
             Answer.objects.filter(post=post).count(), 3,
             msg='answer creation failed'
         )
+
+    def test_create_post_with_blog(self):
+        BlogType.objects.create(name=settings.DEFAULT_BLOG_TYPE)
+        blog = Blog.objects.create(name='okok', owner=self.user)
+        UserInBlog.objects.create(blog=blog, user=self.user)
+        form = CreatePostForm(self.user, {
+            'type': Post.TYPE_POST,
+            'title': 'okok',
+            'text': 'okokok',
+            'blog': blog.id,
+        })
+        self.assertTrue(form.is_valid(), msg='post with blog validation failed')
+        post = form.save()
+        self.assertIsNotNone(post.id, msg='post with blog saving not work')
+        self.assertEqual(post.blog, blog, msg='blog not assigned')
+
+    def test_edit_post(self):
+        post = Post.objects.create(
+            type=Post.TYPE_POST,
+            title='okok',
+            text='okokok',
+            author=self.user,
+        )
+        form = EditPostForm(self.user, {
+            'title': 'eeee',
+            'text': '232323',
+        }, instance=post)
+        self.assertTrue(form.is_valid(), msg='edit post validation failed')
+        changed_post = form.save()
+        self.assertEqual(post.id, changed_post.id, msg='new post created')
+        self.assertEqual(changed_post.title, 'eeee', msg='edit failed')

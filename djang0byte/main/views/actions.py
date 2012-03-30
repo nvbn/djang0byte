@@ -227,65 +227,6 @@ def action(request, type, id, action = None):#TODO: Split and rewrite this shit!
     return HttpResponseRedirect('/post/%d/' % (int(id)))
 
 @never_cache
-@login_required
-def edit_post(request, id):
-    """Edit post
-
-    Keyword arguments:
-    request -- request
-    id -- int -- post.id
-
-    Returns: HttpResponse
-    """
-    try:
-        if request.user.has_perm('main.change_post'):
-            post = Post.objects.get(id=id, type__lt='3')
-        else:
-            post = Post.objects.get(id=id, author=request.user, type__lt='3')
-    except Post.DoesNotExist:
-        return HttpResponseRedirect('/post/%d/' % (int(id)))
-    form = post_forms[post.type]
-    if request.method == 'POST':
-        form = form(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            remove_code(post.text)
-            remove_code(post.preview)
-            post.set_data(data)
-            if request.user.has_perm('main.edit_post'):
-                post.set_blog(data['blog'], force=True)
-            post.save(edit=True, retry=True)
-            post.set_tags(data['tags'])
-            return HttpResponseRedirect('/post/%d/' % (post.id))
-        else:
-            return render_to_response('newpost.html', {
-                'form': form,
-                'blogs': Blog.create_list(request.user.get_profile(), post.blog == None or post.blog.id, append=post.blog),
-                'type': post.type,
-                'extend': 'base.html',
-                'edit': True
-            }, context_instance=RequestContext(request))
-    else:
-        if post.text.find('<fcut>') >= 0:
-            post.text = post.preview + post.text
-        #TODO: stay fcut and cut tag in editor
-        data = {
-            'tags': ', '.join(map(lambda x: x.__unicode__(), post.get_tags())),
-            'title': post.title,
-            'text': unparse(post.text),
-            'addition': post.addition
-        }
-        form = form(data)
-        return render_to_response('newpost.html', {
-            'form': form,
-            'blogs': Blog.create_list(request.user.get_profile(), post.blog == None or post.blog.id, append=post.blog),
-            'type': post.type,
-            'extend': 'base.html',
-            'edit': True,
-            'id': post.id
-        }, context_instance=RequestContext(request))
-
-@never_cache
 def get_val(request, type, count=20):
     out = []
     print type

@@ -13,7 +13,7 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-from django.core.exceptions import MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, PermissionDenied
 from itertools import imap
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -63,6 +63,27 @@ def newanswer(request):
     return {
         'form': form,
     }
+
+
+@never_cache
+@login_required
+@render_to('edit_post.html')
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if not (request.user == post.author or request.user.has_perm('main.change_publication')):
+        raise PermissionDenied
+    if request.method == 'POST':
+        form = EditPostForm(request.user, request.POST, instance=post)
+        if form.is_valid():
+            post = form.save()
+            return redirect(reverse('main_post', args=(post.id,)))
+    else:
+        form = EditPostForm(request.user, instance=post)
+    return {
+        'form': form,
+        'post': post,
+    }
+
 
 
 @cache_page(DEFAULT_CACHE_TIME)
