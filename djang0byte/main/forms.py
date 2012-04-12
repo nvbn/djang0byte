@@ -211,7 +211,7 @@ class EditDraftForm(ModelFormWithUser):
 
     class Meta:
         model = Draft
-        fields = fields = (
+        fields = (
             'type', 'blog', 'addition',
             'title', 'text', 'raw_tags',
         )
@@ -263,11 +263,14 @@ class EditUserForm(forms.Form):
     notify_mention = forms.BooleanField(required=False)
     notify_spy = forms.BooleanField(required=False)
 
-class PostOptions(forms.Form):
+
+class PostOptions(forms.ModelForm):
     """Edit post settings"""
-    pinch = forms.BooleanField(required=False)
-    disable_reply = forms.BooleanField(required=False)
-    disable_rate = forms.BooleanField(required=False)
+
+    class Meta:
+        models = Post
+        fields = ('disable_rate', 'disable_reply', 'pinch',)
+
 
 class EditUserPick(forms.Form):
     userpic = forms.ImageField()

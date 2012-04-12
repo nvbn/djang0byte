@@ -14,11 +14,12 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 from functools import wraps
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404
 from jsonrpc import jsonrpc_method
 from main.models import Post, Comment, Blog, Favourite, Spy, Profile, Draft
 from main.utils import Access
+from main.forms import PostOptions
 from baseutils.jrpc import to_json
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -61,7 +62,7 @@ def preview_comment(request, text):
     """Get comment preview"""
     return {
         'text': utils.parse(
-            request.POST.get('text'),
+            text,
             settings.VALID_TAGS,
             settings.VALID_ATTRS,
         )
@@ -148,18 +149,18 @@ def get_blogs(request, count):
 @get_val('get_favourites', 'favourites')
 def get_favourites(request, count):
     """Get favourites"""
-    return Favourite.objects.select_related(
-        'post',
-    ).filter(user=request.user).order_by('-id')[:count]
+    return Post.objects.filter(
+        favourite__user=request.user,
+    ).order_by('-favourite__id')[:count]
 
 
 @login_required
 @get_val('get_spies', 'spies')
 def get_spies(request, count):
     """Get spied posts"""
-    return Spy.objects.select_related(
-        'post',
-    ).filter(user=request.user).order_by('-id')[:count]
+    return Post.objects.filter(
+        spy__user=request.user,
+    ).order_by('-spy__id')[:count]
 
 
 @login_required
@@ -169,3 +170,38 @@ def get_drafts(request, count):
     return Draft.objects.filter(
         author=request.user, is_draft=True,
     ).order_by('-id')[:count]
+
+
+@jsonrpc_method(
+    'main.join_blog(blog_id=int) -> dict',
+    authenticated=True,
+)
+def join_blog(request, blog_id):
+    """Join or withdraw blog"""
+    blog = get_object_or_404(Blog, id=blog_id)
+    blog.add_or_remove_user(request.user)
+    return {
+        'status': True,
+    }
+
+
+@permission_required('post.can_change_options')
+@jsonrpc_method(
+    'main.post_options(post_id=int, disable_rate=bool, disable_reply=bool, pinch=bool) -> dict',
+    authenticated=True,
+)
+def post_options(request, post_id, disable_rate, disable_reply, pinch):
+    """Change post options"""
+    post = get_object_or_404(Post, id=post_id)
+    form = PostOptions({
+        'disable_rate': disable_rate,
+        'disable_reply': disable_reply,
+        'pinch': pinch,
+    }, instance=post)
+    if form.is_valid():
+        post = form.save()
+        return to_json(post)
+    else:
+        return {
+            'error': form.errors,
+        }

@@ -162,6 +162,7 @@ class Blog(models.Model):
         )
         if not created:
             user_in_blog.delete()
+        return created
 
     def get_avatar(self):
         try:
@@ -305,6 +306,9 @@ class Post(Draft):
 
     class Meta:
         ordering = ('-id', )
+        permissions = (
+            ('can_change_options', _(u'can change options')),
+        )
 
     @classmethod
     def from_draft(cls, draft):

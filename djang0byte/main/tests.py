@@ -1,13 +1,11 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
 import json
 from django.contrib.auth.models import User
 from django.test import TestCase
-from main.forms import CreateBlogForm, CreatePostForm, CreateAnswerForm, EditPostForm, EditDraftForm
+from main.forms import (
+    CreateBlogForm, CreatePostForm,
+    CreateAnswerForm, EditPostForm,
+    EditDraftForm, PostOptions,
+)
 from main.models import Profile, Post, Answer, BlogType, Blog, UserInBlog, Draft
 from django.conf import settings
 
@@ -148,3 +146,31 @@ class PostTest(TestCase):
         draft.delete()
         self.assertIsNotNone(post.id, msg='converted post saving failed')
         self.assertEqual(post.title, 'okok', msg='post from draft data broken')
+
+    def test_joining(self):
+        BlogType.objects.create(name=settings.DEFAULT_BLOG_TYPE)
+        blog = Blog.objects.create(name='okok', owner=self.user)
+        new_user = User.objects.create(username='ok12')
+        self.assertTrue(blog.add_or_remove_user(new_user), msg='joining not work')
+        self.assertEqual(UserInBlog.objects.filter(
+            user=new_user, blog=blog,
+        ).count(), 1, msg='joining not saved to db')
+        self.assertFalse(blog.add_or_remove_user(new_user), msg='withdrawing not work')
+        self.assertEqual(UserInBlog.objects.filter(
+            user=new_user, blog=blog,
+        ).count(), 0, msg='withdrawing not saved to db')
+
+    def test_post_options(self):
+        post = Post.objects.create(
+            author=self.user,
+            title='okok',
+            text='eeee',
+        )
+        form = PostOptions({
+            'disable_rate': True,
+            'disable_reply': False,
+            'pinch': True,
+        }, instance=post)
+        self.assertTrue(form.is_valid(), msg='options validating')
+        post = form.save()
+        self.assertTrue(post.disable_rate, msg='test options')
