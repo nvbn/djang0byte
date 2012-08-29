@@ -622,7 +622,7 @@ msgstr "Вы на других сайтах:"
 
 #: templates/edit_user.html:50 templates/newanswer.html:25
 msgid "Add"
-msgstr "Доавить"
+msgstr "Добавить"
 
 #: templates/edit_user.html:50 templates/newanswer.html:25
 msgid "Remove"
