@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load pytils_numeral %}
+{% block title %}
+{{ user_user.username }}
+{% endblock %}
+{% load cache %}
+{% block content %}
+<img class="userpic_profile" src="{{ profile_user.get_avatar }}" alt="" />
+<h2>{{ user_user.username }} <span{% if profile_user.get_rate > 0 %} class='plus_rate' {% endif %}{% if profile_user.get_rate < 0 %} class='minus_rate' {% endif %}>{{ profile_user.get_rate }}</span></h2>
+    {% for status in profile_user.get_status %}
+        <p class="status">
+        <a href="{{ status.obj.url }}">
+            {{ status.obj.name }}@{% if status.obj.type == 0 %}last.fm{% endif %}{% if status.obj.type == 1 %}twitter.com{% endif %}{% if status.obj.type == 2 %}juick.com{% endif %}:
+            {{ status.text }}</a>
+        </p>
+    {% endfor %}
+<div class='user_info'>
+{% if profile_user.get_city%}<a href='/list/users/city/{{ profile_user.get_city }}/'><img src='/media/style/city.png' /> {{ profile_user.city }}</a>, {% endif %}
+<a href='/pm/compose/{{ profile_user }}/'><img src='/media/style/envelope.gif' /> {% trans "PM's" %}</a>
+{% if profile_user.hide_mail %}, <a href='mailto:{{ user_user.email }}'><img src='/media/style/mailing.gif' /> {{ user_user.email }}</a>{% endif %}
+{% if profile_user.icq %}, <img src='/media/style/icq.png' /> {{ profile_user.icq }}{% endif %}
+{% if profile_user.jabber %}, <a href='xmpp:{{ profile_user.jabber }}'><img src='/media/style/jabber.png' /> {{ profile_user.jabber }}</a>{% endif %}
+{% if profile_user.site %}, <a href='{{ profile_user.site }}'><img src='/media/style/world.gif' /> {{ profile_user.site }}</a>{% endif %}
+{% if meon %}
+    {% for site in meon %}
+        , <a href="{{ site.url }}"><img class='site_favicon' src="{{ site.favicon }}" /> {{ site.title }}</a>
+    {% endfor %}
+{% endif %}
+</div>
+<br /><br />
+{% if profile_user.about %}
+{% trans "About user:" %}<br />
+{% autoescape off %}
+{{ profile_user.about }}
+{% endautoescape %}
+{% endif %}
+<br /><hr />
+{% if profile_user.get_blogs.count > 0 %}
+    {% trans "Blogs:" %} {% for blog in profile_user.get_blogs %}
+    <a href='/blog/{{ blog.blog.id }}/'>{{ blog }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
+    {% endfor %}
+    <br />
+{% endif %}
+{% if profile_user.get_friends.count > 0 %}
+    {% trans "Friends:" %} {% for friend in profile_user.get_friends %}
+    <a href='/user/{{ friend }}/'>{{ friend }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
+    {% endfor %}
+    <br />
+{% endif %}
+{% trans "Writed" %} <a href="/auth/{{ profile_user }}/">{{ profile_user.post_count }} пос{{ profile_user.post_count|choose_plural:"т,та,тов" }}</a> и
+<a href="/comments/{{ profile_user }}/">{{ profile_user.comment_count }} комментари{{ profile_user.comment_count|choose_plural:"й,я,ев" }}</a>.
+{% if mine %}
+    <br />
+    <hr />
+    <a href='/action/edit_user/'><img src="/media/style/edit.png" /> {% trans "Edit profile" %}</a>
+    <a href='/action/change_userpic/'><img src="/media/style/edit.png" /> {% trans "Change userpic" %}</a>
+    {% if profile_user.avatar %}
+    <a href='/action/delete_userpic/'><img src="/media/style/edit.png" /> {% trans "Delete userpic" %}</a>
+    {% endif %}
+    <a href='/accounts/password/change/'><img src="/media/style/edit.png" /> {% trans "Change password" %}</a>
+    <a href='#' id="merge_account"><img src="/media/style/pound.gif" /> {% trans "Merge with another" %}</a>
+{% else %}
+    {% if is_my_friend == 0 %}
+        <br /><br />
+        <a id='add_friend' href="/action/friend/{{ user_user }}/">{% trans "Add to friends!" %}</a>
+    {% endif %}
+    {% if is_my_friend == 1 %}
+        <br /><br />
+        <a id='remove_friend' href="/action/friend/{{ user_user }}/">{% trans "Remove from friends!" %}</a>
+    {% endif %}
+{% endif %}
+{% endblock %}

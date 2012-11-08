@@ -1,0 +1,53 @@
+{% load i18n %}
+{% load timezone_filters %}
+<div class='comment{% if right_answer.id == comment.id %} right_answer{% endif %}' id="cmnt{{ comment.id }}" style="margin-left:{{comment.get_margin}}px;">
+    <div class='comment_top{% if last_view and last_view < comment.created %} new_comment{% endif %}'>
+        <a href="/user/{{ comment.author }}/" class="comment_author"><img src='{{ comment.author.get_profile.get_avatar }}' class='mini_av' />{{ comment.author }}</a>
+        <span class="date">{{ comment.created|localtime:TIMEZONE }}</span>
+        <a href="/post/{{ post.id }}/#cmnt{{ comment.id }}">#</a>
+        {% if comment.get_depth > 2 %}
+            <a href="/post/{{ post.id }}/#cmnt{{ comment.get_parent_id }}">↑</a>
+        {% endif %}
+        <div class="comment_rate" title="{% trans 'Count of raters' %}: {{ comment.rate_count }}">
+            <a class="plus_rate" href='/action/ratecom/{{ comment.id }}/1/'>+</a>
+                <a href="#/comment/{{ comment.id }}/"
+                {% if comment.rate == 0 %}
+                    class='rate_val raters'
+                {% endif %}
+                {% if comment.rate > 0 %}
+                    class='rate_val raters plus_rate'
+                {% endif %}{% if comment.rate < 0 %}
+                    class='rate_val raters minus_rate'
+                {% endif %}>
+                    {{ comment.rate }}
+                </a>
+            <a class="minus_rate" href='/action/ratecom/{{ comment.id }}/0/'>-</a>
+        </div>
+    </div>
+    <div class="comment_text">
+        {% autoescape off %}
+            {{ comment }}
+        {% endautoescape %}
+    </div>
+<div class='comment_bottom'>
+{% if request.user.is_authenticated and not post.disable_reply %}
+    <a class='comment_reply' href='/newcomment/{{ post.id }}/{{ comment.id}}/'><img src="/media/style/speech_bubble.gif" alt="" />{% trans "Reply" %}</a>
+{% endif %}
+{% if PERM_EDIT_COMMENT %}
+    <a class='edit_comment' href='/action/edit_comment/{{ comment.id}}/'><img src='/media/style/pen.gif' /> {% trans "Edit comment" %}</a>
+{% endif %}
+{% if PERM_DELETE_COMMENT %}
+    <a class='delete_comment' href='/action/delete_comment/{{ comment.id}}/'><img src='/media/style/trash.gif' /> {% trans "Delete comment" %}</a>
+{% endif %}
+{% if is_qa and request.user == post.author %}
+    <a href="/action/set_right_answer/{{ post.id }}/{{ comment.id }}/{% if right_answer.id == comment.id %}0{% else %}1{% endif %}/">
+        <img src='/media/style/pound.gif' />
+        {% if right_answer.id == comment.id %}
+            {% trans "Mark as wrong answer" %}
+        {% else %}
+            {% trans "Mark as right answer" %}
+        {% endif %}
+    </a>
+{% endif %}
+</div>
+</div>

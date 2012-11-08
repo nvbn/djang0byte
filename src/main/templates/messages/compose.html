@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %} 
+{% block content %}
+{% include "messages/menu.html" %}
+<h2>{% trans "Compose Message"%}</h2>
+<form action="" method="post">
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit" value="{% trans "Send" %} &raquo;"/>
+</form>
+{% endblock %}

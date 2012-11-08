@@ -1,0 +1,31 @@
+{% extends extend %}
+{% load i18n %}
+{% block title %}
+{% trans "New post" %}
+{% endblock %}
+{% block content %}
+<h2>{% trans "New post" %}</h2>
+<div id="post_type">
+<a href="?">{% trans "Post" %}</a> <a href="?type=link">{% trans "Link" %}</a> <a href="?type=translate">{% trans "Translate" %}</a> <a href="?type=answer" class='selected_post_type'>{% trans "Answer" %}</a>
+</div>
+<form id='new_post_form' action='/newpost/?type=answer' method='post'>
+<span class='input_title'>{% trans 'Blog' %} &ndash; </span><select name="blog">
+	<option value="0">{% trans "Not in blog" %}</option>
+       {% for blog in blogs %}
+        <option {% if blog.selected %}selected{% endif %} value="{{ blog.id }}">{{ blog }}</option>
+       {% endfor %}
+    </select><br />
+<span class='input_title'>{% trans 'Title' %} &ndash; </span>
+<input type='text' name='title'/>
+<div id="answ_area">
+{% for i in answers_count %}
+<p id="answp_{{ i }}"><input class='answer_input' type='text' name='{{ i }}'/><a href="#" id="{{ i }}" class="rm_answ"><img src='/media/style/cancel.png' alt='X' /></a></p>
+{% endfor %}
+</div>
+<input type="button" id="add_answ" value="{% trans 'Add' %}"/><input type="button" id="rm_answ" value="{% trans 'Remove' %}"/><br/><br/><br/>
+<label class='input_title'><input type='checkbox' name='multi' />{% trans "Allow multiple answer" %}</label><br />
+<br /><label><span class='input_title'>{% trans 'Tags' %} &ndash; </span> <input type='text' name='tags'/></label><br /><br />
+<input type='hidden' name='count' value='{{ count }}' id='count' />
+<input type='submit'  value='{% trans 'Send' %}' >
+</form>
+{% endblock %}

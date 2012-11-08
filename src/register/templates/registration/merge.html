@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h2>
+        {% if success %}
+            {% trans "Merging success!" %}
+        {% endif %}
+        {% if error %}
+            {% trans 'Merging complite with errors!' %}
+        {% endif %}
+        {% if relogin %}
+            {% trans "Please login to upur main account!" %}
+        {% endif %}
+    </h2>
+{% endblock %}

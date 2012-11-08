@@ -1,0 +1,16 @@
+{% load i18n %}
+<div title="{% trans 'Count of raters' %}: {{ post.rate_count }}" class="post_rate" id="prate{{ post.id }}">
+       <a class="plus_rate" href='/action/ratepost/{{ post.id }}/1/'>+</a>
+            <a href="#/post/{{ post.id }}/"
+            {% if post.rate == 0 %}
+                class='rate_val raters'
+            {% endif %}
+            {% if post.rate > 0 %}
+                class='rate_val raters plus_rate'
+            {% endif %}{% if post.rate < 0 %}
+                class='rate_val raters minus_rate'
+            {% endif %}>
+                {{ post.rate }}
+            </a>
+        <a class="minus_rate" href='/action/ratepost/{{ post.id }}/0/'>-</a>
+    </div>

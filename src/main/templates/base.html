@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html lang="ru-RU">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="keywords" content="{% block keywords %}{{ keywords }}{% endblock %}" />
+    <link rel="icon" type="image/icon" href="/favicon.ico" />
+    {% load compress %}
+    {% compress css %}
+        <link href='/media/style/main.css' type='text/css' rel='stylesheet' />
+        <link href='/media/style/code.css' type='text/css' rel='stylesheet' />
+        <link href="/media/style/jquery.autocomplete.css" type="text/css" rel="stylesheet" />
+        <link href="/media/style/jquery.jgrowl.css" type="text/css" rel="stylesheet" />
+        <link href='/media/style/hyjack.css' type="text/css" rel="stylesheet" />
+        <link href='/media/style/markitup.css' type="text/css" rel="stylesheet" />
+        <link href='/media/style/markitupstyle.css' type="text/css" rel="stylesheet" />
+    {% endcompress %}
+    {% compress js %}
+        <script type="text/javascript" src="/media/script/jquery.js"></script>
+        <script type="text/javascript" src="/media/script/jquery.jgrowl_compressed.js"></script>
+        <script type="text/javascript" src="/media/script/jquery.autocomplete.min.js"></script>
+        <script type="text/javascript" src="/media/script/jquery.hyjack.select.min.js"></script>
+        <script type="text/javascript" src="/media/script/jquery.markitup.js"></script>
+        <script type="text/javascript" src="/media/script/jquery.simplemodal.1.4.1.min.js"></script>
+        <script type="text/javascript" src="/media/script/set.js"></script>
+        <script type="text/javascript" src="/media/script/main.js"></script>
+        <script type="text/javascript" src="/media/script/admin.js"></script>
+    {% endcompress %}
+    {% block rss %}
+        <link rel="alternate" href="{{ FEED_URL }}" type="application/rss+xml" title="">
+    {% endblock %}
+    <title>{{ SITENAME }} / {% block title %}Главная{% endblock %}</title>
+</head>
+<body>
+
+        {% load cache %}
+        {% load i18n %}
+        {% load pytils_numeral %}
+
+        <div class='menu'>
+            {% load tree_menu_tags %}
+            {% load menus %}
+            <ol>
+            {% show_menu 'menu' %}
+            {% for menu_item in menu.root_item.children %}
+                <li class="{{ menu_item.url|menu_class:request.path }}"><a href='{{ menu_item.url }}'>{{ menu_item }}
+                    {% if menu_item.url|menu_count == -5  %}
+                        {% if lenta_events_count %}
+                            <span class='plus_rate'>+{{ lenta_events_count }}<span>
+                        {% endif %}
+                    {% else %}{% if menu_item.url|menu_count %}
+                        <span class='plus_rate'>+{{ menu_item.url|menu_count }}<span>
+                    {% endif %}{% endif %}
+                </a></li>
+            {% endfor %}
+            </ol>
+            <div id="user_setting">
+                {% if request.user.is_authenticated %}
+
+                    <span class="left"><a href="/user/{{ request.user.username }}/">{{ request.user.username }}</a> <span
+                {% if your_rate > 0 %}
+                    class='plus_rate'
+                {% endif %}{% if your_rate < 0 %}
+                    class='minus_rate'
+                {% endif %}>
+                    {{ your_rate }}
+                </span> <a href="/newpost/">{% trans "New post" %}</a> / <a href='/newblog/'>{% trans "blog" %}</a>.
+                        <a href='/myblogs/'>{% trans "Your blogs" %}</a> {% trans "and" %} <a href='/pm/'>{% trans "PM's" %}</a>
+                        {% if messages_inbox_count %}
+                            {{ messages_inbox_count }}
+                        {% endif %}</span>
+                    <span class="right"><a href='/accounts/logout/'>{% trans "Log out" %}</a></span>
+                
+                {% else %}
+                    <span class="left"><a href='/accounts/register/'>{% trans "Register" %}</a></span>
+                    <span class="right"><a id='login_btn' href='/accounts/login/?next={{ request.path }}'>{% trans "Log in" %}</a></span>
+                {% endif %}
+            </div>
+        </div>
+       
+
+   
+        <div id='content'>
+            {% block content %}{% endblock %}
+        </div>
+        {% cache SIDEBAR_CACHE_TIME sidebar request.user.is_authenticated %}
+        <div id="sidebar">
+            <table class="top">
+                <tr><td id='fast_panel_area'>
+                <ul>
+                    {% for object in top_post_comment %}
+                        {% if object.type == 'post' %}
+                            <li class="post"><a href="/post/{{ object.object.id }}/">{% if object.object.blog %}
+                                    {{ object.object.blog }}
+                                {% else %}
+                                    {{ object.object.author }}
+                                {% endif %} &ndash; {{ object.object.title }}</a></li>
+                        {% else %}
+                            <li class="comment"><a href="/post/{{ object.object.post.id }}/#cmnt{{ object.object.id }}">{{ object.object.author }} /
+                                {% if object.object.post.blog %}
+                                    {{ object.object.post.blog }}
+                                {% else %}
+                                    {{ object.object.post.author }}
+                                {% endif %} &ndash; 
+                                {{ object.object.post.title }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul></td>
+                <td  id='fast_panel_selector'>
+                    <a href='#fast_post' id='fast_posts' class='fast_panel'><img src='/media/style/document.gif' /></a>
+                    <a href='#fast_comment' id='fast_comments' class='fast_panel'><img src='/media/style/speech_bubble.gif' /></a>
+                    {% if request.user.is_authenticated %}
+                        <a href='#fast_draft' id='fast_drafts' class='fast_panel'><img src='/media/style/draft.png' /></a>
+                        <a href='#fast_spy' id='fast_spies' class='fast_panel'><img src='/media/style/eye.gif' /></a>
+                        <a href='#fast_favourite' id='fast_favourites' class='fast_panel'><img src='/media/style/fav.gif' /></a>
+                    {% endif %}
+                </td>
+                </tr>
+            </table>
+            <div class='top search'>
+                <form method="GET" action='/search/'>
+                    <input type='text' name='query' id='search_input' /> <input id='search_btn' type='image' src='/media/style/mag_glass.gif' />
+                </form>
+            </div>
+
+            <div class='top advert'>
+                {% include 'advert.html' %}
+            </div>
+
+            <div id="tag">
+                {% load tagging_tags %}
+                {% tag_cloud_for_model main.Post as tags with steps=9 distribution=log min_count=20 %}
+                {% for tag in tags %}
+                   <a class='tag_{{tag.font_size }}' href='/tag/{{ tag|urlencode }}/'>{{ tag }}</a>
+                {% endfor %}
+            </div>
+
+            <table class="top">
+                <tr><td id='fast_list_area'>
+                <span><a href='/list/users/'>{{ profiles_count }}
+                {% if LANGUAGE_CODE == 'ru-ru' %}
+                    {{ profiles_count|choose_plural:"пользователь,пользователя,пользователей" }}</a> из
+                {% else %}
+                    {% trans "users</a> from" %}
+                {% endif %}
+                    <a href='/list/city/'>{{ city_count  }}
+                    {% if LANGUAGE_CODE == 'ru-ru' %}
+                        {{ city_count|choose_plural:"город,города,городов" }}.
+                    {% else %}
+                        {% trans "cities." %}
+                    {% endif %}
+                </a></span>
+                <ul>
+                    {% for profile in top_profiles %}
+                        <li class="user"><a href="/user/{{ profile.name }}/">{{ profile.name }} ({{ profile.rate }})</a></li>
+                    {% endfor %}
+                </ul>
+                <span><a href='/list/blogs/'>{% if LANGUAGE_CODE == 'ru-ru' %}
+                    Из {{ blogs_count }} блог{{ blogs_count|choose_plural:",а,ов" }}.
+                {% else %}
+                    {{ blogs_count }} {% trans "blogs" %}.
+                {% endif %}</a></span>
+                <ul>
+                    {% for blog in top_blogs %}
+                        <li class="user"><a href="/blog/{{ blog.id }}/">{{ blog.name }} ({{ blog.rate }})</a></li>
+                    {% endfor %}
+                </ul>
+            </td>
+                <td  id='fast_list_selector'>
+                    <a href='#fast_users' id='fast_users' class='fast_panel'><img src='/media/style/figure.gif' /></a>
+                    <a href='#fast_blogs' id='fast_blogs' class='fast_panel'><img src='/media/style/documents.gif' /></a>
+                </td>
+                </tr>
+            </table>
+            <div class='top now_online'>
+                {% trans 'Now online:' %} {% for user in ONLINE %}
+                    <a href='/user/{{ user }}/'>{{ user }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}<br/><br />
+                {% trans 'Last registered:' %} {% for user in LAST_USERS %}
+                    <a href='/user/{{ user }}/'>{{ user }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+            </div>
+        </div>
+        {% endcache %}
+        {% cache MENU_CACHE_TIME bottom_menu %}
+        <div class='menu' id="bottom">
+            {% show_menu "bottom_menu" "ordered-list" %}
+        </div>
+        {% endcache %}
+        {% include 'bottom_buttons.html' %}
+{% if RIGHT_PANEL_JS %}
+    <script>
+    {% autoescape off %}
+        $(document).ready(function(){
+            {{ RIGHT_PANEL_JS  }};
+        });
+    {% endautoescape %}
+    </script>
+{% endif %}
+</body>
+</html>

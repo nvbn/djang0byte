@@ -1,0 +1,1157 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-31 00:33+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#: admin.py:36
+#, fuzzy
+msgid "favourite count"
+msgstr "Любимый текст"
+
+#: models.py:37 templates/list.html:20 templates/newblog.html:9
+msgid "Name"
+msgstr "Имя"
+
+#: models.py:38
+msgid "Display in \"all\"?"
+msgstr "Отображать во \"Всё\""
+
+#: models.py:39
+msgid "Is Q&A?"
+msgstr "Это Q&A?"
+
+#: models.py:66 models.py:77
+msgid "Blog type"
+msgstr "Тип блога"
+
+#: models.py:67
+msgid "Blogs types"
+msgstr "Типы блогов"
+
+#: models.py:72
+msgid "Blog name"
+msgstr "Название"
+
+#: models.py:73
+msgid "Owner of blog"
+msgstr "Владелец"
+
+#: models.py:74
+msgid "Blog description"
+msgstr "Описание"
+
+#: models.py:75
+msgid "Blog rate"
+msgstr "Рейтинг блога"
+
+#: models.py:76 models.py:295 models.py:516 models.py:641
+#: templates/post_rate.html:2 templates/single_comment.html:11
+msgid "Count of raters"
+msgstr "Количество голосов"
+
+#: models.py:78
+msgid "Does not need join?"
+msgstr "Не требует вступления"
+
+#: models.py:79
+msgid "Blog picture"
+msgstr "Аватар"
+
+#: models.py:178 models.py:232 models.py:1001 templates/newanswer.html:12
+#: templates/newpost.html:45
+msgid "Blog"
+msgstr "Блог"
+
+#: models.py:179
+msgid "Blogs"
+msgstr "Блоги"
+
+#: models.py:184
+msgid "Name of city"
+msgstr "Название"
+
+#: models.py:185
+msgid "Users from this city"
+msgstr "Пользователи из этого города"
+
+#: models.py:212 models.py:636 templates/edit_user.html:15
+msgid "City"
+msgstr "Город"
+
+#: models.py:213
+msgid "Cities"
+msgstr "Города"
+
+#: models.py:224 models.py:506 models.py:512 models.py:873 models.py:959
+#: models.py:969 models.py:979 models.py:1024 templates/newanswer.html:9
+#: templates/newpost.html:28
+msgid "Post"
+msgstr "Текст"
+
+#: models.py:225 templates/newanswer.html:9 templates/newpost.html:29
+#: templates/newpost.html.py:55
+msgid "Link"
+msgstr "Пост-ссылка"
+
+#: models.py:226 templates/newanswer.html:9 templates/newpost.html:30
+msgid "Translate"
+msgstr "Перевод"
+
+#: models.py:227 models.py:950 templates/newanswer.html:9
+#: templates/newpost.html:30
+msgid "Answer"
+msgstr "Опрос"
+
+#: models.py:228
+msgid "Multiple Answer"
+msgstr "Несколько ответов"
+
+#: models.py:231 models.py:513
+msgid "Author"
+msgstr "Автор"
+
+#: models.py:233
+msgid "Post title"
+msgstr "Заголовок"
+
+#: models.py:233 models.py:286
+msgid "No name"
+msgstr "Без названия"
+
+#: models.py:234
+msgid "Main text"
+msgstr "Основной текст"
+
+#: models.py:235
+msgid "Type of post"
+msgstr "Тип"
+
+#: models.py:236
+msgid "Addition field"
+msgstr "Дополнительное поле"
+
+#: models.py:293
+msgid "Date"
+msgstr "Дата"
+
+#: models.py:294
+msgid "Post rate"
+msgstr "Рейтинг текста"
+
+#: models.py:296
+msgid "Preview text"
+msgstr "Предпросмотр"
+
+#: models.py:297 templates/newanswer.html:27 templates/newpost.html:61
+msgid "Tags"
+msgstr "Тэги"
+
+#: models.py:298 templates/post_options.html:10
+msgid "Disable reply"
+msgstr "Запрет комментирования"
+
+#: models.py:299 templates/post_options.html:11
+msgid "Disable rate"
+msgstr "Запрет голосования"
+
+#: models.py:300 templates/post_options.html:9
+msgid "Pinch post"
+msgstr "Закрепить"
+
+#: models.py:301
+msgid "Is solved"
+msgstr "Решено"
+
+#: models.py:302
+msgid "Right answer"
+msgstr "Правильный ответ"
+
+#: models.py:507
+msgid "Posts"
+msgstr "Тексты"
+
+#: models.py:514
+msgid "Text"
+msgstr "Текст"
+
+#: models.py:515
+msgid "Comment rate"
+msgstr "Рейтинг комментария"
+
+#: models.py:519
+msgid "Creation date"
+msgstr "Дата создания"
+
+#: models.py:603 models.py:990 models.py:1025 templates/comment.html:4
+msgid "Comment"
+msgstr "Комментарий"
+
+#: models.py:604
+msgid "Comments"
+msgstr "Комментарии"
+
+#: models.py:620
+msgid "User in blog list"
+msgstr "Пользователь в блоге"
+
+#: models.py:621
+msgid "Users in blogs list"
+msgstr "Пользователи в блогах"
+
+#: models.py:635 models.py:860 models.py:951 models.py:960 models.py:970
+#: models.py:980 models.py:991 models.py:1002 models.py:1013 models.py:1023
+#: models.py:1205 templates/notify/comment_reply.html:3
+#: templates/notify/mention.html:3 templates/notify/post_mention.html:3
+#: templates/notify/post_reply.html:3 templates/notify/spy_reply.html:3
+msgid "User"
+msgstr "Пользователь"
+
+#: models.py:637
+msgid "Icq"
+msgstr "Icq"
+
+#: models.py:638 templates/edit_user.html:13
+msgid "Jabber"
+msgstr "Jabber"
+
+#: models.py:639
+msgid "Web site"
+msgstr "Сайт"
+
+#: models.py:640
+msgid "Personal rate"
+msgstr "Персональный рейтинг"
+
+#: models.py:642
+msgid "Rate earned by posts"
+msgstr "Рейтинг с текстов"
+
+#: models.py:643
+msgid "Rate earned by comments"
+msgstr "Рейтинг с комментариев"
+
+#: models.py:644
+msgid "Rate earned by blogs"
+msgstr "Рейтинг с блогов"
+
+#: models.py:645 templates/edit_user.html:23
+msgid "Timezone"
+msgstr "Часовой пояс"
+
+#: models.py:646
+msgid "User picture"
+msgstr "Аватар"
+
+#: models.py:647
+msgid "Show email?"
+msgstr "Показывать адрес электронной почты?"
+
+#: models.py:648
+msgid "Send notify about reply to post?"
+msgstr "Уведомлять о ответах на тексты?"
+
+#: models.py:649
+msgid "Send notify about reply to comment?"
+msgstr "Уведомлять о ответах на комментарии?"
+
+#: models.py:650
+msgid "Send notify about PM?"
+msgstr "Уведомлять о ЛС?"
+
+#: models.py:651
+msgid "Send notify about mention?"
+msgstr "Уведомлять о упоминаниях?"
+
+#: models.py:652
+msgid "Send notify about spy?"
+msgstr "Уведомлять о отслеживаемом?"
+
+#: models.py:653
+msgid "About"
+msgstr "О пользователе"
+
+#: models.py:654
+msgid "Field for addition"
+msgstr "Дополнительное поле"
+
+#: models.py:853
+msgid "User profile"
+msgstr "Профиль пользователя"
+
+#: models.py:854
+msgid "User profiles"
+msgstr "Профили пользователей"
+
+#: models.py:859 models.py:867
+msgid "Friend"
+msgstr "Друг"
+
+#: models.py:868
+msgid "Friends"
+msgstr "Друзья"
+
+#: models.py:874
+msgid "Count of choose"
+msgstr "Колличество раз"
+
+#: models.py:875 models.py:944
+msgid "Answer variant"
+msgstr "Вариант ответа"
+
+#: models.py:945
+msgid "Answers variants"
+msgstr "Варианты ответов"
+
+#: models.py:954
+msgid "Vote to answer log"
+msgstr "Голос"
+
+#: models.py:955
+msgid "Answers votes log"
+msgstr "Лог ответов"
+
+#: models.py:963
+msgid "Favourite post"
+msgstr "Любимый текст"
+
+#: models.py:964 views/post.py:264
+msgid "Favourite posts"
+msgstr "Любимые тексты"
+
+#: models.py:973
+msgid "Post spying"
+msgstr "Отслеживаемый текст"
+
+#: models.py:974
+msgid "Post spyings"
+msgstr "Отслеживаемые тексты"
+
+#: models.py:981 models.py:992 models.py:1003 models.py:1014
+msgid "is negative"
+msgstr ""
+
+#: models.py:984
+msgid "Post rate log"
+msgstr "Лог рейтинга"
+
+#: models.py:985
+msgid "Post rates log"
+msgstr "Лог рейтинга текстов"
+
+#: models.py:995
+msgid "Comment rate log"
+msgstr "Лог рейтинга"
+
+#: models.py:996
+msgid "Comment rates log"
+msgstr "Лог рейтинга комментариев"
+
+#: models.py:1006
+msgid "Blog rate log"
+msgstr "Лог рейтинга"
+
+#: models.py:1007
+msgid "Blog rates log"
+msgstr "Лог рейтинга блогов"
+
+#: models.py:1012
+msgid "Profile"
+msgstr "Профиль"
+
+#: models.py:1017
+msgid "User rate log"
+msgstr "Лог рейтинга"
+
+#: models.py:1018
+msgid "User rates log"
+msgstr "Лог рейтинга пользователей"
+
+#: models.py:1175
+msgid "Notify"
+msgstr "Уведомление"
+
+#: models.py:1176
+msgid "Notify messages"
+msgstr "Уведомления"
+
+#: models.py:1181 models.py:1203
+msgid "Page url"
+msgstr "Адрес"
+
+#: models.py:1182
+msgid "Page name"
+msgstr "Название"
+
+#: models.py:1183
+msgid "Content"
+msgstr "Содержимое"
+
+#: models.py:1186
+msgid "Page"
+msgstr "Страница"
+
+#: models.py:1187
+msgid "Text pages"
+msgstr "Текстовые страницы"
+
+#: models.py:1204 templates/newanswer.html:18 templates/newpost.html:51
+msgid "Title"
+msgstr "Заголовок"
+
+#: models.py:1254
+msgid "User on other site"
+msgstr "Пользователь на другом сайте"
+
+#: models.py:1255
+msgid "Users on other sites"
+msgstr "Пользователи на других сайтах"
+
+#: models.py:1269
+msgid "Name of service"
+msgstr "Название сайта"
+
+#: models.py:1270
+msgid "User name in service"
+msgstr "Имя пользователя на сайте"
+
+#: models.py:1345
+msgid "Enemy"
+msgstr "Жертва"
+
+#: models.py:1346
+msgid "End date"
+msgstr "Дато окончания"
+
+#: models.py:1347
+msgid "Reason"
+msgstr "Причина"
+
+#: models.py:1361
+msgid "Ban"
+msgstr "Блокировка"
+
+#: models.py:1362
+msgid "Bans"
+msgstr "Блокировки"
+
+#: utils.py:76 utils.py:77
+#, python-format
+msgid "User %(user)s mention your on %(site)s"
+msgstr "Пользователь %(user)s упомянул вас на %(site)s"
+
+#: utils.py:78
+#, python-format
+msgid "User %(user)s write reply to your post on %(site)s"
+msgstr "Пользователь %(user)s прокомментировал ваш пост на %(site)s"
+
+#: utils.py:79
+#, python-format
+msgid "User %(user)s write reply to your spy post on %(site)s"
+msgstr ""
+"Пользователь %(user)s прокомментировал отслеживаемый вами пост на %(site)s"
+
+#: utils.py:80
+#, python-format
+msgid "User %(user)s write reply to your comment on %(site)s"
+msgstr "Пользователь %(user)s ответил на ваш комментарий на %(site)s"
+
+#: templates/answer.html:26
+msgid "Vote"
+msgstr "Проголосовать"
+
+#: templates/answer.html:27
+msgid "Refrain"
+msgstr "Воздеражаться"
+
+#: templates/base.html:67 templates/newanswer.html:4
+#: templates/newanswer.html.py:7 templates/newpost.html:10
+#: templates/newpost.html.py:22
+msgid "New post"
+msgstr "Новый пост"
+
+#: templates/base.html:67
+msgid "blog"
+msgstr "блог"
+
+#: templates/base.html:68
+msgid "Your blogs"
+msgstr "Ваши блоги"
+
+#: templates/base.html:68
+msgid "and"
+msgstr "и"
+
+#: templates/base.html:68 templates/user.html:19
+msgid "PM's"
+msgstr "ЛС"
+
+#: templates/base.html:72
+msgid "Log out"
+msgstr "Выйти"
+
+#: templates/base.html:75 templates/registration/login.html:34
+msgid "Register"
+msgstr "Регистрация"
+
+#: templates/base.html:76 templates/registration/activate.html:10
+#: templates/registration/login.html:28
+#: templates/registration/password_reset_complete.html:8
+msgid "Log in"
+msgstr "Войти"
+
+#: templates/base.html:144
+msgid "users</a> from"
+msgstr "пользователей</a> из"
+
+#: templates/base.html:150
+msgid "cities."
+msgstr "городов."
+
+#: templates/base.html:161
+msgid "blogs"
+msgstr "блог"
+
+#: templates/base.html:176
+msgid "Now online:"
+msgstr "Сейчас на сайте"
+
+#: templates/base.html:179
+msgid "Last registered:"
+msgstr "Новые пользователи:"
+
+#: templates/change_userpic.html:4 templates/change_userpic.html.py:7
+#: templates/user.html:55
+msgid "Change userpic"
+msgstr "Сменить аватар"
+
+#: templates/delete_comment.html:4 templates/single_comment.html:40
+msgid "Delete comment"
+msgstr "Удалить"
+
+#: templates/delete_comment.html:7
+msgid "Are you sure to delete this comment"
+msgstr "Вы уверены, что хотите удалить этот комментарий"
+
+#: templates/delete_comment.html:9 templates/delete_post.html:9
+msgid "Yes!"
+msgstr "Да!"
+
+#: templates/delete_comment.html:10 templates/delete_post.html:10
+msgid "No!"
+msgstr "Нет!"
+
+#: templates/delete_post.html:4
+msgid "Delete post"
+msgstr "Удалить пост"
+
+#: templates/delete_post.html:7
+msgid "Are you sure to delete post"
+msgstr "Вы уверены, что хотите удалить пост?"
+
+#: templates/drafts.html:4
+msgid "Drafts"
+msgstr "Черновики"
+
+#: templates/edit_user.html:4
+msgid "Edit user"
+msgstr "Редактирование пользователя"
+
+#: templates/edit_user.html:7
+msgid "Edit user account"
+msgstr "Редактирование пользователя"
+
+#: templates/edit_user.html:10
+msgid "E-mail"
+msgstr ""
+
+#: templates/edit_user.html:11
+msgid "Show mail"
+msgstr "Показывать адрес электронной почты?"
+
+#: templates/edit_user.html:12
+msgid "ICQ"
+msgstr ""
+
+#: templates/edit_user.html:14
+msgid "Site"
+msgstr "Сайт"
+
+#: templates/edit_user.html:17
+msgid "Notify post reply"
+msgstr "Уведомление о ответах на посты"
+
+#: templates/edit_user.html:18
+msgid "Notify comment reply"
+msgstr "Уведомление о ответах на комментарии"
+
+#: templates/edit_user.html:19
+msgid "Notify pm"
+msgstr "Уведомление о ЛС"
+
+#: templates/edit_user.html:20
+msgid "Notify mention"
+msgstr "Уведомлять о упоминаниях"
+
+#: templates/edit_user.html:21
+msgid "Notify spy"
+msgstr "О ответах на отслеживаемое"
+
+#: templates/edit_user.html:24
+msgid "About you:"
+msgstr "О пользователе:"
+
+#: templates/edit_user.html:26
+msgid "Your accounts on other web sites:"
+msgstr "Вы на других сайтах:"
+
+#: templates/edit_user.html:50 templates/newanswer.html:25
+msgid "Add"
+msgstr "Добавить"
+
+#: templates/edit_user.html:50 templates/newanswer.html:25
+msgid "Remove"
+msgstr "Удалить"
+
+#: templates/edit_user.html:51
+msgid "Save"
+msgstr "Сохранить"
+
+#: templates/lenta.html:4
+msgid "Your feed"
+msgstr "Лента"
+
+#: templates/lenta.html:13 templates/post_list.html:80
+msgid "Show full."
+msgstr "Полностью."
+
+#: templates/list.html:4
+msgid "List"
+msgstr "Список"
+
+#: templates/list.html:21
+msgid "Rate"
+msgstr "Рейтинг"
+
+#: templates/list.html:21
+msgid "Count"
+msgstr "Количество"
+
+#: templates/login.html:4
+msgid "Login"
+msgstr "Имя пользователя"
+
+#: templates/new_comment.html:5 templates/single_comment.html:37
+msgid "Edit comment"
+msgstr "Редактировать"
+
+#: templates/new_comment.html:7
+msgid "Create comment"
+msgstr "Создать комментарий"
+
+#: templates/new_comment.html:15 templates/post_options.html:12
+msgid "Apply"
+msgstr "Применить"
+
+#: templates/new_comment.html:15 templates/post.html:87
+#: templates/single_comment.html:34 templates/messages/new_message.html:11
+#: templates/messages/view.html:15
+msgid "Reply"
+msgstr "Ответить"
+
+#: templates/new_comment.html:17 templates/newpost.html:62
+#: templates/newpost.html.py:63 templates/post.html:87
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#: templates/newanswer.html:13 templates/newpost.html:46
+msgid "Not in blog"
+msgstr "Без блога"
+
+#: templates/newanswer.html:26
+msgid "Allow multiple answer"
+msgstr "Несколько ответов"
+
+#: templates/newanswer.html:29 templates/newblog.html:13
+#: templates/newpost.html:62 templates/messages/compose.html:10
+msgid "Send"
+msgstr "Отправить"
+
+#: templates/newblog.html:4
+msgid "Create new blog"
+msgstr "Создать блог"
+
+#: templates/newblog.html:7
+msgid "New blog creating"
+msgstr "Создание блога"
+
+#: templates/newblog.html:11
+msgid "Description"
+msgstr "Описание"
+
+#: templates/newpost.html:5 templates/newpost.html.py:17
+msgid "Edit draft"
+msgstr "Редактировать черновик"
+
+#: templates/newpost.html:8 templates/newpost.html.py:20
+msgid "Edit post"
+msgstr "Редактировать пост"
+
+#: templates/newpost.html:34
+msgid "Preview of the text:"
+msgstr "Предпросмотр"
+
+#: templates/newpost.html:58
+msgid "Source"
+msgstr "Источник"
+
+#: templates/newpost.html:62
+msgid "Save as draft!"
+msgstr "Сохранить как черновик"
+
+#: templates/post.html:23
+msgid "Tags:"
+msgstr "Тэги:"
+
+#: templates/post.html:34
+msgid "Edit post!"
+msgstr "Редактировать пост"
+
+#: templates/post.html:37
+msgid "Delete post!"
+msgstr "Удалить пост"
+
+#: templates/post.html:38 templates/post_options.html:4
+#: templates/post_options.html.py:7
+msgid "Post options"
+msgstr "Настройки"
+
+#: templates/post.html:41
+msgid "Remove from favourite!"
+msgstr "Убрать из избранного!"
+
+#: templates/post.html:43
+msgid "Add to favourite!"
+msgstr "Добавить в избранное!"
+
+#: templates/post.html:47
+msgid "Remove from spy!"
+msgstr "Перестать следить!"
+
+#: templates/post.html:49
+msgid "Add to spy!"
+msgstr "Отслеживать!"
+
+#: templates/post.html:56
+msgid "Unmark solved"
+msgstr "Отметить нерешённым"
+
+#: templates/post.html:58
+msgid "Mark solved"
+msgstr "Отметить решённым"
+
+#: templates/post.html:65
+msgid "Related"
+msgstr "Похожие"
+
+#: templates/post.html:66
+msgid "Share"
+msgstr "Поделиться"
+
+#: templates/post.html:90
+msgid "Reply to post"
+msgstr "Ответить"
+
+#: templates/post_item.html:29
+msgid "Original"
+msgstr "Оригинал"
+
+#: templates/post_list.html:15
+msgid "Posts by "
+msgstr "Тексты"
+
+#: templates/post_list.html:18 templates/user.html:64
+msgid "Add to friends!"
+msgstr "Начать дружить!"
+
+#: templates/post_list.html:21 templates/user.html:68
+msgid "Remove from friends!"
+msgstr "Перестать дружить!"
+
+#: templates/post_list.html:26
+msgid "Posts in "
+msgstr "Посты в "
+
+#: templates/post_list.html:29
+msgid "Invite!"
+msgstr "Вступить!"
+
+#: templates/post_list.html:32
+msgid "Get out!"
+msgstr "Покинуть!"
+
+#: templates/post_list.html:48
+msgid "Posts with tag "
+msgstr "Посты с тегом"
+
+#: templates/post_list.html:51
+msgid "Your favourite posts!"
+msgstr "Любимые тексты"
+
+#: templates/post_list.html:54
+msgid "Posts like"
+msgstr "Похожие на"
+
+#: templates/post_list.html:68
+msgid "Questions"
+msgstr "Вопросы"
+
+#: templates/post_list.html:69
+msgid "All"
+msgstr "Все"
+
+#: templates/post_list.html:70
+msgid "Solved"
+msgstr "Решённые"
+
+#: templates/post_list.html:71
+msgid "Unsolved"
+msgstr "Нерешённые"
+
+#: templates/post_options.html:13 templates/registration/login.html:29
+msgid "Cancel"
+msgstr "Отмена"
+
+#: templates/register.html:4 templates/registration/register.html:4
+msgid "Registration"
+msgstr "Регистрация"
+
+#: templates/search.html:4 templates/search.html.py:9 templates/search.html:13
+msgid "Search"
+msgstr "Поиск"
+
+#: templates/search.html:18
+msgid "No search result!"
+msgstr "По вашему запросу ничего не найдено, придумайте другой."
+
+#: templates/single_comment.html:46
+msgid "Mark as wrong answer"
+msgstr "Отметить неверным ответом"
+
+#: templates/single_comment.html:48
+msgid "Mark as right answer"
+msgstr "Отметить верным ответом"
+
+#: templates/sorry.html:4
+msgid "Sorry, not now!"
+msgstr "Извини, сейчас это не получится!"
+
+#: templates/sorry.html:7
+msgid "Sorry"
+msgstr "Извини"
+
+#: templates/sorry.html:7
+msgid "your banned!"
+msgstr "ты заблокирован!"
+
+#: templates/sorry.html:8
+msgid "Reason:"
+msgstr "Причина:"
+
+#: templates/sorry.html:9
+msgid "Block end date:"
+msgstr "Дата окончания блокировки:"
+
+#: templates/user.html:32
+msgid "About user:"
+msgstr "О пользователе:"
+
+#: templates/user.html:39
+msgid "Blogs:"
+msgstr "Блоги:"
+
+#: templates/user.html:45
+msgid "Friends:"
+msgstr "Друзья:"
+
+#: templates/user.html:50
+msgid "Writed"
+msgstr "Написал"
+
+#: templates/user.html:50
+msgid "posts</a> and"
+msgstr "постов</a> и"
+
+#: templates/user.html:50
+msgid "comments</a>."
+msgstr "комментариев</a>."
+
+#: templates/user.html:54
+msgid "Edit profile"
+msgstr "Редактировать профиль"
+
+#: templates/user.html:57
+msgid "Delete userpic"
+msgstr "Удалить аватар"
+
+#: templates/user.html:59
+msgid "Change password"
+msgstr "Сменить пароль"
+
+#: templates/user.html:60
+msgid "Merge with another"
+msgstr "Объеденить аккаунты"
+
+#: templates/user_comments.html:5 templates/user_comments.html.py:8
+msgid "Comments by"
+msgstr "Комментарии "
+
+#: templates/messages/compose.html:5
+msgid "Compose Message"
+msgstr "Написать сообщение"
+
+#: templates/messages/inbox.html:5 templates/messages/menu.html:3
+#: templates/messages/new_message.html:10
+msgid "Inbox"
+msgstr "Входящие"
+
+#: templates/messages/inbox.html:18 templates/messages/outbox.html:19
+#: templates/messages/trash.html:18
+msgid "No messages."
+msgstr "Нет сообщений"
+
+#: templates/messages/menu.html:4 templates/messages/outbox.html:5
+msgid "Sent Messages"
+msgstr "Отправить"
+
+#: templates/messages/menu.html:5
+msgid "New Message"
+msgstr "Новое сообщение"
+
+#: templates/messages/menu.html:6
+msgid "Trash"
+msgstr "Корзина"
+
+#: templates/messages/new_message.html:1
+#, python-format
+msgid ""
+"Hello %(recipient)s,\n"
+"\n"
+"you received a private message from %(sender)s with\n"
+"the following contents:"
+msgstr ""
+
+#: templates/messages/new_message.html:9
+#, python-format
+msgid "Sent from %(site_url)s"
+msgstr "Отправлено %(site_url)s"
+
+#: templates/messages/trash.html:5
+msgid "Deleted Messages"
+msgstr "Удалить"
+
+#: templates/messages/trash.html:21
+msgid ""
+"Deleted Messages are removed from the trash at unregular intervals, don't "
+"rely on this feature for long-time storage."
+msgstr ""
+
+#: templates/messages/view.html:17
+msgid "Delete"
+msgstr "Удалить"
+
+#: templates/notify/comment_reply.html:4
+msgid "reply your comment in post"
+msgstr "ответил на ваш комментарий в посте"
+
+#: templates/notify/mention.html:4
+msgid "mention your in comment for post"
+msgstr "упомянул вас в комментарии к посту"
+
+#: templates/notify/post_mention.html:4
+msgid "mention your in post"
+msgstr "упомянул вас в посте"
+
+#: templates/notify/post_reply.html:4
+msgid "write reply for your post"
+msgstr "ответил на ваш пост"
+
+#: templates/notify/spy_reply.html:4
+msgid "write reply for your spy post"
+msgstr "написал комментарий в отслеживаемом ваме посте"
+
+#: templates/registration/activate.html:8
+msgid "Account successfully activated"
+msgstr "Аккаунт успешно активирован!"
+
+#: templates/registration/activate.html:14
+msgid "Account activation failed"
+msgstr "Активация не удалась"
+
+#: templates/registration/login.html:4
+msgid "No-no-no!"
+msgstr "Не-не-не!"
+
+#: templates/registration/login.html:33
+msgid "Forgot password"
+msgstr "Сменить пароль"
+
+#: templates/registration/login.html:33
+msgid "Reset it"
+msgstr "Сменить!"
+
+#: templates/registration/login.html:34
+msgid "Not member"
+msgstr "Не член"
+
+#: templates/registration/logout.html:5
+msgid "Logged out"
+msgstr "Выйти"
+
+#: templates/registration/password_change_done.html:5
+msgid "Password changed"
+msgstr "Смена пароля прошла успешно"
+
+#: templates/registration/password_change_form.html:8
+#: templates/registration/password_reset_confirm.html:11
+#: templates/registration/password_reset_form.html:8
+#: templates/registration/registration_form.html:8
+msgid "Submit"
+msgstr "Отправить"
+
+#: templates/registration/password_reset_complete.html:6
+msgid "Password reset successfully"
+msgstr "Сброс пароля прошёл успешно"
+
+#: templates/registration/password_reset_confirm.html:16
+msgid "Password reset failed"
+msgstr "Сброс пароля не удался"
+
+#: templates/registration/password_reset_done.html:5
+msgid "Email with password reset instructions has been sent."
+msgstr "Сообщение с инструкцией для сброса пароля было отправлено"
+
+#: templates/registration/password_reset_email.html:2
+#, python-format
+msgid "Reset password at %(site_name)s"
+msgstr "Сброс пароля на %(site_name)s"
+
+#: templates/registration/registration_complete.html:5
+msgid "You are now registered. Activation email sent."
+msgstr "Вам было выслано письмо для активации."
+
+#: views/actions.py:65 views/actions.py:101 views/actions.py:140
+msgid "Second vote is forbidden!"
+msgstr "Повторное голосование запрещено!"
+
+#: views/actions.py:72 views/actions.py:110 views/actions.py:149
+msgid "Not allow this action!"
+msgstr "Вам это нельзя!"
+
+#: views/actions.py:76
+msgid "For their comments can not vote!"
+msgstr "Вам нельзя голосовать за этот комментарий!"
+
+#: views/actions.py:114
+msgid "For their post can not vote!"
+msgstr "Вам нельзя голосовать за этот текст!"
+
+#: views/actions.py:153
+msgid "For their blog can not vote!"
+msgstr "Вам нельзя голосовать за этот блог!"
+
+#: views/actions.py:181
+msgid "Please register for this action!"
+msgstr "Для этого действия требуется регистрация!"
+
+#: views/actions.py:365 views/actions.py:391
+msgid "Show all!"
+msgstr "Полностью."
+
+#: views/list.py:72 views/list.py:81 views/list.py:160
+#, python-format
+msgid "%d users from this city"
+msgstr "%d пользователей"
+
+#: views/post.py:235
+msgid "Presonal posts"
+msgstr "Личные посты"
+
+#: views/post.py:239
+#, python-format
+msgid "Blog in %s"
+msgstr "Посты в блоге %s"
+
+#: views/post.py:245
+#, python-format
+msgid "Posts with tag %s"
+msgstr "Посты с тегом %s"
+
+#: views/post.py:251
+#, python-format
+msgid "Posts by %s"
+msgstr "Посты от %s"
+
+#: views/post.py:261
+#, python-format
+msgid "Posts like %s"
+msgstr "Похожие на %s"
+
+#: views/post.py:269
+#, python-format
+msgid "Address not found: %s"
+msgstr ""
+
+#~ msgid "Без названия"
+#~ msgstr "Название"
+
+#~ msgid "Send!"
+#~ msgstr "Отправить"
+
+#~ msgid "Link:"
+#~ msgstr "Ссылка:"
+
+#~ msgid "Source:"
+#~ msgstr "Источник:"
+
+#~ msgid "Name:"
+#~ msgstr "Имя"
+
+#~ msgid "Sender"
+#~ msgstr "Отправитель"
+
+#~ msgid "Subject"
+#~ msgstr "Тема"
+
+#~ msgid "Received"
+#~ msgstr "Получатель"
+
+#~ msgid "Action"
+#~ msgstr "Действия"
+
+#~ msgid "delete"
+#~ msgstr "удалить"
+
+#~ msgid "View Message"
+#~ msgstr "Смотерть"
+
+#~ msgid "Your"
+#~ msgstr "Ваши"
+
+#~ msgid "Post list"
+#~ msgstr "Тексты"

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+{% trans "Login" %}
+{% endblock %}
+{% block content %}
+<form action='/login/{{ next }}/' method='post'>
+{{ form.as_ul }}
+<input type='submit' />
+</form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %} 
+{% block content %}
+{% include "messages/menu.html" %}
+<h2>{% trans "Sent Messages" %}</h2>
+{% if message_list %}
+<ul class="messages">
+
+{% for message in message_list %}
+
+        <li class="list_msg {% if message.new %}new_msg{% endif %}"><a href='/user/{{ message.recipient }}/'><img src='{{ message.recipient.get_profile.get_avatar }}' class='mini_av' />{{ message.recipient }}</a>
+         — <a href="{{message.get_absolute_url }}">{{ message.subject }}</a> <a class='del_msg' href="{% url messages.views.delete message.id %}"><img src="/media/style/cancel.png" alt="X" /></a>
+        </li>
+
+{% endfor %}
+</ul>
+
+{% else %}
+<p>{% trans "No messages." %}</p>
+{% endif %}   
+{% endblock %}

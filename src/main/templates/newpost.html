@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% if draft %}
+        {% trans "Edit draft" %}
+    {% else %}
+        {% if edit %}
+            {% trans "Edit post" %}
+        {% else %}
+            {% trans "New post" %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+{% block content %}
+<h2>
+    {% if draft %}
+        {% trans "Edit draft" %}
+    {% else %}
+        {% if edit %}
+            {% trans "Edit post" %}
+        {% else %}
+            {% trans "New post" %}
+        {% endif %}
+    {% endif %}
+</h2>
+{% if not draft and not edit %}
+    <div id="post_type">
+    <a {% if type == 'post' %}class='selected_post_type'{% endif %} href="?">{% trans "Post" %}</a>
+    <a {% if type == 'link' %}class='selected_post_type'{% endif %} href="?type=link">{% trans "Link" %}</a>
+    <a {% if type == 'translate' %}class='selected_post_type'{% endif %} href="?type=translate">{% trans "Translate" %}</a> <a href="?type=answer">{% trans "Answer" %}</a>
+    </div>
+{% else %}
+    {% if draft %}
+        <h2>{% trans "Preview of the text:" %}</h2>
+        <div class='preview'>
+            {% autoescape off %}
+                {{ preview }}
+            {% endautoescape %}
+        </div>
+    {% else %}
+        <div class='preview'></div>
+    {% endif %}
+{% endif %}
+<form id='new_post_form' action='{% if draft %}/draft/{{ id }}/{% else%}{% if edit %}/action/edit_post/{{ id }}/{% else %}/newpost/?type={{ type }}{% endif %}{% endif %}' method='post'>
+    <span class='input_title'>{% trans 'Blog' %} &ndash; </span><select name="blog">
+	<option value="0">{% trans "Not in blog" %}</option>
+       {% for blog in blogs %}
+        <option {% if blog.selected %}selected{% endif %} value="{{ blog.id }}">{{ blog }}</option>
+       {% endfor %}
+    </select><br />
+<span class='input_title'>{% trans 'Title' %} &ndash; </span>{{ form.title }}<br />
+{{ form.text }}
+ <label>
+    {% if type == 'link' %}
+        <br /><span class='input_title'>{% trans 'Link' %} &ndash; </span>
+    {%  endif %}
+    {% if type == 'translate' %}
+        <br /><span class='input_title'>{% trans 'Source' %} &ndash; </span>
+    {%  endif %}
+{{ form.addition }}<br /></label>{% if  form.addition  %}<br />{% endif %}
+<label><span class='input_title'>{% trans 'Tags' %} &ndash; </span> {{ form.tags }}</label><br /><br />
+<input type='submit' value='{% trans 'Send' %}' /> {% if not edit %}<input type='submit' value='{% trans "Preview" %}' name='preview' /> <input name='draft' type='submit' value="{% trans 'Save as draft!' %}">{% else %}
+<input type='button' value='{% trans "Preview" %}' id='preview_post_btn' name='preview' />
+{% endif %}
+</form>
+{%  endblock %}

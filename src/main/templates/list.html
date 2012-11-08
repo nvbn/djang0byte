@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+{% trans "List" %}
+{% endblock %}
+{% block content %}
+{% if type != 'blogs' %}
+    <div id='gmap' style='width: 640px; height: 320px;'></div>
+    <script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{ API_KEY }}"></script>
+    <script type="text/javascript">
+            markers = [{% for item in map %}{
+                address: '{{ item.point }}',
+                title: '{{ item.title }}'
+            }{% if not forloop.last %},{% endif %}{% endfor %}];
+            createMap(markers, 'gmap');
+    </script>
+{% endif %}
+<table style="width: 100%">
+<tr>
+    <td class='left'><a href='{{ url }}name_desc/'>&#8595;</a>{% trans 'Name' %}<a href='{{ url }}name/'>&#8593;</a></td>
+    <td class='right'><a href='{{ url }}rate_desc/'>&#8595;</a>{% if type != 'cities' %}{% trans 'Rate' %}{% else %}{% trans 'Count' %}{% endif %}<a href='{{ url }}rate/'>&#8593;</a></td>
+</tr>
+
+    {% for item in object_list %}
+        <tr>
+        {% if type == 'users' %}
+            <td class='left'>
+                <img src='{{ item.get_avatar }}' alt='' /> <a href='/user/{{ item.user.username }}/'>{{ item.user.username }}</a>
+            </td>
+            <td class='right'>
+                {% if item.get_rate > 0 %}
+                    <span class='plus_rate'>{{ item.get_rate }}</span>
+                {% else %}
+                    {% if item.get_rate < 0 %}
+                        <span class='minus_rate'>{{ item.get_rate }}</span>
+                    {% else %}
+                        {{ item.get_rate }}
+                    {% endif %}
+                {% endif %}
+            </td>
+        {% else %}
+            {% if type == 'blogs' %}
+                <td class='left'>
+                    {% if item.get_avatar %}<img src='{{ item.get_avatar }}' alt='' />{% endif %} <a href='/blog/{{ item.id }}/'>{{ item.name }}</a>
+                </td>
+                <td class='right'>
+                    {% if item.rate > 0 %}
+                        <span class='plus_rate'>{{ item.rate }}</span>
+                    {% else %}
+                        {% if item.rate < 0 %}
+                            <span class='minus_rate'>{{ item.rate }}</span>
+                        {% else %}
+                            {{ item.rate }}
+                        {% endif %}
+                    {% endif %}
+                </td>
+            {% else %}
+                <td class='left'>
+                    <img src='/media/style/city.png' alt='' /> <a href='/list/users/city/{{ item.name }}/'>{{ item.name }}</a>
+                </td>
+                <td class='right'>
+                    <span class='plus_rate'>{{ item.get_count }}</span>
+                </td>
+            {% endif %}
+        {% endif %}
+        </tr>
+    {% endfor %}
+
+</table>
+<div>
+    {% include "paginator_digg.html" %}
+</div>
+{% endblock %}
