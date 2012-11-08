@@ -4,10 +4,13 @@ from tools.exceptions import (
     AlreadyRatedError, InvalidRateSignError,
     RateDisabledError,
 )
-from blogging.models import Blog, Post
+from blogging.models import Blog, Post, Quiz, Answer
 from blogging.exceptions import (
     AlreadySubscribedError, NotSubscribedError,
     AlreadyStarredError, NotStarredError,
+    AlreadyAnsweredError, NotSeveralQuizError,
+    AlreadyIgnoredError, VoteForIgnoredError,
+    IgnoreForVotedError,
 )
 
 
@@ -70,3 +73,53 @@ class BloggingTest(TestCase):
         self.assertEqual(post.is_starred(self.root), False)
         with self.assertRaises(NotStarredError):
             post.unstar(self.root)
+
+    def test_vote_quiz(self):
+        """Test vote for quiz"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd',
+        )
+        quiz = Quiz.objects.create(
+            name='qqqq', is_several=False,
+            post=post,
+        )
+        answer = Answer.objects.create(
+            name='answer', quiz=quiz,
+        )
+        answer1 = Answer.objects.create(
+            name='answer1', quiz=quiz,
+        )
+        self.assertEqual(quiz.is_voted(self.root), False)
+        with self.assertRaises(NotSeveralQuizError):
+            quiz.vote(self.root, [answer, answer1])
+        quiz.vote(self.root, answer)
+        self.assertEqual(quiz.is_voted(self.root), True)
+        with self.assertRaises(AlreadyAnsweredError):
+            quiz.vote(self.root, answer1)
+        with self.assertRaises(IgnoreForVotedError):
+            quiz.ignore(self.root)
+
+    def test_ignore_quiz(self):
+        """Test ignore for quiz"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd',
+        )
+        quiz = Quiz.objects.create(
+            name='qqqq', is_several=False,
+            post=post,
+        )
+        answer = Answer.objects.create(
+            name='answer', quiz=quiz,
+        )
+        answer1 = Answer.objects.create(
+            name='answer1', quiz=quiz,
+        )
+        self.assertEqual(quiz.is_ignored(self.root), False)
+        quiz.ignore(self.root)
+        self.assertEqual(quiz.is_ignored(self.root), True)
+        with self.assertRaises(AlreadyIgnoredError):
+            quiz.ignore(self.root)
+        with self.assertRaises(VoteForIgnoredError):
+            quiz.vote(self.root, answer)

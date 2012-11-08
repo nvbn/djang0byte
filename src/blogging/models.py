@@ -9,6 +9,9 @@ from tools.decorators import extend
 from blogging.exceptions import (
     AlreadySubscribedError, NotSubscribedError,
     AlreadyStarredError, NotStarredError,
+    AlreadyAnsweredError, NotSeveralQuizError,
+    AlreadyIgnoredError, VoteForIgnoredError,
+    IgnoreForVotedError,
 )
 
 
@@ -129,6 +132,60 @@ class Comment(rateable_from(MPTTModel)):
         auto_now_add=True, verbose_name=_('created'),
     )
     post = models.ForeignKey(Post, verbose_name=_('post'))
+
+
+class Quiz(models.Model):
+    """Quiz model"""
+    name = models.CharField(max_length=300, verbose_name=_('name'))
+    is_several = models.BooleanField(
+        default=False, verbose_name=_('is several'),
+    )
+    ignorers = models.ManyToManyField(User, verbose_name=_('ignorers'))
+    post = models.ForeignKey(Post, verbose_name=_('post'))
+
+    def vote(self, user, answers):
+        """Vote to answers"""
+        if not hasattr(answers, '__iter__'):
+            answers = [answers]
+        if len(answers) > 1 and not self.is_several:
+            raise NotSeveralQuizError(self)
+        if self.is_voted(user):
+            raise AlreadyAnsweredError(self)
+        if self.is_ignored(user):
+            raise VoteForIgnoredError(self)
+        self.answers.filter(
+            id__in=map(lambda answer: answer.id, answers),
+        ).update(count=models.F('count') + 1)
+        for answer in answers:
+            answer.voters.add(user)
+
+    def is_voted(self, user):
+        """Check user is voted"""
+        return bool(self.answers.filter(voters=user).count())
+
+    def ignore(self, user):
+        """ignore quiz"""
+        if self.is_voted(user):
+            raise IgnoreForVotedError(self)
+        if self.is_ignored(user):
+            raise AlreadyIgnoredError(self)
+        self.ignorers.add(user)
+
+    def is_ignored(self, user):
+        """Check user is ignore quiz"""
+        return bool(self.ignorers.filter(id=user.id).count())
+
+
+class Answer(models.Model):
+    """Answer for quiz model"""
+    name = models.CharField(max_length=300, verbose_name=_('name'))
+    count = models.PositiveIntegerField(
+        default=0, verbose_name=_('count'),
+    )
+    quiz = models.ForeignKey(
+        Quiz, related_name='answers', verbose_name=_('quiz'),
+    )
+    voters = models.ManyToManyField(User, verbose_name=_('voters'))
 
 
 @extend(User)
