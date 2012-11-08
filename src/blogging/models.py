@@ -62,9 +62,8 @@ class Section(models.Model):
         verbose_name_plural = _('Sections')
 
     def __unicode__(self):
-        pass
+        return self.name
     
-
 
 class PostRate(RateClassMixin):
     """Rates for post model"""
@@ -82,6 +81,19 @@ class Post(RateableMixin):
     """Post model"""
     __rateclass__ = PostRate
 
+    TYPE_POST = 0
+    TYPE_LINK = 1
+    TYPE_TRANSLATE = 2
+    POST_TYPES = (
+        (TYPE_POST, _('post')),
+        (TYPE_LINK, _('link')),
+        (TYPE_TRANSLATE, _('translate')),
+    )
+
+    type = models.PositiveSmallIntegerField(
+        default=TYPE_POST, choices=POST_TYPES,
+        verbose_name=_('type of post'),
+    )
     title = models.CharField(max_length=300, verbose_name=_('title'))
     preview = models.TextField(verbose_name=_('preview'))
     content = models.TextField(verbose_name=_('content'))
@@ -101,6 +113,9 @@ class Post(RateableMixin):
     )
     is_commenting_locked = models.BooleanField(
         default=False, verbose_name=_('is commenting locked'),
+    )
+    related_url = models.URLField(
+        blank=True, null=True, verbose_name=_('related url'),
     )
 
     class Meta:
