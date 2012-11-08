@@ -4,3 +4,8 @@ class IvalidRateSignError(ValueError):
 
 class RateDisabledError(Exception):
     pass
+
+
+class AlreadyRatedError(Exception):
+    pass
+

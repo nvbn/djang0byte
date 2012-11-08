@@ -1,7 +1,10 @@
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 from django.db import models
-from tools.exceptions import InvalidRateSignError, RateDisabledError
+from tools.exceptions import (
+    InvalidRateSignError, RateDisabledError,
+    AlreadyRatedError,
+)
 
 
 RATE_MINUS = -1
@@ -48,11 +51,16 @@ class RateableMixin(object):
             author=user, enemy=self,
         ))
 
-    def set_rate(self, sign):
+    def set_rate(self, sign, user):
         if not is_rate_enabled:
             raise RateDisabledError(self)
+        if self.is_rated(user):
+            raise AlreadyRatedError(self)
         if sign in (RATE_PLUS, RATE_MINUS):
             self.rate = models.F('rate') + sign
             self.rate_count = models.F('rate_count') + 1
+            self.rate_class.objects.create(
+                author=user, enemy=self,
+            )
         else:
             raise InvalidRateSignError(self)
