@@ -3,10 +3,23 @@ from django.contrib.auth.models import User
 from django.db import models
 from tagging.fields import TagField
 from tagging.models import Tag
-from tools.mixins import RateableMixin
+from tools.mixins import RateClassMixin, RateableMixin
 
 
-class Blog(models.Model, RateableMixin):
+class BlogRate(RateClassMixin):
+    enemy = models.ForeignKey('Blog', verbose_name=_('blog'))
+
+    class Meta:
+        verbose_name = _('BlogRate')
+        verbose_name_plural = _('BlogRates')
+
+    def __unicode__(self):
+        return unicode(self.enemy)
+
+
+class Blog(RateableMixin):
+    __rateclass__ = BlogRate
+
     name = models.CharField(max_length=300, verbose_name=_('name'))
     description = models.TextField(verbose_name=_('description'))
     author = models.ForeignKey(User, verbose_name=_('author'))
@@ -19,7 +32,7 @@ class Blog(models.Model, RateableMixin):
         return self.name
 
 
-class Post(models.Model, RateableMixin):
+class Post(models.Model):
     title = models.CharField(max_length=300, verbose_name=_('title'))
     preview = models.TextField(verbose_name=_('preview'))
     content = models.TextField(verbose_name=_('content'))

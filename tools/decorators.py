@@ -1,6 +1,7 @@
 from django.db import models
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
+from django.utils.translation import ugettext as _
 from itertools import ifilter
 from shortcuts import get_module_name
 import types

@@ -15,30 +15,21 @@ RATES = (
 )
 
 
-class RateClassMixin(object):
-
+class RateClassMixin(models.Model):
     sign = models.PositiveSmallIntegerField(
-        choices=RATES, verbose_name=_(RATES),
+        choices=RATES, verbose_name=_('sign'),
     )
     author = models.ForeignKey(User, verbose_name=_('author'))
     created = models.DateTimeField(
         auto_now_add=True, verbose_name=_('created'),
     )
 
-
-class RateableBase(models.base.ModelBase):
-    def __new__(cls, name, bases, attrs):
-        if not 'rate_class' in attrs:
-            attrs['rate_class'] = type('%sRate' % cls.__name__, (
-                models.Model, RateableMixin,
-            ), {
-                'enemy': models.ForeignKey(cls, verbose_name=_('enemy')),
-            })
-        return super(RateableBase, cls).__new__(cls, name, bases, attrs)
+    class Meta:
+        abstract = True
 
 
-class RateableMixin(object):
-    __metaclass__ = RateableBase
+class RateableMixin(models.Model):
+    __rateclass__ = None
 
     rate = models.IntegerField(default=0, verbose_name=_('rate'))
     rate_count = models.IntegerField(default=0, verbose_name=_('rate'))
@@ -47,20 +38,23 @@ class RateableMixin(object):
     )
 
     def is_rated(self, user):
-        return bool(self.rate_class.objects.filter(
+        return bool(self.__rateclass__.objects.filter(
             author=user, enemy=self,
         ))
 
     def set_rate(self, sign, user):
-        if not is_rate_enabled:
+        if not self.is_rate_enabled:
             raise RateDisabledError(self)
         if self.is_rated(user):
             raise AlreadyRatedError(self)
         if sign in (RATE_PLUS, RATE_MINUS):
             self.rate = models.F('rate') + sign
             self.rate_count = models.F('rate_count') + 1
-            self.rate_class.objects.create(
-                author=user, enemy=self,
+            self.__rateclass__.objects.create(
+                author=user, enemy=self, sign=sign,
             )
         else:
             raise InvalidRateSignError(self)
+
+    class Meta:
+        abstract = True

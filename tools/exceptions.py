@@ -1,4 +1,4 @@
-class IvalidRateSignError(ValueError):
+class InvalidRateSignError(ValueError):
     pass
 
 
