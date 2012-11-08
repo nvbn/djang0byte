@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from tagging.fields import TagField
 from tagging.models import Tag
-from tools.mixins import RateClassMixin, RateableMixin
+from mptt.models import MPTTModel, TreeForeignKey
+from tools.mixins import RateClassMixin, RateableMixin, rateable_from
 from tools.decorators import extend
 from blogging.exceptions import (
     AlreadySubscribedError, NotSubscribedError,
@@ -114,6 +115,20 @@ class Post(RateableMixin):
     def is_starred(self, user):
         """Check user is starred to post"""
         return bool(user.stars.filter(id=self.id).count())
+
+
+class Comment(rateable_from(MPTTModel)):
+    """Comment models"""
+    parent = TreeForeignKey(
+        'self', null=True, blank=True,
+        related_name='children', verbose_name=_('parent'),
+    )
+    author = models.ForeignKey(User, verbose_name=_('author'))
+    content = models.TextField(verbose_name=_('content'))
+    created = models.DateTimeField(
+        auto_now_add=True, verbose_name=_('created'),
+    )
+    post = models.ForeignKey(Post, verbose_name=_('post'))
 
 
 @extend(User)

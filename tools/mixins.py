@@ -5,6 +5,7 @@ from tools.exceptions import (
     InvalidRateSignError, RateDisabledError,
     AlreadyRatedError,
 )
+from tools.decorators import extend
 
 
 RATE_MINUS = -1
@@ -29,36 +30,45 @@ class RateClassMixin(models.Model):
         abstract = True
 
 
-class RateableMixin(models.Model):
-    """Mixin for models with rates"""
-    __rateclass__ = None
+def rateable_from(base=models.Model):
+    """Create rateable mixin from"""
+    class Mixin(base):
+        """Mixin for models with rates"""
+        __rateclass__ = None
 
-    rate = models.IntegerField(default=0, verbose_name=_('rate'))
-    rate_count = models.IntegerField(default=0, verbose_name=_('rate'))
-    is_rate_enabled = models.BooleanField(
-        default=True, verbose_name=_('is rate enabled'),
-    )
+        rate = models.IntegerField(default=0, verbose_name=_('rate'))
+        rate_count = models.IntegerField(default=0, verbose_name=_('rate'))
+        is_rate_enabled = models.BooleanField(
+            default=True, verbose_name=_('is rate enabled'),
+        )
 
-    def is_rated(self, user):
-        """Check enemy is rated"""
-        return bool(self.__rateclass__.objects.filter(
-            author=user, enemy=self,
-        ))
+        def _to_model(self):
+            self.add_t
 
-    def set_rate(self, sign, user):
-        """Set rate"""
-        if not self.is_rate_enabled:
-            raise RateDisabledError(self)
-        if self.is_rated(user):
-            raise AlreadyRatedError(self)
-        if sign in (RATE_PLUS, RATE_MINUS):
-            self.rate = models.F('rate') + sign
-            self.rate_count = models.F('rate_count') + 1
-            self.__rateclass__.objects.create(
-                author=user, enemy=self, sign=sign,
-            )
-        else:
-            raise InvalidRateSignError(self)
+        def is_rated(self, user):
+            """Check enemy is rated"""
+            return bool(self.__rateclass__.objects.filter(
+                author=user, enemy=self,
+            ))
 
-    class Meta:
-        abstract = True
+        def set_rate(self, sign, user):
+            """Set rate"""
+            if not self.is_rate_enabled:
+                raise RateDisabledError(self)
+            if self.is_rated(user):
+                raise AlreadyRatedError(self)
+            if sign in (RATE_PLUS, RATE_MINUS):
+                self.rate = models.F('rate') + sign
+                self.rate_count = models.F('rate_count') + 1
+                self.__rateclass__.objects.create(
+                    author=user, enemy=self, sign=sign,
+                )
+            else:
+                raise InvalidRateSignError(self)
+
+        class Meta:
+            abstract = True
+    return Mixin
+
+
+RateableMixin = rateable_from()
