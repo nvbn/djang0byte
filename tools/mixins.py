@@ -16,6 +16,7 @@ RATES = (
 
 
 class RateClassMixin(models.Model):
+    """Mixin for rates models"""
     sign = models.PositiveSmallIntegerField(
         choices=RATES, verbose_name=_('sign'),
     )
@@ -29,6 +30,7 @@ class RateClassMixin(models.Model):
 
 
 class RateableMixin(models.Model):
+    """Mixin for models with rates"""
     __rateclass__ = None
 
     rate = models.IntegerField(default=0, verbose_name=_('rate'))
@@ -38,11 +40,13 @@ class RateableMixin(models.Model):
     )
 
     def is_rated(self, user):
+        """Check enemy is rated"""
         return bool(self.__rateclass__.objects.filter(
             author=user, enemy=self,
         ))
 
     def set_rate(self, sign, user):
+        """Set rate"""
         if not self.is_rate_enabled:
             raise RateDisabledError(self)
         if self.is_rated(user):

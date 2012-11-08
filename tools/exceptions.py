@@ -1,11 +1,10 @@
 class InvalidRateSignError(ValueError):
-    pass
+    """Invalid rate sign error"""
 
 
 class RateDisabledError(Exception):
-    pass
+    """Rate disabled error"""
 
 
 class AlreadyRatedError(Exception):
-    pass
-
+    """Already rated errorr"""

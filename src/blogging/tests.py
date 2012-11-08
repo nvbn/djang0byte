@@ -4,7 +4,8 @@ from tools.exceptions import (
     AlreadyRatedError, InvalidRateSignError,
     RateDisabledError,
 )
-from blogging.models import Blog
+from blogging.models import Blog, Post
+from blogging.exceptions import AlreadySubscribedError, NotSubscribedError
 
 
 class BloggingTest(TestCase):
@@ -33,3 +34,18 @@ class BloggingTest(TestCase):
         )
         with self.assertRaises(RateDisabledError):
             blog2.set_rate(-1, self.root)
+
+    def test_subscriptions(self):
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd',
+        )
+        self.assertEqual(post.is_subscribed(self.root), False)
+        post.subscribe(self.root)
+        self.assertEqual(post.is_subscribed(self.root), True)
+        with self.assertRaises(AlreadySubscribedError):
+            post.subscribe(self.root)
+        post.unsubscribe(self.root)
+        self.assertEqual(post.is_subscribed(self.root), False)
+        with self.assertRaises(NotSubscribedError):
+            post.unsubscribe(self.root)
