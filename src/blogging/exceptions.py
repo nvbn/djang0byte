@@ -4,3 +4,11 @@ class AlreadySubscribedError(Exception):
 
 class NotSubscribedError(Exception):
     """Not subscribed error"""
+
+
+class AlreadyStarredError(Exception):
+    """Already starred error"""
+
+
+class NotStarredError(Exception):
+    """Not starred error"""

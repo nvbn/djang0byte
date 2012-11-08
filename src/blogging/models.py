@@ -5,7 +5,10 @@ from tagging.fields import TagField
 from tagging.models import Tag
 from tools.mixins import RateClassMixin, RateableMixin
 from tools.decorators import extend
-from blogging.exceptions import AlreadySubscribedError, NotSubscribedError
+from blogging.exceptions import (
+    AlreadySubscribedError, NotSubscribedError,
+    AlreadyStarredError, NotStarredError,
+)
 
 
 class BlogRate(RateClassMixin):
@@ -96,6 +99,22 @@ class Post(RateableMixin):
         """Check user is subscribed to post"""
         return bool(user.subscriptions.filter(id=self.id).count())
 
+    def star(self, user):
+        """Star user to post"""
+        if self.is_starred(user):
+            raise AlreadyStarredError(self)
+        user.stars.add(self)
+
+    def unstar(self, user):
+        """Unstar user from post"""
+        if not self.is_starred(user):
+            raise NotStarredError(self)
+        user.stars.remove(self)
+
+    def is_starred(self, user):
+        """Check user is starred to post"""
+        return bool(user.stars.filter(id=self.id).count())
+
 
 @extend(User)
 class Profile(object):
@@ -104,5 +123,5 @@ class Profile(object):
         related_name='sub_users', verbose_name=_('subscriptions'),
     )
     stars = models.ManyToManyField(Post,
-        related_name='star_users', verbose_name=_('subscriptions'),
+        related_name='star_users', verbose_name=_('stars'),
     )    

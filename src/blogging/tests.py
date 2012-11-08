@@ -5,7 +5,10 @@ from tools.exceptions import (
     RateDisabledError,
 )
 from blogging.models import Blog, Post
-from blogging.exceptions import AlreadySubscribedError, NotSubscribedError
+from blogging.exceptions import (
+    AlreadySubscribedError, NotSubscribedError,
+    AlreadyStarredError, NotStarredError,
+)
 
 
 class BloggingTest(TestCase):
@@ -17,6 +20,7 @@ class BloggingTest(TestCase):
         )
 
     def test_rating(self):
+        """Check ratins"""
         blog = Blog.objects.create(
             name='blog', description='description',
             author=self.root,
@@ -36,6 +40,7 @@ class BloggingTest(TestCase):
             blog2.set_rate(-1, self.root)
 
     def test_subscriptions(self):
+        """Check subscriptions"""
         post = Post.objects.create(
             title='asd', preview='fsd',
             content='esd',
@@ -49,3 +54,19 @@ class BloggingTest(TestCase):
         self.assertEqual(post.is_subscribed(self.root), False)
         with self.assertRaises(NotSubscribedError):
             post.unsubscribe(self.root)
+
+    def test_stars(self):
+        """Check stars"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd',
+        )
+        self.assertEqual(post.is_starred(self.root), False)
+        post.star(self.root)
+        self.assertEqual(post.is_starred(self.root), True)
+        with self.assertRaises(AlreadyStarredError):
+            post.star(self.root)
+        post.unstar(self.root)
+        self.assertEqual(post.is_starred(self.root), False)
+        with self.assertRaises(NotStarredError):
+            post.unstar(self.root)
