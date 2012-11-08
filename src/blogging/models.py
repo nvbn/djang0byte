@@ -43,6 +43,29 @@ class Blog(RateableMixin):
         return self.name
 
 
+class Section(models.Model):
+    """Section model"""
+    name = models.CharField(max_length=300, verbose_name=_('name'))
+    url_name = models.CharField(max_length=300, verbose_name=_('name in url'))
+    is_default = models.BooleanField(
+        default=False, verbose_name=_('is default'),
+    )
+    included_blogs = models.ManyToManyField(
+        Blog, related_name='included_in', verbose_name=_('included blogs'),
+    )
+    excluded_blogs = models.ManyToManyField(
+        Blog, related_name='excluded_from', verbose_name=_('excluded blogs'),
+    )
+
+    class Meta:
+        verbose_name = _('Section')
+        verbose_name_plural = _('Sections')
+
+    def __unicode__(self):
+        pass
+    
+
+
 class PostRate(RateClassMixin):
     """Rates for post model"""
     enemy = models.ForeignKey('Post', verbose_name=_('post'))
@@ -133,6 +156,13 @@ class Comment(rateable_from(MPTTModel)):
     )
     post = models.ForeignKey(Post, verbose_name=_('post'))
 
+    class Meta:
+        verbose_name = _('Comment')
+        verbose_name_plural = _('Comments')
+
+    def __unicode__(self):
+        return self.content
+
 
 class Quiz(models.Model):
     """Quiz model"""
@@ -142,6 +172,13 @@ class Quiz(models.Model):
     )
     ignorers = models.ManyToManyField(User, verbose_name=_('ignorers'))
     post = models.ForeignKey(Post, verbose_name=_('post'))
+
+    class Meta:
+        verbose_name = _('Qiuz')
+        verbose_name_plural = _('Qiuzes')
+
+    def __unicode__(self):
+        return self.name
 
     def vote(self, user, answers):
         """Vote to answers"""
@@ -186,6 +223,13 @@ class Answer(models.Model):
         Quiz, related_name='answers', verbose_name=_('quiz'),
     )
     voters = models.ManyToManyField(User, verbose_name=_('voters'))
+
+    class Meta:
+        verbose_name = _('Answer')
+        verbose_name_plural = _('Answers')
+
+    def __unicode__(self):
+        return self.name
 
 
 @extend(User)
