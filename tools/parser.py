@@ -35,5 +35,17 @@ class Parser(object):
                 callback(item)
         return clean(content, ALLOWED_TAGS, ALLOWED_ATTRIBUTES)
 
+    def cut(self, text):
+        """Cut text"""
+        text = text.replace('&lt;fcut&gt;', '<fcut>').replace('&lt;cut&gt;', '<cut>')
+        cutted = text.split('<cut>')
+        if len(cutted) == 2:
+            return cutted[0], text
+        cutted = text.split('<fcut>')
+        if len(cutted) == 2:
+            return cutted[0], '<fcut>' + cutted[1]
+        else:
+            return text, text
+
 
 parser = Parser()

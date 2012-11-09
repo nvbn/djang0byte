@@ -15,9 +15,11 @@ from blogging.exceptions import (
     SolutionAlreadyExistError, SoulutionDoesNotExistError,
     WrongSolutionHolderError,
 )
+from blogging.forms import PostForm, PostOptionsForm
+from accounts.middleware import _thread_locals
 
 
-class BloggingTest(TestCase):
+class ModelsTest(TestCase):
     def setUp(self):
         self.root = User.objects.create(
             username='root',
@@ -200,3 +202,55 @@ class BloggingTest(TestCase):
         self.assertEqual(post.has_solution(), True)
         post.unset_solution()
         self.assertEqual(post.has_solution(), False)
+
+
+class FormsTest(TestCase):
+    def setUp(self):
+        self.root = User.objects.create(
+            username='root',
+            is_staff=True,
+            is_superuser=True,
+        )
+        _thread_locals.user = self.root
+        
+
+    def test_post_creating(self):
+        """Test post creating"""
+        form = PostForm({
+            'title': 'ok',
+            'content': 'ok',
+            'type': Post.TYPE_POST,
+        })
+        self.assertEqual(form.is_valid(), True)
+        post = form.save()
+        self.assertEqual(post.title, 'ok')
+        form = PostForm({
+            'title': 'ok',
+            'content': 'ok',
+            'type': Post.TYPE_LINK,
+        })
+        self.assertEqual(form.is_valid(), False)
+        form = PostForm({
+            'title': 'ok',
+            'content': 'ok',
+            'type': Post.TYPE_LINK,
+            'related_url': 'http://welinux.ru/',
+        })
+        form.is_valid()
+        self.assertEqual(form.is_valid(), True)
+
+    def test_post_updating(self):
+        """Test post updating"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd', author=self.root,
+        )
+        form = PostForm({
+            'title': '12345',
+            'content': 'ok',
+            'type': Post.TYPE_POST,
+        }, instance=post)
+        form.is_valid()
+        self.assertEqual(form.is_valid(), True)
+        post = form.save()
+        self.assertEqual(post.title, '12345')

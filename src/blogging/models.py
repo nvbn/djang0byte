@@ -105,7 +105,7 @@ class Post(removable_from(RateableMixin)):
     title = models.CharField(max_length=300, verbose_name=_('title'))
     preview = models.TextField(verbose_name=_('preview'))
     content = models.TextField(verbose_name=_('content'))
-    blog = models.ForeignKey(Blog, null=True, verbose_name=_('blog'))
+    blog = models.ForeignKey(Blog, null=True, blank=True, verbose_name=_('blog'))
     tags = TagField(blank=True, null=True, verbose_name=_('tags'))
     created = models.DateTimeField(
         auto_now_add=True, verbose_name=_('created'),
