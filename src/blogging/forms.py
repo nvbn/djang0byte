@@ -79,3 +79,27 @@ class CommentForm(forms.ModelForm):
         fields = (
             'parent', 'content', 'post',
         )    
+
+
+class BlogForm(forms.ModelForm):
+    """Creating/updating blog form"""
+
+    def clean_description(self):
+        """Clean description"""
+        description = self.cleaned_data.get('description')
+        if not description:
+            raise forms.ValidationError('Comment to short')
+        return parser.parse(description)
+
+    def save(self, *args, **kwargs):
+        """Set author if not exist"""
+        try:
+            if not self.instance.author:
+                raise
+        except Exception:
+            self.instance.author = get_current_user()
+        return super(BlogForm, self).save(*args, **kwargs)
+
+    class Meta:
+        model = Blog
+        fields = ('name', 'description')

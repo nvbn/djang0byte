@@ -15,7 +15,10 @@ from blogging.exceptions import (
     SolutionAlreadyExistError, SoulutionDoesNotExistError,
     WrongSolutionHolderError,
 )
-from blogging.forms import PostForm, PostOptionsForm, CommentForm
+from blogging.forms import (
+    PostForm, PostOptionsForm, CommentForm,
+    BlogForm,
+)
 from accounts.middleware import _thread_locals
 
 
@@ -290,7 +293,31 @@ class FormsTest(TestCase):
         form = CommentForm({
             'content': '12345',
             'post': post.id,
-        })
+        }, instance=comment)
         self.assertEqual(form.is_valid(), True)
         comment = form.save()
         self.assertEqual(comment.content, '12345')
+
+    def test_blog_create(self):
+        """Test blog creating"""
+        form = BlogForm({
+            'name': 'okok',
+            'description': 'yeee',
+        })
+        self.assertEqual(form.is_valid(), True)
+        blog = form.save()
+        self.assertEqual(blog.name, 'okok')
+
+    def test_blog_updating(self):
+        """Test blog updating"""
+        blog = Blog.objects.create(
+            author=self.root, name='okok',
+            description='yeeee',
+        )
+        form = BlogForm({
+            'name': '12345',
+            'description': 'yeee',
+        }, instance=blog)
+        self.assertEqual(form.is_valid(), True)
+        blog = form.save()
+        self.assertEqual(blog.name, '12345')
