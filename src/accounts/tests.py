@@ -27,6 +27,7 @@ class AccountTest(TestCase):
         )
 
     def test_rates(self):
+        """Check account rates"""
         blog_rate = 23
         blog = Blog.objects.create(
             name='blog', description='description',
@@ -48,3 +49,16 @@ class AccountTest(TestCase):
             BLOG_RATE * blog_rate + POST_RATE * post_rate + \
             COMMENT_RATE * comment_rate,
         )
+
+    def test_services(self):
+        """Check services in json field"""
+        self.root.services = {
+            'welinux': 'http://welinux.ru/',
+            'lastfm': 'http://www.lastfm.ru/user/nvbn',
+        }
+        self.root.save()
+        self.assertEqual(len(self.root.services), 2)
+        received = User.objects.get(id=self.root.id)
+        self.assertEqual(len(self.root.services), 2)
+        self.assertEqual(self.root.services['welinux'].description, None)
+        self.assertGreater(self.root.services['lastfm'].description, 3)
