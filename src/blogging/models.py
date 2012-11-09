@@ -4,7 +4,10 @@ from django.db import models
 from tagging.fields import TagField
 from tagging.models import Tag
 from mptt.models import MPTTModel, TreeForeignKey
-from tools.mixins import RateClassMixin, RateableMixin, rateable_from
+from tools.mixins import (
+    RateClassMixin, RateableMixin, rateable_from,
+    removable_from,
+)
 from tools.decorators import extend
 from blogging.exceptions import (
     AlreadySubscribedError, NotSubscribedError,
@@ -29,7 +32,7 @@ class BlogRate(RateClassMixin):
         return unicode(self.enemy)
 
 
-class Blog(RateableMixin):
+class Blog(removable_from(RateableMixin)):
     """Blog model"""
     __rateclass__ = BlogRate
 
@@ -79,7 +82,7 @@ class PostRate(RateClassMixin):
         return unicode(self.enemy)
 
 
-class Post(RateableMixin):
+class Post(removable_from(RateableMixin)):
     """Post model"""
     __rateclass__ = PostRate
 
@@ -120,9 +123,6 @@ class Post(RateableMixin):
     )
     related_url = models.URLField(
         blank=True, null=True, verbose_name=_('related url'),
-    )
-    is_removed = models.BooleanField(
-        default=False, verbose_name=_('is removed'),
     )
 
     class Meta:
@@ -204,7 +204,7 @@ class Post(RateableMixin):
         solution.save()
 
 
-class Comment(rateable_from(MPTTModel)):
+class Comment(removable_from(rateable_from(MPTTModel))):
     """Comment models"""
     parent = TreeForeignKey(
         'self', null=True, blank=True,
@@ -216,9 +216,6 @@ class Comment(rateable_from(MPTTModel)):
         auto_now_add=True, verbose_name=_('created'),
     )
     post = models.ForeignKey(Post, verbose_name=_('post'))
-    is_removed = models.BooleanField(
-        default=False, verbose_name=_('is removed'),
-    )
     is_solution = models.BooleanField(
         default=False, verbose_name=_('is solution'),
     )

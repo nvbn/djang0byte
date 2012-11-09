@@ -12,3 +12,7 @@ class AlreadyRatedError(Exception):
 
 class AlreadyRemovedError(Exception):
     """Already removed error"""
+
+
+class NotRemovedError(Exception):
+    """Already removed error"""

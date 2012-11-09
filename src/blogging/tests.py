@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from tools.exceptions import (
     AlreadyRatedError, InvalidRateSignError,
-    RateDisabledError,
+    RateDisabledError, AlreadyRemovedError,
+    NotRemovedError,
 )
 from blogging.models import Blog, Post, Quiz, Answer, Comment
 from blogging.exceptions import (
@@ -43,6 +44,31 @@ class BloggingTest(TestCase):
         )
         with self.assertRaises(RateDisabledError):
             blog2.set_rate(-1, self.root)
+
+    def test_removing(self):
+        """Check removing"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd',
+        )
+        self.assertEqual(post.is_removed, False)
+        post.remove()
+        self.assertEqual(post.is_removed, True)
+        with self.assertRaises(AlreadyRemovedError):
+            post.remove()
+
+    def test_restore(self):
+        """Check restoring"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd',
+        )
+        with self.assertRaises(NotRemovedError):
+            post.restore()
+        post.remove()
+        self.assertEqual(post.is_removed, True)
+        post.restore()
+        self.assertEqual(post.is_removed, False)
 
     def test_subscriptions(self):
         """Check subscriptions"""

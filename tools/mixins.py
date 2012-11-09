@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from tools.exceptions import (
     InvalidRateSignError, RateDisabledError,
-    AlreadyRatedError,
+    AlreadyRatedError, NotRemovedError,
+    AlreadyRemovedError,
 )
 from tools.decorators import extend
 
@@ -32,7 +33,7 @@ class RateClassMixin(models.Model):
 
 def rateable_from(base=models.Model):
     """Create rateable mixin from"""
-    class Mixin(base):
+    class BaseRateableMixin(base):
         """Mixin for models with rates"""
         __rateclass__ = None
 
@@ -41,9 +42,6 @@ def rateable_from(base=models.Model):
         is_rate_enabled = models.BooleanField(
             default=True, verbose_name=_('is rate enabled'),
         )
-
-        def _to_model(self):
-            self.add_t
 
         def is_rated(self, user):
             """Check enemy is rated"""
@@ -68,7 +66,38 @@ def rateable_from(base=models.Model):
 
         class Meta:
             abstract = True
-    return Mixin
+    return BaseRateableMixin
 
 
 RateableMixin = rateable_from()
+
+
+def removable_from(base=models.Model):
+    """Create removable mixin from"""
+    class BaseRemovableMixin(base):
+        """Fake removable mixin"""
+        is_removed = models.BooleanField(
+            default=False, verbose_name=_('is removed'),
+        )
+
+        def remove(self):
+            """Remove object"""
+            if self.is_removed:
+                raise AlreadyRemovedError(self)
+            self.is_removed = True
+            self.save()
+
+        def restore(self):
+            """Restore object"""
+            if not self.is_removed:
+                raise NotRemovedError(self)
+            self.is_removed = False
+            self.save()
+
+        class Meta:
+            abstract = True
+
+    return BaseRemovableMixin
+
+
+RmovableMixin = removable_from()
