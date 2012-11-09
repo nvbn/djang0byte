@@ -117,6 +117,9 @@ class Post(RateableMixin):
     related_url = models.URLField(
         blank=True, null=True, verbose_name=_('related url'),
     )
+    is_removed = models.BooleanField(
+        default=False, verbose_name=_('is removed'),
+    )
 
     class Meta:
         verbose_name = _('Post')
@@ -170,6 +173,9 @@ class Comment(rateable_from(MPTTModel)):
         auto_now_add=True, verbose_name=_('created'),
     )
     post = models.ForeignKey(Post, verbose_name=_('post'))
+    is_removed = models.BooleanField(
+        default=False, verbose_name=_('is removed'),
+    )
 
     class Meta:
         verbose_name = _('Comment')

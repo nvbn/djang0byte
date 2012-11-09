@@ -8,3 +8,7 @@ class RateDisabledError(Exception):
 
 class AlreadyRatedError(Exception):
     """Already rated errorr"""
+
+
+class AlreadyRemovedError(Exception):
+    """Already removed error"""
