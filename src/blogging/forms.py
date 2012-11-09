@@ -1,5 +1,5 @@
 from django import forms
-from blogging.models import Post
+from blogging.models import Post, Comment, Blog
 from tools.parser import parser
 from accounts.middleware import get_current_user
 
@@ -53,3 +53,29 @@ class PostOptionsForm(forms.ModelForm):
             'is_attached', 'is_commenting_locked',
             'is_rate_enabled',
         )
+
+
+class CommentForm(forms.ModelForm):
+    """Creating/updating comment form"""
+
+    def clean_content(self):
+        """Clean content"""
+        content = self.cleaned_data.get('content')
+        if not content:
+            raise forms.ValidationError('Comment to short')
+        return parser.parse(content)
+
+    def save(self, *args, **kwargs):
+        """Set author if not exist"""
+        try:
+            if not self.instance.author:
+                raise
+        except Exception:
+            self.instance.author = get_current_user()
+        return super(CommentForm, self).save(*args, **kwargs)
+
+    class Meta:
+        model = Comment
+        fields = (
+            'parent', 'content', 'post',
+        )    

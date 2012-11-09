@@ -15,7 +15,7 @@ from blogging.exceptions import (
     SolutionAlreadyExistError, SoulutionDoesNotExistError,
     WrongSolutionHolderError,
 )
-from blogging.forms import PostForm, PostOptionsForm
+from blogging.forms import PostForm, PostOptionsForm, CommentForm
 from accounts.middleware import _thread_locals
 
 
@@ -254,3 +254,43 @@ class FormsTest(TestCase):
         self.assertEqual(form.is_valid(), True)
         post = form.save()
         self.assertEqual(post.title, '12345')
+
+    def test_comment_create(self):
+        """Test comment creating"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd', author=self.root,
+        )
+        form = CommentForm({
+            'content': 'okok',
+            'post': post.id,
+        })
+        self.assertEqual(form.is_valid(), True)
+        comment = form.save()
+        self.assertEqual(comment.content, 'okok')
+        form = CommentForm({
+            'content': 'eee',
+            'parent': comment.id,
+            'post': post.id,
+        })
+        self.assertEqual(form.is_valid(), True)
+        child = form.save()
+        self.assertEqual(child.parent.id, comment.id)
+
+    def test_comment_update(self):
+        """Test comment updating"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd', author=self.root,
+        )
+        comment = Comment.objects.create(
+            content='okok', post=post,
+            author=self.root,
+        )
+        form = CommentForm({
+            'content': '12345',
+            'post': post.id,
+        })
+        self.assertEqual(form.is_valid(), True)
+        comment = form.save()
+        self.assertEqual(comment.content, '12345')
