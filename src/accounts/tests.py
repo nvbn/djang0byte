@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from accounts.remote_services import get_service
 from blogging.models import Blog, Post, Comment
 from accounts.models import BLOG_RATE, POST_RATE, COMMENT_RATE
+from accounts.exceptions import MergingNotAvailable
 
 
 class RemoteServiceTest(TestCase):
@@ -62,3 +63,33 @@ class AccountTest(TestCase):
         self.assertEqual(len(self.root.services), 2)
         self.assertEqual(self.root.services['welinux'].description, None)
         self.assertGreater(self.root.services['lastfm'].description, 3)
+
+    def test_merge(self):
+        """Test profiles merging"""
+        user = User.objects.create(
+            username='user',
+        )
+        for author in [user, self.root] * 5:
+            Blog.objects.create(
+                name='blog', description='description',
+                author=author,
+            )
+            post = Post.objects.create(
+                title='asd', preview='fsd',
+                content='esd', author=author,
+            )
+            Comment.objects.create(
+                post=post, author=author,
+                content='asdfg',
+            )
+        with self.assertRaises(MergingNotAvailable):
+            self.root.merge('123')
+        blog_count = Blog.objects.filter(author__in=(user, self.root)).count()
+        post_count = Post.objects.filter(author__in=(user, self.root)).count()
+        comment_count = Comment.objects.filter(author__in=(user, self.root)).count()
+        key = user.create_merge_key()
+        self.assertIsNotNone(key)
+        self.root.merge(key)
+        self.assertEqual(blog_count, Blog.objects.filter(author=self.root).count())
+        self.assertEqual(post_count, Post.objects.filter(author=self.root).count())
+        self.assertEqual(comment_count, Comment.objects.filter(author=self.root).count())

@@ -56,30 +56,6 @@ class MergeKey(models.Model):
                         obj.save()
                     except IntegrityError:
                         obj.delete()
-#        for ct in ContentType.objects.all():
-#            model = ct.model_class()
-#            if model:
-#                for field in model._meta.fields:
-#                    if field.rel:
-#                        _model = field.rel.to
-#                        if _model == User:
-#                            for obj in model.objects.filter(**{
-#                                field.name: self.user
-#                            }):
-#                                try:
-#                                    setattr(obj, field.name, new_user)
-#                                    obj.save()
-#                                except IntegrityError:
-#                                    obj.delete()
-#                        elif _model == Profile:
-#                            for obj in model.objects.filter(**{
-#                                field.name: self.user.get_profile()
-#                            }):
-#                                try:
-#                                    setattr(obj, field.name, new_user.get_profile())
-#                                    obj.save()
-#                                except IntegrityError:
-#                                    obj.delete()
         self.delete()
         self.user.delete()
 

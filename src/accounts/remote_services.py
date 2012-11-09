@@ -11,21 +11,6 @@ class RemoteServiceManager(object):
         self._registered = []
         self._default = None
 
-    def register(self, name, parents, attrs):
-        raise attrs
-        print attrs
-        if attrs.get('__default__'):
-            self._default = cls
-            print 'yeah!'
-        if attrs.get('__regexp__'):
-            attrs['__regexp__'] = re.compile(attrs['__regexp__'])
-            self._registered.append((
-               attrs['__regexp__'], cls,
-            ))
-        cls = type(name, parents, attrs)
-
-        return cls
-
     def get_service(self, url):
         for regexp, service in self._registered:
             if regexp.match(url):
