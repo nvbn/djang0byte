@@ -4,13 +4,15 @@ from tools.exceptions import (
     AlreadyRatedError, InvalidRateSignError,
     RateDisabledError,
 )
-from blogging.models import Blog, Post, Quiz, Answer
+from blogging.models import Blog, Post, Quiz, Answer, Comment
 from blogging.exceptions import (
     AlreadySubscribedError, NotSubscribedError,
     AlreadyStarredError, NotStarredError,
     AlreadyAnsweredError, NotSeveralQuizError,
     AlreadyIgnoredError, VoteForIgnoredError,
-    IgnoreForVotedError,
+    IgnoreForVotedError, NotQuestionError,
+    SolutionAlreadyExistError, SoulutionDoesNotExistError,
+    WrongSolutionHolderError,
 )
 
 
@@ -123,3 +125,52 @@ class BloggingTest(TestCase):
             quiz.ignore(self.root)
         with self.assertRaises(VoteForIgnoredError):
             quiz.vote(self.root, answer)
+
+    def test_solution(self):
+        """Test question sulution"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd',
+        )
+        comment = Comment.objects.create(
+            post=post, author=self.root,
+            content='asdfg',
+        )
+        with self.assertRaises(NotQuestionError):
+            post.set_solution(comment)
+        post.type = Post.TYPE_QUESTION
+        with self.assertRaises(SoulutionDoesNotExistError):
+            post.get_solution()
+        self.assertEqual(post.has_solution(), False)
+        post.set_solution(comment)
+        self.assertEqual(post.has_solution(), True)
+        self.assertEqual(post.get_solution(), comment)
+        comment2 = Comment.objects.create(
+            post=post, author=self.root,
+            content='asdfg',
+        )
+        with self.assertRaises(SolutionAlreadyExistError):
+            post.set_solution(comment2)
+        post2 = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd', type=Post.TYPE_QUESTION, 
+        )
+        with self.assertRaises(WrongSolutionHolderError):
+            post2.set_solution(comment2)
+
+    def test_remove_solution(self):
+        """Test remove solution"""
+        post = Post.objects.create(
+            title='asd', preview='fsd',
+            content='esd', type=Post.TYPE_QUESTION,
+        )
+        comment = Comment.objects.create(
+            post=post, author=self.root,
+            content='asdfg',
+        )
+        with self.assertRaises(SoulutionDoesNotExistError):
+            post.unset_solution()
+        post.set_solution(comment)
+        self.assertEqual(post.has_solution(), True)
+        post.unset_solution()
+        self.assertEqual(post.has_solution(), False)

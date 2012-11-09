@@ -11,7 +11,9 @@ from blogging.exceptions import (
     AlreadyStarredError, NotStarredError,
     AlreadyAnsweredError, NotSeveralQuizError,
     AlreadyIgnoredError, VoteForIgnoredError,
-    IgnoreForVotedError,
+    IgnoreForVotedError, NotQuestionError,
+    SolutionAlreadyExistError, SoulutionDoesNotExistError,
+    WrongSolutionHolderError,
 )
 
 
@@ -84,10 +86,12 @@ class Post(RateableMixin):
     TYPE_POST = 0
     TYPE_LINK = 1
     TYPE_TRANSLATE = 2
+    TYPE_QUESTION = 3
     POST_TYPES = (
         (TYPE_POST, _('post')),
         (TYPE_LINK, _('link')),
         (TYPE_TRANSLATE, _('translate')),
+        (TYPE_QUESTION, _('question')),
     )
 
     type = models.PositiveSmallIntegerField(
@@ -160,6 +164,45 @@ class Post(RateableMixin):
         """Check user is starred to post"""
         return bool(user.stars.filter(id=self.id).count())
 
+    def _only_questions(self):
+        """Check is question"""
+        if self.type != Post.TYPE_QUESTION:
+            raise NotQuestionError(self)
+
+    def has_solution(self):
+        """Check question has solution"""
+        self._only_questions()
+        return bool(Comment.objects.filter(
+            post=self, is_solution=True,
+        ).count())
+
+    def get_solution(self):
+        """Get question solution"""
+        self._only_questions()
+        try:
+            return Comment.objects.get(
+                post=self, is_solution=True,
+            )
+        except Comment.DoesNotExist:
+            raise SoulutionDoesNotExistError(self)
+
+    def set_solution(self, comment):
+        """Set question solution"""
+        self._only_questions()
+        if comment.post != self:
+            raise WrongSolutionHolderError(self)
+        if self.has_solution():
+            raise SolutionAlreadyExistError(self)
+        comment.is_solution = True
+        comment.save()
+
+    def unset_solution(self):
+        """Unset question solution"""
+        self._only_questions()
+        solution = self.get_solution()
+        solution.is_solution = False
+        solution.save()
+
 
 class Comment(rateable_from(MPTTModel)):
     """Comment models"""
@@ -175,6 +218,9 @@ class Comment(rateable_from(MPTTModel)):
     post = models.ForeignKey(Post, verbose_name=_('post'))
     is_removed = models.BooleanField(
         default=False, verbose_name=_('is removed'),
+    )
+    is_solution = models.BooleanField(
+        default=False, verbose_name=_('is solution'),
     )
 
     class Meta:

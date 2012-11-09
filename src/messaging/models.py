@@ -33,6 +33,13 @@ class Message(models.Model):
         default=REMOVED_NO, choices=REMOVED,
     )
 
+    class Meta:
+        verbose_name = _('Message')
+        verbose_name_plural = _('Messages')
+
+    def __unicode__(self):
+        return self.title  
+
     def remove(self, user):
         """Remove message by user"""
         if user not in (self.sender, self.receiver):
@@ -58,10 +65,3 @@ class Message(models.Model):
             return True
         else:
             return False
-
-    class Meta:
-        verbose_name = _('Message')
-        verbose_name_plural = _('Messages')
-
-    def __unicode__(self):
-        return self.title    

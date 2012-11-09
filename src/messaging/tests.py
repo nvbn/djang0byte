@@ -5,7 +5,6 @@ from messaging.models import Message
 from messaging.exceptions import RemoveNotPermittedError
 
 
-
 class MessagingTest(TestCase):
     def setUp(self):
         self.root = User.objects.create(
