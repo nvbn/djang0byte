@@ -85,6 +85,7 @@ INSTALLED_APPS = (
     # 'compressor',
     # 'loginza',
     'django_evolution',
+    'accounts',
     'messaging',
     # 'haystack',
     # 'djang0parser',
