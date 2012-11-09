@@ -91,7 +91,6 @@ class MergeKey(models.Model):
         super(MergeKey, self).save(*args, **kwargs)
 
 
-
 @extend(User)
 class Profile(object):
     """Extended user profile"""
