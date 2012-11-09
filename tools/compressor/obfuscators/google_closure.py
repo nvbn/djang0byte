@@ -1,4 +1,4 @@
-from compressor.consts import FILE_MARKER
+from tools.compressor.consts import FILE_MARKER
 from django.conf import settings
 import os
 import subprocess

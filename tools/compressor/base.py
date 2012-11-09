@@ -1,6 +1,6 @@
-from compressor.consts import COMPRESSOR_MODE_ONE_FILE, COMPRESSOR_MARKER, \
+from tools.compressor.consts import COMPRESSOR_MODE_ONE_FILE, COMPRESSOR_MARKER, \
     PROCESSOR_LIST
-from compressor.class_loader import get_class_by_string
+from tools.compressor.class_loader import get_class_by_string
 from django.conf import settings
 import threading
 from django.utils.functional import cached_property

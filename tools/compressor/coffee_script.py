@@ -1,10 +1,10 @@
-from compressor.processors import BaseProcessor
-from compressor.base import compressor
+from tools.compressor.processors import BaseProcessor
+from tools.compressor.base import compressor
 import os
 import zlib
-from compressor.utils import search_media
+from tools.compressor.utils import search_media
 from commands import getoutput
-from compressor.consts import COMPRESSOR_CACHE_ROOT, COMPRESSOR_CACHE_URL,\
+from tools.compressor.consts import COMPRESSOR_CACHE_ROOT, COMPRESSOR_CACHE_URL,\
     COMPRESSOR_CACHE_PREFIX
 import re
 

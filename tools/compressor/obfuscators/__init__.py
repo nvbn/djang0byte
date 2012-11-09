@@ -1,5 +1,5 @@
 from django.conf import settings
-from compressor.class_loader import get_class_by_string
+from tools.compressor.class_loader import get_class_by_string
 
 #DEFAULT_OBFUSCATOR = getattr(settings, "COMPRESSOR_DEFAULT_OBFUSCATOR", "compressor.obfuscators.google_closure")
 DEFAULT_OBFUSCATOR = getattr(settings, "COMPRESSOR_DEFAULT_OBFUSCATOR", "compressor.obfuscators.yuicompressor")

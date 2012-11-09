@@ -1,10 +1,10 @@
 import os
 from django.conf import settings
-from compressor.class_loader import app_path_by_name
+from tools.compressor.class_loader import app_path_by_name
 import re
 from django.core.cache import cache
 from django.conf import settings
-from compressor.base import compressor
+from tools.compressor.base import compressor
 
 
 COMPRESSOR_USE_CACHE_FOR_SEARCH_MEDIA = getattr(settings, "COMPRESSOR_USE_CACHE_FOR_SEARCH_MEDIA", False)

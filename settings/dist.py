@@ -59,7 +59,14 @@ DATABASES = {
         'PASSWORD': '',
         'HOST':     '',
         'PORT':     '',
-    }
+    }, 'db_multi' : {
+        'ENGINE': 'django.db.backends.sqlite3', 
+        'NAME': "db_multi",                      
+        'USER': '',                     
+        'PASSWORD': '',                  
+        'HOST': '',                      
+        'PORT': '',                
+    },
 }
 PRIVATE_RATING = False
 ALLOW_MERGING = True

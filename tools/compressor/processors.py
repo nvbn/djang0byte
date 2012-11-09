@@ -1,9 +1,9 @@
-from compressor.base import compressor
-from compressor.consts import COMPRESSOR_MODE_INLINE, \
+from tools.compressor.base import compressor
+from tools.compressor.consts import COMPRESSOR_MODE_INLINE, \
     COMPRESSOR_MODE_ONE_FILE, COMPRESSOR_ONE_FILE_IGNORE, COMPRESSOR_CACHE_ROOT, \
     COMPRESSOR_CACHE_URL, FILE_MARKER, COMPRESSOR_MODE_LINKS
-from compressor.obfuscators import get_obfuscator_js, get_obfuscator_css
-from compressor.utils import search_media
+from tools.compressor.obfuscators import get_obfuscator_js, get_obfuscator_css
+from tools.compressor.utils import search_media
 from django.conf import settings
 import os
 import re

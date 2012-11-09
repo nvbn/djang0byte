@@ -1,5 +1,5 @@
-from compressor.base import compressor
-from compressor.consts import COMPRESSOR_CACHE_ROOT, COMPRESSOR_MARKER
+from tools.compressor.base import compressor
+from tools.compressor.consts import COMPRESSOR_CACHE_ROOT, COMPRESSOR_MARKER
 from django.conf import settings
 import os
 from django.views.static import serve

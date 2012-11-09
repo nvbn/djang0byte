@@ -1,8 +1,8 @@
 # coding=utf-8
-from compressor.base import compressor
-from compressor.consts import COMPRESSOR_MODE_INLINE, COMPRESSOR_MODE_LINKS, \
+from tools.compressor.base import compressor
+from tools.compressor.consts import COMPRESSOR_MODE_INLINE, COMPRESSOR_MODE_LINKS, \
     COMPRESSOR_MODE_ONE_FILE, COMPRESSOR_MARKER
-from compressor.utils import add_to_compress
+from tools.compressor.utils import add_to_compress
 from django import forms, template
 from django.conf import settings
 from django.template import Node, Variable, VariableDoesNotExist, \
