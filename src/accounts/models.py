@@ -109,7 +109,9 @@ class Profile(object):
         max_length=15, blank=True, null=True,
         verbose_name=_('icq'),
     )
-    about = models.TextField(verbose_name=_('about'))
+    about = models.TextField(
+        blank=True, null=True, verbose_name=_('about'),
+    )
     city = models.ForeignKey(
         City, blank=True, null=True, verbose_name=_('city'),
     )
@@ -160,3 +162,9 @@ class Profile(object):
         except MergeKey.DoesNotExist:
             raise MergingNotAvailable(key)
         merge_key.merge(self)
+
+    def set_city(self, name):
+        city, created = City.objects.get_or_create(
+            name=name,
+        )
+        self.city = city

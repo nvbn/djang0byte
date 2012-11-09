@@ -4,6 +4,8 @@ from accounts.remote_services import get_service
 from blogging.models import Blog, Post, Comment
 from accounts.models import BLOG_RATE, POST_RATE, COMMENT_RATE
 from accounts.exceptions import MergingNotAvailable
+from accounts.forms import ChangeUserForm
+import json
 
 
 class RemoteServiceTest(TestCase):
@@ -19,7 +21,7 @@ class RemoteServiceTest(TestCase):
         self.assertGreater(len(service.description), 3)
 
 
-class AccountTest(TestCase):
+class ModelsTest(TestCase):
     def setUp(self):
         self.root = User.objects.create(
             username='root',
@@ -93,3 +95,35 @@ class AccountTest(TestCase):
         self.assertEqual(blog_count, Blog.objects.filter(author=self.root).count())
         self.assertEqual(post_count, Post.objects.filter(author=self.root).count())
         self.assertEqual(comment_count, Comment.objects.filter(author=self.root).count())
+
+
+class FormsTest(TestCase):
+    def setUp(self):
+        self.root = User.objects.create(
+            username='root',
+            is_staff=True,
+            is_superuser=True,
+        )
+
+    def test_change_user(self):
+        """Test changing user"""
+        form = ChangeUserForm({
+            'first_name': '123',
+            'last_name': '1235',
+            'services': json.dumps({
+                'welinux': 'http://welinux.ru/',
+                'lastfm': 'http://www.lastfm.ru/user/nvbn',
+            }),
+        }, instance=self.root)
+        self.assertEqual(form.is_valid(), True)
+        user = form.save()
+        self.assertEqual(user.first_name, '123')
+        form = ChangeUserForm({
+            'first_name': '123',
+            'last_name': '1235',
+            'services': json.dumps({
+                'welinux': 'httpwelinux',
+                'lastfm': 'http://www.lastfm.ru/user/nvbn',
+            }),
+        }, instance=self.root)
+        self.assertEqual(form.is_valid(), False)
