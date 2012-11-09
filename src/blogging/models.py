@@ -101,6 +101,7 @@ class Post(removable_from(RateableMixin)):
         default=TYPE_POST, choices=POST_TYPES,
         verbose_name=_('type of post'),
     )
+    author = models.ForeignKey(User, verbose_name=_('author'))
     title = models.CharField(max_length=300, verbose_name=_('title'))
     preview = models.TextField(verbose_name=_('preview'))
     content = models.TextField(verbose_name=_('content'))

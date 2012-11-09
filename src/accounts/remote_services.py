@@ -64,10 +64,12 @@ class RemoteService(object):
         raise NotImplementedError(self)
 
     def _match(self):
+        """Get regexp match"""
         return self.regexp.match(self._url).groupdict()
 
     @property
     def description(self):
+        """Transparent description"""
         if self._description == NOT_STARTED:
             try:
                 self._description = self._parse()
@@ -78,6 +80,7 @@ class RemoteService(object):
 
     @property
     def regexp(self):
+        """Transparent compiled regexp"""
         return re.compile(self.__regexp__)
 
 

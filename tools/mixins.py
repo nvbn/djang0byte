@@ -61,6 +61,7 @@ def rateable_from(base=models.Model):
                 self.__rateclass__.objects.create(
                     author=user, enemy=self, sign=sign,
                 )
+                self.author.update_rate()
             else:
                 raise InvalidRateSignError(self)
 

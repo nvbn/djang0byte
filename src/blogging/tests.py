@@ -49,7 +49,7 @@ class BloggingTest(TestCase):
         """Check removing"""
         post = Post.objects.create(
             title='asd', preview='fsd',
-            content='esd',
+            content='esd', author=self.root,
         )
         self.assertEqual(post.is_removed, False)
         post.remove()
@@ -61,7 +61,7 @@ class BloggingTest(TestCase):
         """Check restoring"""
         post = Post.objects.create(
             title='asd', preview='fsd',
-            content='esd',
+            content='esd', author=self.root,
         )
         with self.assertRaises(NotRemovedError):
             post.restore()
@@ -74,7 +74,7 @@ class BloggingTest(TestCase):
         """Check subscriptions"""
         post = Post.objects.create(
             title='asd', preview='fsd',
-            content='esd',
+            content='esd', author=self.root,
         )
         self.assertEqual(post.is_subscribed(self.root), False)
         post.subscribe(self.root)
@@ -90,7 +90,7 @@ class BloggingTest(TestCase):
         """Check stars"""
         post = Post.objects.create(
             title='asd', preview='fsd',
-            content='esd',
+            content='esd', author=self.root,
         )
         self.assertEqual(post.is_starred(self.root), False)
         post.star(self.root)
@@ -106,7 +106,7 @@ class BloggingTest(TestCase):
         """Test vote for quiz"""
         post = Post.objects.create(
             title='asd', preview='fsd',
-            content='esd',
+            content='esd', author=self.root,
         )
         quiz = Quiz.objects.create(
             name='qqqq', is_several=False,
@@ -132,7 +132,7 @@ class BloggingTest(TestCase):
         """Test ignore for quiz"""
         post = Post.objects.create(
             title='asd', preview='fsd',
-            content='esd',
+            content='esd', author=self.root,
         )
         quiz = Quiz.objects.create(
             name='qqqq', is_several=False,
@@ -156,7 +156,7 @@ class BloggingTest(TestCase):
         """Test question sulution"""
         post = Post.objects.create(
             title='asd', preview='fsd',
-            content='esd',
+            content='esd', author=self.root,
         )
         comment = Comment.objects.create(
             post=post, author=self.root,
@@ -178,7 +178,7 @@ class BloggingTest(TestCase):
         with self.assertRaises(SolutionAlreadyExistError):
             post.set_solution(comment2)
         post2 = Post.objects.create(
-            title='asd', preview='fsd',
+            title='asd', preview='fsd', author=self.root,
             content='esd', type=Post.TYPE_QUESTION, 
         )
         with self.assertRaises(WrongSolutionHolderError):
@@ -187,7 +187,7 @@ class BloggingTest(TestCase):
     def test_remove_solution(self):
         """Test remove solution"""
         post = Post.objects.create(
-            title='asd', preview='fsd',
+            title='asd', preview='fsd', author=self.root,
             content='esd', type=Post.TYPE_QUESTION,
         )
         comment = Comment.objects.create(
