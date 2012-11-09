@@ -27,7 +27,7 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
     'django.template.loaders.eggs.load_template_source',
-    )
+)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'main.context_processors.djbyte',
@@ -38,7 +38,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
     'messages.context_processors.inbox',
-    )
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
@@ -47,8 +47,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'main.middleware.BansMiddleware',
-    )
+    'accounts.middleware.GlobalRequest',
+    'tools.compressor.middleware.CompressorMiddleware',
+)
 
 ROOT_URLCONF = 'urls'
 
@@ -56,7 +57,7 @@ TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates'),
     os.path.join(os.path.dirname(__file__), 'register', 'templates'),
     "/usr/lib/pymodules/python2.6/django/contrib/admin/templates/",
-    )
+)
 
 TAGGING_AUTOCOMPLETE_JS_BASE_URL = '/media/script/jquery-autocomplete/'
 
@@ -85,6 +86,7 @@ INSTALLED_APPS = (
     # 'compressor',
     # 'loginza',
     'django_evolution',
+    'tools.compressor',
     'accounts',
     'messaging',
     # 'haystack',
