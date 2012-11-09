@@ -3,9 +3,11 @@ from django.contrib.auth.models import User
 from tools.exceptions import AlreadyRemovedError
 from messaging.models import Message
 from messaging.exceptions import RemoveNotPermittedError
+from messaging.forms import MessageForm
+from accounts.middleware import _thread_locals
 
 
-class MessagingTest(TestCase):
+class ModelsTest(TestCase):
     def setUp(self):
         self.root = User.objects.create(
             username='root',
@@ -44,3 +46,33 @@ class MessagingTest(TestCase):
         msg2.remove(self.user)
         self.assertEqual(msg2.is_removed(self.root), False)
         self.assertEqual(msg2.is_removed(self.user), True)
+
+
+class FormsTest(TestCase):
+    def setUp(self):
+        self.root = User.objects.create(
+            username='root',
+            is_staff=True,
+            is_superuser=True,
+        )
+        _thread_locals.user = self.root
+        self.user = User.objects.create(
+            username='user',
+        )
+
+    def test_create_message(self):
+        """Test message creating"""
+        form = MessageForm({
+            'receiver': 'user',
+            'title': 'okok',
+            'content': 'kokoc',
+        })
+        self.assertEqual(form.is_valid(), True)
+        msg = form.save()
+        self.assertEqual(msg.receiver.id, self.user.id)
+        form = MessageForm({
+            'receiver': 'user!!!!',
+            'title': 'okok',
+            'content': 'kokoc',
+        })
+        self.assertEqual(form.is_valid(), False)
