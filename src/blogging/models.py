@@ -38,12 +38,23 @@ class Blog(removable_from(RateableMixin)):
     __rateclass__ = BlogRate
 
     name = models.CharField(max_length=300, verbose_name=_('name'))
+    slug = models.SlugField(max_length=300, verbose_name=_('slug'))
     description = models.TextField(verbose_name=_('description'))
     author = models.ForeignKey(User, verbose_name=_('author'))
 
     class Meta:
         verbose_name = _('Blog')
         verbose_name_plural = _('Blogs')
+
+    def get_posts(self):
+        """Get posts from blog"""
+        return Post.objects.filter(blog=self)
+
+    def save(self, *args, **kwargs):
+        """Save and generate slug"""
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super(Section, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -326,4 +337,8 @@ class Profile(object):
     )
     stars = models.ManyToManyField(Post,
         related_name='star_users', verbose_name=_('stars'),
-    )    
+    )
+
+    def get_posts(self):
+        """Get user posts"""
+        return Post.objects.filter(author=self)

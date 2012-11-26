@@ -259,7 +259,6 @@ class FormsTest(TestCase):
             is_superuser=True,
         )
         _thread_locals.user = self.root
-        
 
     def test_post_creating(self):
         """Test post creating"""
