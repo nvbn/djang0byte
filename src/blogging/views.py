@@ -36,3 +36,11 @@ def user_posts(request, username, page=0):
         'user': user,
         'posts': user.get_posts(),
     }
+
+
+@render_to
+def post_page(request, post_id):
+    """Post page"""
+    return {
+        'post': get_object_or_404(Post, id=post_id),
+    }
