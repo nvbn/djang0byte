@@ -35,7 +35,8 @@ class CompressorMiddleware(object):
         return None
 
     def process_response(self, request, response):
-        if request.method == 'GET' and response.status_code == 200 and request._apply_compresor:
+        if request.method == 'GET' and response.status_code == 200\
+        and getattr(request, '_apply_compresor', False):
             self._apply(response, "js")
             self._apply(response, "css")
         return response

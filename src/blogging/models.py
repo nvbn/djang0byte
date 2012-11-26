@@ -68,10 +68,12 @@ class Section(models.Model):
         default=False, verbose_name=_('is default'),
     )
     included_blogs = models.ManyToManyField(
-        Blog, related_name='included_in', verbose_name=_('included blogs'),
+        Blog, related_name='included_in',
+        blank=True, verbose_name=_('included blogs'),
     )
     excluded_blogs = models.ManyToManyField(
-        Blog, related_name='excluded_from', verbose_name=_('excluded blogs'),
+        Blog, related_name='excluded_from',
+        blank=True, verbose_name=_('excluded blogs'),
     )
 
     class Meta:
