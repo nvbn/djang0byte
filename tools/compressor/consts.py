@@ -3,10 +3,10 @@ import os
 
 
 PROCESSOR_LIST = getattr(settings, "COMPRESSOR_PROCESSORS", [
-    "compressor.coffee_script.CoffeeCompiler",
-    "compressor.processors.OneFile",
-    "compressor.processors.Inline",
-    "compressor.processors.Links",
+    "tools.compressor.coffee_script.CoffeeCompiler",
+    "tools.compressor.processors.OneFile",
+    "tools.compressor.processors.Inline",
+    "tools.compressor.processors.Links",
 ])
 
 

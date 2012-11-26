@@ -2,7 +2,7 @@ from django.conf import settings
 from tools.compressor.class_loader import get_class_by_string
 
 #DEFAULT_OBFUSCATOR = getattr(settings, "COMPRESSOR_DEFAULT_OBFUSCATOR", "compressor.obfuscators.google_closure")
-DEFAULT_OBFUSCATOR = getattr(settings, "COMPRESSOR_DEFAULT_OBFUSCATOR", "compressor.obfuscators.yuicompressor")
+DEFAULT_OBFUSCATOR = getattr(settings, "COMPRESSOR_DEFAULT_OBFUSCATOR", "tools.compressor.obfuscators.yuicompressor")
 
 
 def get_obfuscator_js():

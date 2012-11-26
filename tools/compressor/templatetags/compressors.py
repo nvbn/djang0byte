@@ -11,8 +11,6 @@ import types
 
 
 #check middleware
-if "compressor.middleware.CompressorMiddleware" not in settings.MIDDLEWARE_CLASSES:
-    raise Exception("Add 'compressor.middleware.CompressorMiddleware' in your settings.MIDDLEWARE_CLASSES")
 
 
 register = template.Library()
