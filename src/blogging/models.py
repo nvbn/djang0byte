@@ -4,6 +4,7 @@ from django.db import models
 from tagging.fields import TagField
 from tagging.models import Tag
 from mptt.models import MPTTModel, TreeForeignKey
+from pytils.translit import slugify
 from tools.mixins import (
     RateClassMixin, RateableMixin, rateable_from,
     removable_from,
@@ -51,7 +52,7 @@ class Blog(removable_from(RateableMixin)):
 class Section(models.Model):
     """Section model"""
     name = models.CharField(max_length=300, verbose_name=_('name'))
-    url_name = models.CharField(max_length=300, verbose_name=_('name in url'))
+    slug = models.SlugField(max_length=300, verbose_name=_('slug'))
     is_default = models.BooleanField(
         default=False, verbose_name=_('is default'),
     )
@@ -65,6 +66,25 @@ class Section(models.Model):
     class Meta:
         verbose_name = _('Section')
         verbose_name_plural = _('Sections')
+
+    def save(self, *args, **kwargs):
+        """Save and generate slug"""
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super(Section, self).save(*args, **kwargs)
+
+    def get_posts(self):
+        """Get queryset of posts from section"""
+        posts_qs = Post.objects
+        if self.included_blogs.count():
+            posts_qs = posts_qs.filter(
+                blog__included_in=self,
+            )
+        if self.excluded_blogs.count():
+            posts_qs = posts_qs.exclude(
+                blog__excluded_from=self,
+            )
+        return posts_qs
 
     def __unicode__(self):
         return self.name
@@ -129,6 +149,7 @@ class Post(removable_from(RateableMixin)):
     class Meta:
         verbose_name = _('Post')
         verbose_name_plural = _('Posts')
+        ordering = ('-id',)
 
     def __unicode__(self):
         return self.title

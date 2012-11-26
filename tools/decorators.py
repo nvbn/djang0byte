@@ -4,6 +4,7 @@ from django.template.context import RequestContext
 from django.utils.translation import ugettext as _
 from itertools import ifilter
 from shortcuts import get_module_name
+from functools import wraps
 import types
 
 
@@ -35,10 +36,9 @@ def render_to(template, mimetype=None):
         
     if isinstance(template, types.FunctionType):
         func = template
+        @wraps(func)
         def wrapper(request, *args, **kw):
             return render(request, func(request, *args, **kw), template_name(func))
-        wrapper.__module__ = func.__module__
-        wrapper.__name__ = func.__name__
         return wrapper
 
     def renderer(func):

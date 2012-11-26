@@ -5,7 +5,10 @@ from tools.exceptions import (
     RateDisabledError, AlreadyRemovedError,
     NotRemovedError,
 )
-from blogging.models import Blog, Post, Quiz, Answer, Comment
+from blogging.models import (
+    Blog, Post, Quiz, Answer, Comment,
+    Section,
+)
 from blogging.exceptions import (
     AlreadySubscribedError, NotSubscribedError,
     AlreadyStarredError, NotStarredError,
@@ -205,6 +208,47 @@ class ModelsTest(TestCase):
         self.assertEqual(post.has_solution(), True)
         post.unset_solution()
         self.assertEqual(post.has_solution(), False)
+
+    def test_posts_from_section(self):
+        """Test posts from section"""
+        blogs = map(lambda i: Blog.objects.create(
+            name=str(i), author=self.root,
+        ), range(10))
+        posts = map(lambda i: Post.objects.create(
+            title=str(i), preview='fsd', author=self.root,
+            content='esd', blog=blogs[i],
+        ), range(10))
+        section_1 = Section.objects.create(
+            name='1',
+        )
+        section_1.included_blogs.add(blogs[0])
+        section_1.included_blogs.add(blogs[1])
+        self.assertEqual(
+            list(section_1.get_posts()),
+            [posts[1], posts[0]],
+        )
+        section_2 = Section.objects.create(
+            name='2',
+        )
+        section_2.excluded_blogs.add(blogs[2])
+        section_2.excluded_blogs.add(blogs[3])
+        self.assertEqual(
+            list(section_2.get_posts()),
+            [
+                posts[9], posts[8], posts[7], posts[6],
+                posts[5], posts[4], posts[1], posts[0],
+            ],
+        )
+        section_3 = Section.objects.create(
+            name='3',
+        )
+        section_3.included_blogs.add(blogs[5])
+        section_3.included_blogs.add(blogs[6])
+        section_3.excluded_blogs.add(blogs[6])
+        self.assertEqual(
+            list(section_3.get_posts()),
+            [posts[5]],
+        )
 
 
 class FormsTest(TestCase):
