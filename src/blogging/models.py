@@ -54,7 +54,7 @@ class Blog(removable_from(RateableMixin)):
         """Save and generate slug"""
         if not self.slug:
             self.slug = slugify(self.name)
-        return super(Section, self).save(*args, **kwargs)
+        return super(Blog, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name

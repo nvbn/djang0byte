@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from tools.decorators import render_to
-from tools.paginator import Ppaginated
+from tools.paginator import Paginated
 from blogging.models import Section, Post, Blog
 
 
