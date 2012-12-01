@@ -1,0 +1,13 @@
+django
+django-evolution
+pillow
+sorl-thumbnail
+django-mptt
+-e git://github.com/j2a/pytils.git#egg=pytils
+django-registration
+django-tagging
+psycopg2
+jsonrpc
+django-annoying
+lxml
+bleach

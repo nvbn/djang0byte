@@ -87,7 +87,7 @@ TEMPLATE_DIRS = (
 TAGGING_AUTOCOMPLETE_JS_BASE_URL = '/media/script/jquery-autocomplete/'
 
 INSTALLED_APPS = (
-    'timezones',
+    # 'timezones',
     'tagging',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <ul>
-        {% for post in posts %}
-            <li>{{ post }}</li>
-        {% endfor %}
-    </ul>
+    {% for post in posts %}
+        {% include 'includes/post.html' %}
+    {% endfor %}
 {% endblock %}

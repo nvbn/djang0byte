@@ -1,0 +1,30 @@
+<div class='well post'>
+    <a href='#' class='post-author'>
+        <img src='img/av.png' class='img-rounded' />
+        {{ post.author }}
+    </a>
+    <h2>
+        <a href='#'>{{ post.blog }}</a> &mdash;
+        <a href='#'>{{ post }}</a>
+    </h2>
+    <div class='post-content'>
+        {{ post.preview }}
+    </div>
+    <dic class='post-buttons'>
+        <a class='post-full' href='#'>Читать полность</a>
+        <div class='post-actions'>
+            <div class='post-rates'>
+                <a href='#' class='rate-plus'><b class='icon-plus'></b></a>
+                <a href='#' class='rate-plus'>82</a>
+                <a href='#' class='rate-minus'><b class='icon-minus'></b></a>
+            </div>
+            <div class='post-comment-info'>
+                <a href='#'>
+                    <b class='icon-comment'></b>
+                    <span class='new'>5</span>
+                    <span class='all'> / 42</span>
+                </a>
+            </div>
+        </div>
+    </dic>
+</div>
