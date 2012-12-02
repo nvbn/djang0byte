@@ -238,6 +238,10 @@ class Post(removable_from(RateableMixin)):
         solution.is_solution = False
         solution.save()
 
+    def get_comments_count(self):
+        """Get comments count in post"""
+        return self.comments.count()
+
 
 class Comment(removable_from(rateable_from(MPTTModel))):
     """Comment models"""
@@ -250,7 +254,10 @@ class Comment(removable_from(rateable_from(MPTTModel))):
     created = models.DateTimeField(
         auto_now_add=True, verbose_name=_('created'),
     )
-    post = models.ForeignKey(Post, verbose_name=_('post'))
+    post = models.ForeignKey(
+        Post, related_name='comments',
+        verbose_name=_('post'),
+    )
     is_solution = models.BooleanField(
         default=False, verbose_name=_('is solution'),
     )
@@ -344,3 +351,5 @@ class Profile(object):
     def get_posts(self):
         """Get user posts"""
         return Post.objects.filter(author=self)
+
+    

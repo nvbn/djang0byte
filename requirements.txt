@@ -11,3 +11,4 @@ jsonrpc
 django-annoying
 lxml
 bleach
+django-object-permissions

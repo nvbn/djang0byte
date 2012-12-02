@@ -4,14 +4,18 @@
         {{ post.author }}
     </a>
     <h2>
-        <a href='#'>{{ post.blog }}</a> &mdash;
-        <a href='#'>{{ post }}</a>
+        <a href='{% url blogging_blog_posts post.blog.slug %}'>{{ post.blog }}</a> &mdash;
+        <a href='{% url blogging_post_page post.id %}'>{{ post }}</a>
     </h2>
     <div class='post-content'>
         {{ post.preview }}
     </div>
     <dic class='post-buttons'>
-        <a class='post-full' href='#'>Читать полность</a>
+        {% if is_post_page %}
+
+        {% else %}
+            <a class='post-full' href='{% url blogging_post_page post.id %}'>Читать полностью</a>
+        {% endif %}
         <div class='post-actions'>
             <div class='post-rates'>
                 <a href='#' class='rate-plus'><b class='icon-plus'></b></a>
@@ -22,7 +26,7 @@
                 <a href='#'>
                     <b class='icon-comment'></b>
                     <span class='new'>5</span>
-                    <span class='all'> / 42</span>
+                    <span class='all'> / {{ post.get_comments_count }}</span>
                 </a>
             </div>
         </div>

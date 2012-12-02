@@ -78,12 +78,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), 'templates'),
-    os.path.join(os.path.dirname(__file__), 'register', 'templates'),
-    "/usr/lib/pymodules/python2.6/django/contrib/admin/templates/",
-)
-
 TAGGING_AUTOCOMPLETE_JS_BASE_URL = '/media/script/jquery-autocomplete/'
 
 INSTALLED_APPS = (
@@ -115,6 +109,7 @@ INSTALLED_APPS = (
     # 'loginza',
     'django_evolution',
     'tools.compressor',
+    'tools.object_permissions',
     'accounts',
     'messaging',
     # 'haystack',
@@ -123,15 +118,15 @@ INSTALLED_APPS = (
     'blogging',
 )
 
-MAN_IN_BLACKLIST = (
-    'main_spy',
-    'main_favourite',
-    'main_lastvisit',
-)
+# MAN_IN_BLACKLIST = (
+#     'main_spy',
+#     'main_favourite',
+#     'main_lastvisit',
+# )
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'loginza.authentication.LoginzaBackend',
+    # 'loginza.authentication.LoginzaBackend',
 )
 
 LOGINZA_AMNESIA_PATHS = (
