@@ -61,7 +61,7 @@ Objects
  - ``rate`` -- ``int``
  - ``rate_count`` -- ``int``
 
-**Darft**
+**Draft**
  - ``author`` -- ``User``
  - ``title`` -- ``unicode``
  - ``blog`` -- ``Blog``
